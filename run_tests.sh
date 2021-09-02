@@ -12,4 +12,3 @@ cd server/tests
 python3 -m unittest test_server.py
 
 echo "[STOPPING AND CLEANING UP]"
-fuser -k 8000/tcp
