@@ -16,8 +16,8 @@ class SchoolSchema:
         )
         self.login_schema = Schema(
             schema={
-                "password": And(str, lambda passwd: len(passwd.strip() > 0)),
-                "email": And(str, And(str, lambda email: len(email.strip()) > 0)),
+                "password": And(str, lambda passwd: len(passwd.strip()) > 0),
+                "email": And(str, lambda email: len(email.strip()) > 0),
             }
         )
 
@@ -29,7 +29,6 @@ class SchoolSchema:
         """
         try:
             if self.kwargs.get("register"):
-                data = dict(self.kwargs.get("data"))
                 return self.register_schema.validate(self.kwargs.get("data"))
             return self.login_schema.validate(self.kwargs.get("data"))
         except SchemaError as e:
