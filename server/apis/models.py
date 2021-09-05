@@ -4,7 +4,9 @@ import string
 from typing import Dict, Union
 
 import pymongo
-from core.errorfactory import DuplicationError, ExcessiveUnitsError
+from core.errorfactory import (
+    DuplicationError, ExcessiveUnitsError, InvalidCredentialsError
+)
 
 
 class Model:
@@ -64,3 +66,9 @@ class Model:
         )
         if school:
             raise DuplicationError("School Exists")
+
+    def credetials(self, password: str, email: str):
+        school = self.db.schools.find_one({"password": password, "email": email})
+        if school:
+            return school
+        raise InvalidCredentialsError("Invalid credentials")
