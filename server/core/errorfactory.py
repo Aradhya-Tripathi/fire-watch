@@ -1,6 +1,10 @@
 class DuplicationError(Exception):
-    pass
+    ...
 
 
 class ExcessiveUnitsError(Exception):
-    pass
+    ...
+
+
+class InvalidCredentialsError(Exception):
+    ...
