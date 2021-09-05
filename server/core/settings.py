@@ -28,6 +28,14 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG")
 
+if not DEBUG:
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(dsn=os.getenv("SENTRY_DSN"), integrations=[DjangoIntegration()])
+    print("SENTRY ENABLED")
+
+
 ALLOWED_HOSTS = ["*"]
 
 
@@ -40,7 +48,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "apis",
+    "apis"
 ]
 
 MIDDLEWARE = [
@@ -51,6 +59,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "authentication.middleware.AuthMiddleWare"
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -72,6 +81,22 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "core.wsgi.application"
+
+if DEBUG:
+    REST_FRAMEWORK = {
+        "DEFAULT_THROTTLE_RATES": {
+            "basic_throttle": "100/min",
+        },
+        "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
+    }
+
+else:
+    REST_FRAMEWORK = {
+        "DEFAULT_THROTTLE_RATES": {
+            "basic_throttle": "10/min",
+        },
+        "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
+    }
 
 
 # Database
