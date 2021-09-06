@@ -72,3 +72,18 @@ class Login(APIView):
             data={"access_token": access_token, "refresh_token": refresh_token},
             status=200,
         )
+
+
+class ProtectedView(APIView):
+    throttle_classes = [throttle]
+
+    def get(self, request: request, **kwargs) -> JsonResponse:
+        """Test protected route
+
+        Args:
+            request (request): request object
+
+        Returns:
+            JsonResponse: Response
+        """
+        return JsonResponse(data={"success": True}, status=200)
