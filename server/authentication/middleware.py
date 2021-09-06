@@ -1,5 +1,6 @@
 from authentication import issue_keys
 from django.http.response import JsonResponse
+from core.errorfactory import InvalidToken
 
 
 class AuthMiddleWare:
@@ -7,8 +8,21 @@ class AuthMiddleWare:
         self.view = view
         self._protected = ["/apis/protected"]
 
+    @staticmethod
+    def _validate_tokentype(authorization: str):
+        try:
+            token_type, token = authorization.split()
+            assert token_type == "Bearer"
+        except Exception as e:
+            raise InvalidToken("Invalid Token")
+        return token
+
     def authenticate_request(self, request):
-        if issue_keys.verify_key(key=request.headers.get("Authorization")):
+        try:
+            token = self._validate_tokentype(request.headers.get("Authorization"))
+        except InvalidToken as e:
+            return JsonResponse(data={"error": str(e)}, status=403)
+        if issue_keys.verify_key(key=token):
             return JsonResponse(data={"error": "Invalid credentials"}, status=403)
         return self.view(request)
 
