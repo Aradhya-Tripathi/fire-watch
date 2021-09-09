@@ -1,4 +1,4 @@
 from django.urls import path
-from .views import test
+from .views import Alert
 
-urlpatterns = [path("alerts", test.as_asgi())]
+urlpatterns = [path("alerts", Alert.as_asgi())]
