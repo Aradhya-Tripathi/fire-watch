@@ -36,13 +36,14 @@ class TokenAuth:
     def verify_key(self, key: str):
         def _verify_key(key: str):
             try:
-                jwt.decode(
+                key = jwt.decode(
                     jwt=key.encode(),
                     key=self.signature,
                     options={"verify_exp": True, "verify_signature": True},
                     algorithms=["HS256"],
                 )
-            except Exception as e:
-                return e
+                return key
+            except Exception:
+                return None
 
         return _verify_key(key=key)

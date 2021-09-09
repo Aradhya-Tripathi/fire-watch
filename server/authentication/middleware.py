@@ -22,9 +22,10 @@ class AuthMiddleWare:
             token = self._validate_tokentype(request.headers.get("Authorization"))
         except InvalidToken as e:
             return JsonResponse(data={"error": str(e)}, status=403)
-        if issue_keys.verify_key(key=token):
-            return JsonResponse(data={"error": "Invalid credentials"}, status=403)
-        return self.view(request)
+        if keys := issue_keys.verify_key(key=token):
+            request.auth_user = keys
+            return self.view(request)
+        return JsonResponse(data={"error": "Invalid credentials"}, status=403)
 
     def __call__(self, request):
         if request.path in self._protected:

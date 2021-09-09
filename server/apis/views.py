@@ -1,6 +1,5 @@
 import os
 import time
-
 import psutil
 from authentication import issue_keys
 from core.throttle import throttle
@@ -10,7 +9,6 @@ from rest_framework.views import APIView
 
 from .checks import enter_school, login
 from .definitions import SchoolSchema
-
 
 class HealthCheck(APIView):
     throttle_classes = [throttle]
