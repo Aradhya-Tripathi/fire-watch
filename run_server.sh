@@ -1,11 +1,11 @@
 #!/bin/bash
 echo "[STARTING-SERVER] [PORT] 8000"
 
-echo "Looking for wsgi application..."
+echo "Looking for asgi application..."
 cd server
 
 #STARTING APPLICATION
-gunicorn core.wsgi --reload --bind 0.0.0.0:8000 &
+daphne core.asgi:application  --bind 0.0.0.0 &
 
 cd ../
 echo "Running Django Server [8000]"
