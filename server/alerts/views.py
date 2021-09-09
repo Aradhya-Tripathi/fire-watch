@@ -3,7 +3,8 @@ from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
 
-class test(JsonWebsocketConsumer):
+
+class Alert(JsonWebsocketConsumer):
     group_name = "Alert"
 
     def connect(self):
