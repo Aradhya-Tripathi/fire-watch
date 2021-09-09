@@ -28,9 +28,9 @@ class Model:
         if _units > limit:
             raise ExcessiveUnitsError("Unit limit excede")
 
-        doc = {**{"unit": self.get_uid()}, **doc}
+        doc = {**{"unit_id": self.get_uid()}, **doc}
         self.db.schools.insert_one(doc)
-        self.db.units.insert_one({"_id": doc["unit"]})
+        self.db.units.insert_one({"unit_id": doc["unit_id"]})
 
     def get_uid(self, length: int = 8) -> str:
         """

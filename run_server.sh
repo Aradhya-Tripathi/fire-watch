@@ -5,7 +5,7 @@ echo "Looking for asgi application..."
 cd server
 
 #STARTING APPLICATION
-daphne core.asgi:application  --bind 0.0.0.0 &
+uvicorn core.asgi:application  --port 8000 --reload &
 
 cd ../
 echo "Running Django Server [8000]"
