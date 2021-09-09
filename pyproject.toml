@@ -22,7 +22,7 @@ PyJWT = "^2.1.0"
 channels = "^3.0.4"
 cryptography = "^3.4.8"
 channels-redis = "^3.3.0"
-daphne = "^3.0.2"
+uvicorn = "^0.15.0"
 
 [tool.poetry.dev-dependencies]
 

@@ -1,3 +1,4 @@
+from typing import Any, Dict
 from authentication import issue_keys
 from core.errorfactory import InvalidToken, InvalidCredentialsError
 
@@ -16,7 +17,20 @@ class AuthMiddleWare:
                     return value.split()
         raise InvalidToken("Token not provided")
 
-    def authenticate(self, scope):
+    def authenticate(self, scope: Dict[str, Any]) -> Dict[str, Any]:
+        """MIddleware authentication for sockets adds `error` message in scope
+           if authentication failed else adds `current` in scope representing the
+           current user.
+
+        Args:
+            scope (Dict[str, Any]): Incoming scope
+
+        Raises:
+            InvalidCredentialsError: Raised when authentication fails
+
+        Returns:
+            Dict[str, Any]: returns Modified scope
+        """
         try:
             authorization = self.get_credentials(scope["headers"])
         except InvalidToken as e:
