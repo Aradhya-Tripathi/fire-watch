@@ -42,13 +42,15 @@ ALLOWED_HOSTS = ["*"]
 # Application definition
 
 INSTALLED_APPS = [
+    "channels",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "apis"
+    "alerts",
+    "apis",
 ]
 
 MIDDLEWARE = [
@@ -59,7 +61,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "authentication.middleware.AuthMiddleWare"
+    "authentication.middleware.AuthMiddleWare",
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -80,6 +82,7 @@ TEMPLATES = [
     },
 ]
 
+ASGI_APPLICATION = "core.asgi.application"
 WSGI_APPLICATION = "core.wsgi.application"
 
 if DEBUG:
@@ -114,6 +117,14 @@ if DEBUG:
     print(
         f"[STARTING-SERVER] DEBUG: {DEBUG} USING-DB: {DATABASE['Test']['DB'] if DEBUG else DATABASE['Production']['DB']}"
     )
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
