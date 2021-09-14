@@ -1,8 +1,11 @@
 import os
 import time
+from typing import Union, Dict
 
 import psutil
-from authentication import issue_keys, permissions
+from asgiref.sync import async_to_sync
+from authentication import issue_keys, permissions, utils
+from channels.layers import get_channel_layer
 from core.throttle import throttle
 from django.http import request
 from django.http.response import JsonResponse
@@ -54,7 +57,15 @@ class Register(APIView):
 class Login(APIView):
     throttle_classes = [throttle]
 
-    def post(self, request, **kwargs):
+    def post(self, request: request, **kwargs) -> JsonResponse:
+        """Login users
+
+        Args:
+            request (request): wsgi request
+
+        Returns:
+            JsonResponse: Response
+        """
         validate = SchoolSchema(data=request.data).approval()
 
         if "error" in validate:
@@ -91,8 +102,59 @@ class ProtectedView(APIView):
 
 class CollectData(APIView):
     permission_classes = [permissions.ValidateUnit]
+    throttle_classes = [throttle]
 
-    def post(self, request, **kwargs):
+    def post(self, request: request, **kwargs) -> JsonResponse:
+        """Accept data dumps from device
+
+        Args:
+            request (request): wsgi request
+
+        Returns:
+            JsonResponse: Response
+        """
         if insert_data(unit_id=request.unit_id, data=request.data):
             return JsonResponse(data={}, status=201)
         return JsonResponse(data={}, status=400)
+
+
+class SOS(APIView):
+    permission_classes = [permissions.ValidateUnit]
+    group_name = "Alert"
+    channel_layer = get_channel_layer()
+
+    def send_alert(self, token: str, data: Dict[str, Union[str, int]]) -> None:
+        """Send alert to group.
+           Get group id -> common `group_name` + `unit_id`
+           send alert to that group
+
+        Args:
+            token (str): unit_id
+            data (Dict[str, Union[str, int]]): alert data
+
+        Returns:
+            None
+        """
+        #TODO: Include email
+
+        group_id = self.group_name + str(token)
+        async_to_sync(self.channel_layer.group_send)(
+            group_id, {"type": "send.alert", "content": data}
+        )
+        return None
+
+    def post(self, request: request, **kwargs) -> JsonResponse:
+        """Accept alert from device
+
+        Args:
+            request (request): wsgi request
+
+        Returns:
+            JsonResponse: Response
+        """
+        try:
+            token = utils.get_token(request.headers)
+        except Exception as e:
+            return JsonResponse(data={"error": "Invalid token"}, status=403)
+        self.send_alert(token, request.data)
+        return JsonResponse(data={}, status=200)
