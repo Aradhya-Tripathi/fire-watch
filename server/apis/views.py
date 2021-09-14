@@ -1,14 +1,16 @@
 import os
 import time
+
 import psutil
-from authentication import issue_keys
+from authentication import issue_keys, permissions
 from core.throttle import throttle
 from django.http import request
 from django.http.response import JsonResponse
 from rest_framework.views import APIView
 
-from .checks import enter_school, login
+from .checks import enter_school, insert_data, login
 from .definitions import SchoolSchema
+
 
 class HealthCheck(APIView):
     throttle_classes = [throttle]
@@ -85,3 +87,12 @@ class ProtectedView(APIView):
             JsonResponse: Response
         """
         return JsonResponse(data={"success": True}, status=200)
+
+
+class CollectData(APIView):
+    permission_classes = [permissions.ValidateUnit]
+
+    def post(self, request, **kwargs):
+        if insert_data(unit_id=request.unit_id, data=request.data):
+            return JsonResponse(data={}, status=201)
+        return JsonResponse(data={}, status=400)
