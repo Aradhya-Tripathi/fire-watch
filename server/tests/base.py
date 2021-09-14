@@ -1,3 +1,9 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
 def school_register(
     school_name: str = "Test",
     email: str = "tester@example.com",
@@ -12,3 +18,12 @@ def school_register(
     }
 
     return doc
+
+
+DATABASE = {
+    "Production": {
+        "MONGO_URI": os.getenv("MONGO_URI"),
+        "DB": os.getenv("DB"),
+    },
+    "Test": {"MONGO_URI": os.getenv("MONGO_URI"), "DB": os.getenv("TESTDB")},
+}
