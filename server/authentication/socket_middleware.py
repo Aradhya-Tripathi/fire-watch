@@ -1,5 +1,5 @@
 from typing import Any, Dict
-from authentication import issue_keys
+from authentication import issue_keys, auth_model
 from core.errorfactory import InvalidToken, InvalidCredentialsError
 
 
@@ -18,9 +18,9 @@ class AuthMiddleWare:
         raise InvalidToken("Token not provided")
 
     def authenticate(self, scope: Dict[str, Any]) -> Dict[str, Any]:
-        """MIddleware authentication for sockets adds `error` message in scope
+        """Middleware authentication for sockets adds `error` message in scope
            if authentication failed else adds `current` in scope representing the
-           current user.
+           current user (unit_id).
 
         Args:
             scope (Dict[str, Any]): Incoming scope
@@ -29,7 +29,7 @@ class AuthMiddleWare:
             InvalidCredentialsError: Raised when authentication fails
 
         Returns:
-            Dict[str, Any]: returns Modified scope
+            Dict[str, Any]: returns modified scope
         """
         try:
             authorization = self.get_credentials(scope["headers"])
@@ -40,7 +40,7 @@ class AuthMiddleWare:
             token_type, token = authorization
             assert token_type == "Bearer"
             if key := issue_keys.verify_key(key=token):
-                scope["current"] = key
+                scope["current"] = auth_model.id_from_school(key["school_name"])
             else:
                 raise InvalidCredentialsError("Invalid token")
         except Exception as e:
