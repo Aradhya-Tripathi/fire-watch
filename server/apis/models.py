@@ -5,7 +5,10 @@ from typing import Dict, Union
 
 import pymongo
 from core.errorfactory import (
-    DuplicationError, ExcessiveUnitsError, InvalidCredentialsError
+    DuplicationError,
+    ExcessiveUnitsError,
+    InvalidCredentialsError,
+    InvalidUid,
 )
 
 
@@ -16,6 +19,7 @@ class Model:
             self.db = client[os.getenv("TESTDB")]
         else:
             self.db = client[os.getenv("DB")]
+        self.max_entry = int(os.getenv("MAX_UNIT_ENTRY"))
 
     def register_school(self, doc: Dict[str, Union[str, int]], limit: int = 50):
         """Register new schools and assign units
@@ -28,9 +32,9 @@ class Model:
         if _units > limit:
             raise ExcessiveUnitsError("Unit limit excede")
 
-        doc = {**{"unit_id": self.get_uid()}, **doc}
+        doc = {**{"unit_id": self.get_uid(length=16)}, **doc}
         self.db.schools.insert_one(doc)
-        self.db.units.insert_one({"unit_id": doc["unit_id"]})
+        self.db.units.insert_one({"unit_id": doc["unit_id"], "data": []})
 
     def get_uid(self, length: int = 8) -> str:
         """
@@ -72,3 +76,35 @@ class Model:
         if school:
             return school
         raise InvalidCredentialsError("Invalid credentials")
+
+    def insert_data(self, unit_id: str, data: Dict[str, Union[str, int]]):
+        """Insert collected data into respective unit documents.
+           Insert into document if current insertions are less than
+           200 else create new unit document with same unit id and
+           insert.
+
+           Can be used as a standalone function to insert data or
+           through available `upload` api route
+
+        Args:
+            unit_id (str): unique unit identifier
+            data (Dict[str, Union[str, int]]): data collected
+
+        Raises:
+            InvalidUid: raised if no unit found
+        """
+        units = list(self.db.units.find({"unit_id": unit_id}))
+        try:
+            unit = units.pop()
+        except IndexError as e:
+            raise InvalidUid(f"No unit with the id {unit_id} found")
+
+        if len(unit["data"]) < self.max_entry:
+            self.db.units.update_one(
+                {"_id": unit["_id"]}, update={"$push": {"data": data}}
+            )
+            return True
+
+        doc = {"unit_id": unit_id, "data": [data]}
+        self.db.units.insert_one(doc)
+        return True

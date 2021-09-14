@@ -2,6 +2,7 @@ from core.errorfactory import (
     DuplicationError,
     ExcessiveUnitsError,
     InvalidCredentialsError,
+    InvalidUid,
 )
 from typing import Dict, Union
 from apis import model
@@ -29,3 +30,10 @@ def login(password: str, email: str):
         return model.credetials(password, email)
     except InvalidCredentialsError as e:
         return str(e)
+
+
+def insert_data(unit_id: str, data: Dict[str, Union[str, int]]):
+    try:
+        return model.insert_data(unit_id=unit_id, data=data)
+    except InvalidUid:
+        return None
