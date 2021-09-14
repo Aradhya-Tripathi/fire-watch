@@ -12,3 +12,7 @@ class InvalidCredentialsError(Exception):
 
 class InvalidToken(Exception):
     ...
+
+
+class InvalidUid(Exception):
+    ...
