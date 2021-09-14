@@ -10,5 +10,6 @@ echo "[SERVER-BOOT-COMPLETE]"
 sleep 10s
 cd server/tests
 python3 -m unittest test_server.py
+python3 -m unittest test_units.py
 
 echo "[STOPPING AND CLEANING UP]"
