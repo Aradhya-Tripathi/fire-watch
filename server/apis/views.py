@@ -135,7 +135,7 @@ class SOS(APIView):
         Returns:
             None
         """
-        #TODO: Include email
+        # TODO: Include email
 
         group_id = self.group_name + str(token)
         async_to_sync(self.channel_layer.group_send)(

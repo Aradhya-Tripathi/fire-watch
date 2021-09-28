@@ -7,5 +7,5 @@ urlpatterns = [
     path("login", Login.as_view()),
     path("protected", ProtectedView.as_view()),
     path("upload", CollectData.as_view()),
-    path("sos", SOS.as_view())
+    path("sos", SOS.as_view()),
 ]
