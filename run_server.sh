@@ -1,4 +1,6 @@
 #!/bin/bash
+
+
 echo "[STARTING-SERVER] [PORT] 8000"
 
 echo "Looking for asgi application..."
