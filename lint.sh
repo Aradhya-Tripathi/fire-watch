@@ -14,5 +14,5 @@ then
     echo "$execution All clean!"
 else
     black server/ --diff
-
+    exit 1
 fi
