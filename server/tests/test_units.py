@@ -1,7 +1,7 @@
 import pymongo
 from unittest import TestCase
 import requests
-from base import school_register, DATABASE
+from .base import school_register, DATABASE
 import json
 
 
