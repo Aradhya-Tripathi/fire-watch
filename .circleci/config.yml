@@ -17,4 +17,4 @@ jobs:
           name: run tests
           command: |
             . rain/bin/activate
-            bash run_tests.sh
+            bash run_server_tests.sh
