@@ -1,6 +1,6 @@
 from unittest import TestCase
 import requests
-from base import school_register
+from .base import school_register
 import json
 
 

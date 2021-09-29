@@ -29,7 +29,7 @@ class TokenAuth:
                 payload["exp"] = current_time + timedelta(seconds=value)
             refresh_payload = {**{"refresh": True}, **payload}
             refresh_token = jwt.encode(refresh_payload, key=self.signature)
-            return access_token, refresh_token
+            return {"access_token": access_token, "refresh_token": refresh_token}
 
         return access_token
 
