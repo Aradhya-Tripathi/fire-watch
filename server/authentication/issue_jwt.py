@@ -9,7 +9,10 @@ load_dotenv()
 
 class TokenAuth:
     def __init__(self, *args, **kwargs):
-        self.signature = os.getenv("SECRET_KEY")
+        if os.getenv("CI"):
+            self.signature = "random"
+        else:
+            self.signature = os.getenv("SECRET_KEY")
 
     def generate_key(
         self,
