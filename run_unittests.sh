@@ -8,9 +8,9 @@ echo -e "$execution [...]"
 
 echo "$execution [STARTING TESTS]"
 
-cd servettest
+cd server/authentication
+python3 -m unittest
 
-r/authentication
-python3 -m unicd ../..
+cd ../..
 
 echo "$execution Claning up!"
