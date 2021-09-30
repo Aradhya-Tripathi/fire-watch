@@ -1,4 +1,7 @@
 from unittest import TestCase
+import pymongo
+import os
+from dotenv import load_dotenv
 import requests
 from .base import school_register
 import json
@@ -8,16 +11,12 @@ class TestServer(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         """
-        Start server
+        Initialize server tests.
         """
         cls.request = requests.Session()
         cls.base_url = "http://localhost:8000/"
 
     def clear_all(self):
-        import pymongo
-        import os
-        from dotenv import load_dotenv
-
         load_dotenv()
 
         client = pymongo.MongoClient(os.getenv("MONGO_URI"))
@@ -66,6 +65,10 @@ class TestServer(TestCase):
             self.base_url + "apis/login", data=json.dumps(creds), headers=headers
         )
 
+        response = status.json()
+
+        self.assertIn("access_token", response)
+        self.assertIn("refresh_token", response)
         self.assertEqual(status.status_code, 200)
         creds = {"password": "incorrectpassword", "email": doc["email"]}
         status = self.request.post(

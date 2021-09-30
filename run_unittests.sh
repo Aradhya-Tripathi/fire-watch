@@ -13,4 +13,4 @@ python3 -m unittest
 
 cd ../..
 
-echo "$execution Claning up!"
+echo "$execution Cleaning up!"
