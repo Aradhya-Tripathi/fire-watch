@@ -28,7 +28,5 @@ jobs:
         MONGO_URI: ${{ secrets.MONGO_URI }}
         DEBUG: ${{ secrets.DEBUG }}
         MAX_UNIT_ENTRY: ${{ secrets.MAX_UNIT_ENTRY }}
-
-    - name: Run Tests
       run: |
           . ./run_server_tests.sh 1 || true
