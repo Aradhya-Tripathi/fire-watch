@@ -12,17 +12,31 @@ echo -e "$execution [...]"
 
 echo "$execution [SERVER-BOOT-COMPLETE]"
 #Find tests
-sleep 10s
+sleep 1s
 cd server
-var=$(python3 test_runner.py | grep "Failing Tests" -c)
+
+echo "$execution You entred: $1"
+
+if [ $1 -eq "1" ];
+then
+    echo "$execution Running Unit Tests"
+    var=$(python3 test_runner.py --unit-tests 1| grep "Failing Tests" -c)
+
+else
+    echo "$error No unit tests ran"
+    var=$(python3 test_runner.py| grep "Failing Tests" -c)
+
+fi
 
 if [ $var = 0 ];
 then
-    echo "$execution [All tests pass]"
+    echo "$execution All tests pass!"
 else
-    echo "$error All clean!"
+    echo "$error Failing Tests!"
+    cd ../
     exit -1
 fi
 
+cd ../
 
 echo "$execution Claning up!"
