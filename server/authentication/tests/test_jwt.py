@@ -1,5 +1,5 @@
 import unittest
-from issue_jwt import TokenAuth
+from authentication.issue_jwt import TokenAuth
 
 
 class TestJwt(unittest.TestCase):

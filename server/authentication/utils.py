@@ -8,5 +8,5 @@ def get_token(headers: Dict[str, Union[int, str]]):
     return token
 
 
-def validate_token(token: str):
-    return auth_model.validate_request(unit_id=token)
+def validate_request(token: str):
+    return auth_model.validate_token(unit_id=token)

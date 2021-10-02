@@ -1,6 +1,6 @@
 import pymongo
-from core.errorfactory import InvalidUid
 import os
+from core.errorfactory import InvalidUid
 
 
 class AuthModel:
@@ -11,8 +11,8 @@ class AuthModel:
         else:
             self.db = client[os.getenv("DB")]
 
-    def validate_request(self, unit_id: str):
-        documents = self.db.units.count_documents({"unit_id": unit_id})
+    def validate_token(self, unit_id: str):
+        documents = self.db.units.find_one({"unit_id": unit_id})
         if documents:
             return True
         raise InvalidUid(f"No document with unit with Id {unit_id} found")

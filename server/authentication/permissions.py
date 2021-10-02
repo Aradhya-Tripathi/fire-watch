@@ -1,5 +1,5 @@
 from rest_framework.permissions import BasePermission
-from .utils import get_token, validate_token
+from .utils import get_token, validate_request
 from core.errorfactory import InvalidUid
 
 
@@ -10,7 +10,7 @@ class ValidateUnit(BasePermission):
         except Exception:
             return False
         try:
-            validate_token(token)
+            validate_request(token)
         except InvalidUid:
             return False
         setattr(request, "unit_id", token)
