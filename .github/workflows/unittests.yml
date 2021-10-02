@@ -25,7 +25,9 @@ jobs:
       run: echo "Setting variables"
       env:
         TESTDB: ${{ secrets.TESTDB }}
-        MONGO_URI: ${{ secrets.MONGO_URI }}
+        MONGO_URI: ${{ secrets.TESTDB }}
+        DEBUG: ${{ secrets.DEBUG }}
+        MAX_UNIT_ENTRY: ${{ secrets.MAX_UNIT_ENTRY }}
 
     - name: Run Tests
       run: |

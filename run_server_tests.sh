@@ -7,11 +7,14 @@ echo -e "$execution [...]"
 
 
 
-#START SERVER
-. ./run_server.sh
+# START SERVER
+if [ $1 -eq "0" ];
+then
+    . ./run_server.sh
+    echo "$execution [SERVER-BOOT-COMPLETE]"
+fi
 
-echo "$execution [SERVER-BOOT-COMPLETE]"
-#Find tests
+# Find tests
 sleep 1s
 cd server
 
@@ -20,11 +23,11 @@ echo "$execution You entred: $1"
 if [ $1 -eq "1" ];
 then
     echo "$execution Running Unit Tests"
-    var=$(python3 test_runner.py --unit-tests 1| grep "Failing Tests" -c)
+    var=$(python3 test_runner.py --unit-tests 1 | grep "Failing Tests" -c)
 
 else
     echo "$error No unit tests ran"
-    var=$(python3 test_runner.py| grep "Failing Tests" -c)
+    var=$(python3 test_runner.py --unit-tests 0| grep "Failing Tests" -c)
 
 fi
 
