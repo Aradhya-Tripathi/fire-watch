@@ -7,7 +7,7 @@ import argparse
 
 def configure_options():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--unit-tests", nargs=1, default=0, type=int)
+    parser.add_argument("--unit-tests", nargs=1, default=[0], type=int)
     parser.add_argument("--allow-both", nargs=1, default=[0], type=int)
     return parser
 
