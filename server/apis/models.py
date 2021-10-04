@@ -2,6 +2,7 @@ import os
 import random
 import string
 from typing import Dict, Union
+from core.settings import CONF
 
 import pymongo
 from core.errorfactory import (
@@ -19,7 +20,7 @@ class Model:
             self.db = client[os.getenv("TESTDB")]
         else:
             self.db = client[os.getenv("DB")]
-        self.max_entry = int(os.getenv("MAX_UNIT_ENTRY"))
+        self.max_entry = CONF["max_unit_entry"]
 
     def register_school(self, doc: Dict[str, Union[str, int]], limit: int = 50):
         """Register new schools and assign units
@@ -30,7 +31,7 @@ class Model:
 
         _units = doc.get("units")
         if _units > limit:
-            raise ExcessiveUnitsError("Unit limit excede")
+            raise ExcessiveUnitsError
 
         doc = {**{"unit_id": self.get_uid(length=16)}, **doc}
         self.db.schools.insert_one(doc)
