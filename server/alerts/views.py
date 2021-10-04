@@ -4,7 +4,7 @@ from asgiref.sync import async_to_sync
 
 from core.errorfactory import SocketAuthenticationFailed
 from .checks import authenticate
-from core.settings import conf
+from core import conf
 
 
 GROUP_NAME = conf["socket"]["base_group"]

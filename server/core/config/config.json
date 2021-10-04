@@ -4,7 +4,10 @@
         "email",
         "ws"
     ],
-    "logs": false,
+    "logs": {
+        "path": "./server.log",
+        "level": "ERROR"
+    },
     "socket": {
         "base_group": "Alerts"
     },

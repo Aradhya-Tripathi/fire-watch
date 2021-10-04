@@ -11,9 +11,10 @@ from django.http import request
 from django.http.response import JsonResponse
 from rest_framework.views import APIView
 
-from .checks import enter_user, insert_data, login, check_subscription
+from .checks import enter_user, insert_data, login
 from .definitions import UserSchema
-from core.settings import conf
+from core import conf
+from .utils import check_subscription, check_logging
 
 
 class HealthCheck(APIView):
@@ -161,6 +162,8 @@ class SOS(APIView):
         """
         try:
             token = utils.get_token(request.headers)
+            if check_logging():
+                pass
         except Exception as e:
             return JsonResponse(data={"error": "Invalid token"}, status=403)
         self.send_alert(token, request.data)

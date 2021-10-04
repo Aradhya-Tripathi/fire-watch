@@ -3,7 +3,7 @@ from unittest import TestCase
 import requests
 from .base import user_register, DATABASE
 import json
-from core.settings import conf
+from core import conf
 
 from typing import Union, Dict
 

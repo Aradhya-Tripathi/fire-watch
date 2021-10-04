@@ -1,6 +1,6 @@
 import pymongo
 import os
-from core.settings import conf
+from core import conf
 from core.errorfactory import InvalidUid
 
 
