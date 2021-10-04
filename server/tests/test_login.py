@@ -67,6 +67,8 @@ class TestServer(TestCase):
         )
 
         self.assertEqual(status.status_code, 200)
+        self.assertIsInstance(status.json()["access_token"], str)
+        self.assertIsInstance(status.json()["refresh_token"], str)
         creds = {"password": "incorrectpassword", "email": doc["email"]}
         status = self.request.post(
             self.base_url + "apis/login", data=json.dumps(creds), headers=headers
