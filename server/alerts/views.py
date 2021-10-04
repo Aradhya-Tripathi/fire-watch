@@ -14,8 +14,9 @@ class Alert(JsonWebsocketConsumer):
     def connect(self):
         try:
             authenticate(scope=self.scope)
-        except SocketAuthenticationFailed as e:
+        except SocketAuthenticationFailed:
             self.close()
+            return
 
         self.accept()
         self.channel_layer = get_channel_layer()
@@ -30,3 +31,7 @@ class Alert(JsonWebsocketConsumer):
 
     def disconnect(self, code):
         super().disconnect(code)
+
+class NotFound(JsonWebsocketConsumer):
+    def connect(self):
+        self.close()
