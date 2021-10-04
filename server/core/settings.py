@@ -24,6 +24,9 @@ _path = Path(__file__).resolve()
 BASE_DIR = _path.parent.parent
 conf = sanitized_configs(base_path=_path.parent)
 
+from .log.log_configs import Log
+
+logger = Log()
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
