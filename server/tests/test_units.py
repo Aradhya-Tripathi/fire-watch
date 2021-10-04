@@ -30,7 +30,7 @@ class TestUnit(TestCase):
         self.register_school()
 
         school = self.db.schools.find_one(
-            {"school_name": school_register()["school_name"]}
+            {"user_name": school_register()["user_name"]}
         )
         unit_id = school["unit_id"]
 

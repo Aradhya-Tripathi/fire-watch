@@ -46,7 +46,7 @@ class TestServer(TestCase):
         self.assertEqual(status.status_code, 400)
 
         doc = school_register()
-        doc.pop("school_name")
+        doc.pop("user_name")
         status = self.request.post(
             self.base_url + "apis/register", data=json.dumps(doc), headers=headers
         )

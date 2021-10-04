@@ -8,7 +8,7 @@ class SchoolSchema:
 
         self.register_schema = Schema(
             schema={
-                "school_name": And(str, lambda name: len(name.strip()) > 0),
+                "user_name": And(str, lambda name: len(name.strip()) > 0),
                 "units": And(int, lambda units: units > 0),
                 "password": And(str, lambda passwd: len(passwd.strip()) > 0),
                 "email": And(str, lambda email: len(email.strip()) > 0),
