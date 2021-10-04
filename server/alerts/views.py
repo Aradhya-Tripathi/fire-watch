@@ -32,6 +32,7 @@ class Alert(JsonWebsocketConsumer):
     def disconnect(self, code):
         super().disconnect(code)
 
+
 class NotFound(JsonWebsocketConsumer):
     def connect(self):
         self.close()

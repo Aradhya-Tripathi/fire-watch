@@ -81,7 +81,10 @@ class Login(APIView):
             payload=payload, expiry=1, get_refresh=True, refresh_exipry=12
         )
         return JsonResponse(
-            data={"access_token": key["access_token"], "refresh_token": key["refresh_token"]},
+            data={
+                "access_token": key["access_token"],
+                "refresh_token": key["refresh_token"],
+            },
             status=200,
         )
 
