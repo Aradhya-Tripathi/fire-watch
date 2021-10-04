@@ -15,10 +15,10 @@ then
 fi
 
 # Find tests
-sleep 1s
+sleep 5s
 cd server
 
-echo "$execution You entred: $1"
+echo "$execution Entered: $1"
 
 if [ $1 -eq "1" ];
 then
@@ -38,6 +38,12 @@ else
     echo "$error Failing Tests!"
     cd ../
     exit -1
+fi
+
+if [ $2 = "shutdown" ];
+then
+    echo "$execution Killing port [...]"
+    fuser -k 8000/tcp
 fi
 
 cd ../
