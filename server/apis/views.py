@@ -13,7 +13,8 @@ from rest_framework.views import APIView
 
 from .checks import enter_user, insert_data, login
 from .definitions import UserSchema
-from core.settings import conf
+from core import conf
+from .utils import check_subscription, check_logging
 
 
 class HealthCheck(APIView):
@@ -139,12 +140,15 @@ class SOS(APIView):
         Returns:
             None
         """
-        # TODO: Include email
-
-        group_id = self.group_name + str(token)
-        async_to_sync(self.channel_layer.group_send)(
-            group_id, {"type": "send.alert", "content": data}
-        )
+        subs = check_subscription()
+        if "email" in subs:
+            # TODO: Include email
+            ...
+        if "ws" in subs:
+            group_id = self.group_name + str(token)
+            async_to_sync(self.channel_layer.group_send)(
+                group_id, {"type": "send.alert", "content": data}
+            )
         return None
 
     def post(self, request: request, **kwargs) -> JsonResponse:
@@ -158,6 +162,8 @@ class SOS(APIView):
         """
         try:
             token = utils.get_token(request.headers)
+            if check_logging():
+                pass
         except Exception as e:
             return JsonResponse(data={"error": "Invalid token"}, status=403)
         self.send_alert(token, request.data)

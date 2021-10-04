@@ -2,7 +2,7 @@ import os
 import random
 import string
 from typing import Dict, Union
-from core.settings import conf
+from core import conf
 
 import pymongo
 from core.errorfactory import (

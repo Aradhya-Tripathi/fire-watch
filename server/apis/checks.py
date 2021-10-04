@@ -7,6 +7,7 @@ from core.errorfactory import (
 from typing import Dict, Union
 from apis import model
 from hashlib import sha256
+from core import conf
 
 
 def enter_user(doc: Dict[str, Union[str, int]]):

@@ -17,13 +17,13 @@ from dotenv import load_dotenv
 
 from .utils import sanitized_configs
 
+
 load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 _path = Path(__file__).resolve()
 
 BASE_DIR = _path.parent.parent
 conf = sanitized_configs(base_path=_path.parent)
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -40,7 +40,6 @@ if not DEBUG:
 
     sentry_sdk.init(dsn=os.getenv("SENTRY_DSN"), integrations=[DjangoIntegration()])
     print("SENTRY ENABLED")
-
 
 ALLOWED_HOSTS = ["*"]
 

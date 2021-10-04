@@ -27,3 +27,8 @@ class ConfigFileNotFound(Exception):
 class SocketAuthenticationFailed(Exception):
     def __init__(self, *args: object) -> None:
         super().__init__("Socket authentication failed")
+
+
+class LogsNotEnabled(Exception):
+    def __init__(self, *args: object) -> None:
+        super().__init__("Logging is disabled!!")
