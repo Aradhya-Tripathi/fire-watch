@@ -29,9 +29,7 @@ class TestUnit(TestCase):
     def test_upload_route(self):
         self.register_school()
 
-        school = self.db.schools.find_one(
-            {"user_name": school_register()["user_name"]}
-        )
+        school = self.db.schools.find_one({"user_name": school_register()["user_name"]})
         unit_id = school["unit_id"]
 
         headers = {
