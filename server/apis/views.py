@@ -11,7 +11,7 @@ from django.http import request
 from django.http.response import JsonResponse
 from rest_framework.views import APIView
 
-from .checks import enter_user, insert_data, login
+from .checks import enter_user, insert_data, login, check_subscription
 from .definitions import UserSchema
 from core.settings import conf
 
@@ -139,12 +139,15 @@ class SOS(APIView):
         Returns:
             None
         """
-        # TODO: Include email
-
-        group_id = self.group_name + str(token)
-        async_to_sync(self.channel_layer.group_send)(
-            group_id, {"type": "send.alert", "content": data}
-        )
+        subs = check_subscription()
+        if "email" in subs:
+            # TODO: Include email
+            ...
+        if "ws" in subs:
+            group_id = self.group_name + str(token)
+            async_to_sync(self.channel_layer.group_send)(
+                group_id, {"type": "send.alert", "content": data}
+            )
         return None
 
     def post(self, request: request, **kwargs) -> JsonResponse:

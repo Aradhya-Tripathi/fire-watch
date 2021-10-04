@@ -7,6 +7,7 @@ from core.errorfactory import (
 from typing import Dict, Union
 from apis import model
 from hashlib import sha256
+from core.settings import conf
 
 
 def enter_user(doc: Dict[str, Union[str, int]]):
@@ -37,3 +38,13 @@ def insert_data(unit_id: str, data: Dict[str, Union[str, int]]):
         return model.insert_data(unit_id=unit_id, data=data)
     except InvalidUid:
         return None
+
+
+def check_subscription():
+    """
+    Check all subscriptions mentioned in configuration
+    return list of all subscriptions for alerts
+    """
+    alerts = conf["send_alerts"]
+    if alerts:
+        return alerts
