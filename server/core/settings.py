@@ -12,11 +12,17 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 import os
 from pathlib import Path
+
 from dotenv import load_dotenv
+
+from .utils import sanitized_configs
 
 load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+_path = Path(__file__).resolve()
+
+BASE_DIR = _path.parent.parent
+CONF = sanitized_configs(base_path=_path.parent)
 
 
 # Quick-start development settings - unsuitable for production

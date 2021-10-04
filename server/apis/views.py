@@ -75,7 +75,7 @@ class Login(APIView):
 
         if isinstance(creds, str):
             return JsonResponse(data={"error": creds}, status=403)
-        payload = {"school_name": creds["school_name"]}
+        payload = {"user_name": creds["user_name"]}
         access_token, refresh_token = issue_keys.generate_key(
             payload=payload, expiry=1, get_refresh=True, refresh_exipry=12
         )
