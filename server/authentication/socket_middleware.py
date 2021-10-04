@@ -51,4 +51,8 @@ class AuthMiddleWare:
     async def __call__(self, scope, recieve, send):
         if scope["path"] in self._protected:
             scope = self.authenticate(scope)
-        return await self.view(scope, recieve, send)
+        try:
+            return await self.view(scope, recieve, send)
+        except ValueError:
+            scope["path"] = "not-found"
+            return await self.view(scope, recieve, send)
