@@ -1,7 +1,7 @@
 from schema import Schema, SchemaError, And
 
 
-class SchoolSchema:
+class UserSchema:
     def __init__(self, *args, **kwargs):
 
         self.kwargs = kwargs

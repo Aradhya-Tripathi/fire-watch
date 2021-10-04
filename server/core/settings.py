@@ -22,7 +22,7 @@ load_dotenv()
 _path = Path(__file__).resolve()
 
 BASE_DIR = _path.parent.parent
-CONF = sanitized_configs(base_path=_path.parent)
+conf = sanitized_configs(base_path=_path.parent)
 
 
 # Quick-start development settings - unsuitable for production
@@ -32,7 +32,7 @@ CONF = sanitized_configs(base_path=_path.parent)
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG")
+DEBUG = conf["developer"]
 
 if not DEBUG:
     import sentry_sdk
