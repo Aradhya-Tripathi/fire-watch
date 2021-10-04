@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-def school_register(
+def user_register(
     user_name: str = "Test",
     email: str = "tester@example.com",
     password: str = "password",

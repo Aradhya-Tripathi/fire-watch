@@ -2,14 +2,20 @@ from channels.generic.websocket import JsonWebsocketConsumer
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
+from core.errorfactory import SocketAuthenticationFailed
+from .checks import authenticate
+from core.settings import conf
+
+
+GROUP_NAME = conf["socket"]["base_group"]
+
 
 class Alert(JsonWebsocketConsumer):
-    group_name = "Alert"
-
     def connect(self):
-        if "error" in self.scope:
+        try:
+            authenticate(scope=self.scope)
+        except SocketAuthenticationFailed as e:
             self.close()
-            return None
 
         self.accept()
         self.channel_layer = get_channel_layer()
@@ -19,7 +25,7 @@ class Alert(JsonWebsocketConsumer):
         self.send_json(content["content"])
 
     def add_to_group(self):
-        self.group_id = self.group_name + str(self.scope["current"])
+        self.group_id = GROUP_NAME + str(self.scope["current"])
         async_to_sync(self.channel_layer.group_add)(self.group_id, self.channel_name)
 
     def disconnect(self, code):

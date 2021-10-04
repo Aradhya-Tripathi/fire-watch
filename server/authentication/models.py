@@ -1,12 +1,13 @@
 import pymongo
 import os
+from core.settings import conf
 from core.errorfactory import InvalidUid
 
 
 class AuthModel:
     def __init__(self, *args, **kwargs):
         client = pymongo.MongoClient(os.getenv("MONGO_URI"))
-        if os.getenv("DEBUG") or os.getenv("CI"):
+        if conf["developer"] or os.getenv("CI"):
             self.db = client[os.getenv("TESTDB")]
         else:
             self.db = client[os.getenv("DB")]
@@ -17,6 +18,6 @@ class AuthModel:
             return True
         raise InvalidUid(f"No document with unit with Id {unit_id} found")
 
-    def id_from_school(self, school_name: str):
-        school = self.db.schools.find_one({"school_name": school_name})
-        return school["unit_id"]
+    def id_from_user(self, user_name: str):
+        user = self.db.users.find_one({"user_name": user_name})
+        return user["unit_id"]

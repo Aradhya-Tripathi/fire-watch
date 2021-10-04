@@ -40,7 +40,7 @@ class AuthMiddleWare:
             token_type, token = authorization
             assert token_type == "Bearer"
             if key := issue_keys.verify_key(key=token):
-                scope["current"] = auth_model.id_from_school(key["school_name"])
+                scope["current"] = auth_model.id_from_user(key["user_name"])
             else:
                 raise InvalidCredentialsError("Invalid token")
         except Exception as e:

@@ -1,8 +1,11 @@
 import pymongo
 from unittest import TestCase
 import requests
-from .base import school_register, DATABASE
+from .base import user_register, DATABASE
 import json
+from core.settings import conf
+
+from typing import Union, Dict
 
 
 class TestUnit(TestCase):
@@ -14,23 +17,23 @@ class TestUnit(TestCase):
         cls.db = cls.client[DATABASE["Test"]["DB"]]
 
     def clear_all(self):
-        self.db.drop_collection("schools")
+        self.db.drop_collection("users")
         self.db.drop_collection("units")
 
-    def register_school(self):
+    def register_user(self, doc: Dict[str, Union[str, int]]):
         headers = {"Content-Type": "application/json"}
         status = self.request.post(
             self.base_url + "apis/register",
-            data=json.dumps(school_register()),
+            data=json.dumps(doc),
             headers=headers,
         )
-        self.assertEqual(status.status_code, 201)
+        return status
 
     def test_upload_route(self):
-        self.register_school()
+        self.register_user(user_register())
 
-        school = self.db.schools.find_one({"user_name": school_register()["user_name"]})
-        unit_id = school["unit_id"]
+        user = self.db.users.find_one({"user_name": user_register()["user_name"]})
+        unit_id = user["unit_id"]
 
         headers = {
             "Authorization": f"Bearer {unit_id}",
@@ -48,6 +51,11 @@ class TestUnit(TestCase):
         }
         status = self.request.post(self.base_url + "apis/upload", headers=headers)
         self.assertEqual(status.status_code, 403)
+
+    def test_excessive_units(self):
+        doc = user_register(units=conf["max_unit_entry"] + 1)
+        status = self.register_user(doc)
+        self.assertEqual(status.status_code, 400)
 
     def setUp(self):
         self.clear_all()
