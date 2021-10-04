@@ -9,7 +9,7 @@ from apis import model
 from hashlib import sha256
 
 
-def enter_school(doc: Dict[str, Union[str, int]]):
+def enter_user(doc: Dict[str, Union[str, int]]):
     try:
         model.check_existing(doc)
     except DuplicationError as e:
@@ -17,7 +17,7 @@ def enter_school(doc: Dict[str, Union[str, int]]):
 
     try:
         doc["password"] = sha256(doc["password"].encode()).hexdigest()
-        model.register_school(doc)
+        model.register_user(doc)
     except ExcessiveUnitsError as e:
         return e
 

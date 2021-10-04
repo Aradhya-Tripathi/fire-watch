@@ -1,6 +1,6 @@
 from unittest import TestCase
 import requests
-from .base import school_register
+from .base import user_register
 import json
 
 import pymongo
@@ -23,7 +23,7 @@ class TestServer(TestCase):
         client = pymongo.MongoClient(os.getenv("MONGO_URI"))
         db = client[os.getenv("TESTDB")]
 
-        db.drop_collection("schools")
+        db.drop_collection("users")
         db.drop_collection("units")
 
     def test_server(self):
@@ -33,7 +33,7 @@ class TestServer(TestCase):
     def test_register(self):
         self.clear_all()
 
-        doc = school_register()
+        doc = user_register()
         headers = {"Content-type": "application/json"}
         status = self.request.post(
             self.base_url + "apis/register", data=json.dumps(doc), headers=headers
@@ -45,7 +45,7 @@ class TestServer(TestCase):
         )
         self.assertEqual(status.status_code, 400)
 
-        doc = school_register()
+        doc = user_register()
         doc.pop("user_name")
         status = self.request.post(
             self.base_url + "apis/register", data=json.dumps(doc), headers=headers
@@ -54,7 +54,7 @@ class TestServer(TestCase):
 
     def test_login(self):
         self.clear_all()
-        doc = school_register()
+        doc = user_register()
         headers = {"Content-type": "application/json"}
         status = self.request.post(
             self.base_url + "apis/register", data=json.dumps(doc), headers=headers

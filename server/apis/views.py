@@ -11,8 +11,9 @@ from django.http import request
 from django.http.response import JsonResponse
 from rest_framework.views import APIView
 
-from .checks import enter_school, insert_data, login
-from .definitions import SchoolSchema
+from .checks import enter_user, insert_data, login
+from .definitions import UserSchema
+from core.settings import conf
 
 
 class HealthCheck(APIView):
@@ -35,7 +36,7 @@ class Register(APIView):
     throttle_classes = [throttle]
 
     def post(self, request: request, **kwargs) -> JsonResponse:
-        """Register schools
+        """Register users
 
         Args:
             request (request): wsgi request
@@ -43,12 +44,12 @@ class Register(APIView):
         Returns:
             JsonResponse: Response
         """
-        validate = SchoolSchema(data=request.data, register=True).approval()
+        validate = UserSchema(data=request.data, register=True).approval()
 
         if "error" in validate:
             return JsonResponse(data={"error": validate["error"]}, status=400)
 
-        if value := enter_school(validate):
+        if value := enter_user(validate):
             return JsonResponse(data={"error": str(value)}, status=400)
 
         return JsonResponse(data={"success": True}, status=201)
@@ -66,7 +67,7 @@ class Login(APIView):
         Returns:
             JsonResponse: Response
         """
-        validate = SchoolSchema(data=request.data).approval()
+        validate = UserSchema(data=request.data).approval()
 
         if "error" in validate:
             return JsonResponse(data={"error": validate["error"]}, status=400)
@@ -120,7 +121,7 @@ class CollectData(APIView):
 
 class SOS(APIView):
     permission_classes = [permissions.ValidateUnit]
-    group_name = "Alert"
+    group_name = conf["socket"]["base_group"]
     channel_layer = get_channel_layer()
 
     def send_alert(self, token: str, data: Dict[str, Union[str, int]]) -> None:
