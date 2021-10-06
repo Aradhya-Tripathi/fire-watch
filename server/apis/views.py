@@ -14,7 +14,8 @@ from rest_framework.views import APIView
 from .checks import enter_user, insert_data, login
 from .definitions import UserSchema
 from core import conf
-from .utils import check_subscription, check_logging
+from .utils import check_subscription
+from core.log.log_configs import get_logger
 
 
 class HealthCheck(APIView):
@@ -29,6 +30,8 @@ class HealthCheck(APIView):
         Returns:
             JsonResponse: Uptime
         """
+        logger = get_logger("server.log", 10)
+        logger.debug("HIT")
         uptime = time.time() - psutil.Process(os.getpid()).create_time()
         return JsonResponse(data={"uptime": uptime, "OK": True}, status=200)
 
