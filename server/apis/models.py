@@ -2,6 +2,8 @@ import os
 import random
 import string
 from typing import Dict, Union
+
+from pymongo.message import update
 from core import conf
 
 import pymongo
@@ -109,3 +111,19 @@ class Model:
         doc = {"unit_id": unit_id, "data": [data]}
         self.db.units.insert_one(doc)
         return True
+
+    def reset_password(self, email_id: str, old_passwd: str, new_passwd: str) -> None:
+        """Takes in hashed passwords updates
+           password if user found.
+
+        Args:
+            old_pswd (str): old hashed password
+            new_pswd (str): new hashed password
+            email_id (str): email_id
+        """
+
+        self.db.users.find_one_and_update(
+            {"password": old_passwd, "email": email_id},
+            update={"$set": {"password": new_passwd}},
+        )
+        return None

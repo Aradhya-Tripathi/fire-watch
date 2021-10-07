@@ -14,7 +14,7 @@ from django.http import request
 from django.http.response import JsonResponse
 from rest_framework.views import APIView
 
-from .checks import enter_user, insert_data, login
+from .checks import enter_user, insert_data, login, reset_password
 from .definitions import UserSchema
 from .utils import check_subscription
 
@@ -170,4 +170,15 @@ class Alert(APIView):
         except Exception as e:
             return JsonResponse(data={"error": "Invalid token"}, status=403)
         self.send_alert(token, request.data)
+        return JsonResponse(data={}, status=200)
+
+
+class ResetPassword(APIView):
+    throttle_classes = [throttle]
+
+    def post(self, request, **kwargs):
+        validate = UserSchema(data=request.data, reset=True).approval()
+        if "error" in validate:
+            return JsonResponse(data={"error": validate["error"]}, status=400)
+        reset_password(request.data)
         return JsonResponse(data={}, status=200)
