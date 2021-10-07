@@ -2,25 +2,30 @@ from core.settings import conf
 from core.errorfactory import LogsNotEnabled
 import logging
 
+FMT = "%(asctime)s:%(name)s:%(message)s"
 
-def get_logger(filename: str, level: int, formatter: str = None) -> logging.getLogger:
-    """Get pre configured logger object with the configurations
-       set above.
+
+def get_logger(logger_name: str, filename: str, level: int = 10) -> logging.getLogger:
+    """Simple logger configuration implemented to support
+       safe logging.
 
     Args:
-        filename (str): `Log File`
-        level (int): `Severity level`
-        formatter (str): `Log formatted`
+        logger_name (str): name given to current logger.
+        level (int): severity level.
+        filename (str): file to throw all logs to.
+
+    Raises:
+        LogsNotEnabled: Raised if logging is tried with out enabling logger in configurations
 
     Returns:
-        Log: Logger object
+        logging.getLogger: logger object
     """
+    logger = logging.getLogger(logger_name)
     if conf["logs"]:
-        logger = logging.getLogger(__name__)
         logger.setLevel(level=level)
         file_handler = logging.FileHandler(filename, mode="a")
-        if formatter:
-            file_handler.setFormatter(logging.Formatter(formatter))
+        file_handler.setFormatter(logging.Formatter(FMT))
+
         logger.addHandler(file_handler)
         return logger
     raise LogsNotEnabled
