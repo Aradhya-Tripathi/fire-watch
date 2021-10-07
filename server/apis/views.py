@@ -1,11 +1,14 @@
+import json
 import os
 import time
-from typing import Union, Dict
+from typing import Dict, Union
 
 import psutil
 from asgiref.sync import async_to_sync
 from authentication import issue_keys, permissions, utils
 from channels.layers import get_channel_layer
+from core import conf
+from core.log.log_configs import get_logger
 from core.throttle import throttle
 from django.http import request
 from django.http.response import JsonResponse
@@ -13,9 +16,7 @@ from rest_framework.views import APIView
 
 from .checks import enter_user, insert_data, login
 from .definitions import UserSchema
-from core import conf
 from .utils import check_subscription
-from core.log.log_configs import get_logger
 
 
 class HealthCheck(APIView):
@@ -30,8 +31,6 @@ class HealthCheck(APIView):
         Returns:
             JsonResponse: Uptime
         """
-        logger = get_logger("server.log", 10)
-        logger.debug("HIT")
         uptime = time.time() - psutil.Process(os.getpid()).create_time()
         return JsonResponse(data={"uptime": uptime, "OK": True}, status=200)
 
@@ -126,10 +125,12 @@ class CollectData(APIView):
         return JsonResponse(data={}, status=400)
 
 
-class SOS(APIView):
+class Alert(APIView):
     permission_classes = [permissions.ValidateUnit]
     group_name = conf["socket"]["base_group"]
     channel_layer = get_channel_layer()
+
+    logger = get_logger(__name__, filename="./alerts.log")
 
     def send_alert(self, token: str, data: Dict[str, Union[str, int]]) -> None:
         """Send alert to group.
@@ -165,8 +166,7 @@ class SOS(APIView):
         """
         try:
             token = utils.get_token(request.headers)
-            if check_logging():
-                pass
+            self.logger.warning(f"Alert {json.dumps(request.data)}")
         except Exception as e:
             return JsonResponse(data={"error": "Invalid token"}, status=403)
         self.send_alert(token, request.data)
