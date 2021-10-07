@@ -25,7 +25,7 @@ class UserSchema:
             schema={
                 "old_passwd": And(str, lambda old_pswd: len(old_pswd.strip()) > 0),
                 "new_passwd": And(str, lambda new_pswd: len(new_pswd.strip()) > 0),
-                "email_id": And(str, lambda eamil_id: len(eamil_id.strip()) > 0)
+                "email_id": And(str, lambda eamil_id: len(eamil_id.strip()) > 0),
             }
         )
 
