@@ -1,6 +1,7 @@
 import unittest
 from tests import test_login, test_units
 from authentication.tests import test_auth_model, test_jwt
+from core.log.tests import test_logging
 from importlib import import_module
 
 import argparse
@@ -17,6 +18,7 @@ def configure_options():
 def get_unittests(suite):
     suite.addTest(unittest.makeSuite(test_auth_model.TestAuthModel))
     suite.addTest(unittest.makeSuite(test_jwt.TestJwt))
+    suite.addTest(unittest.makeSuite(test_logging.TestLog))
 
 
 def get_server_tests(suite):
@@ -44,7 +46,7 @@ def main():
         get_unittests(suite)
         get_server_tests(suite)
 
-    output = unittest.TextTestRunner(verbosity=0).run(suite)
+    output = unittest.TextTestRunner(verbosity=2).run(suite)
     if output.errors or output.failures:
         print("Failing Tests")
 
