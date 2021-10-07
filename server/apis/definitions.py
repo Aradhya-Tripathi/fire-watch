@@ -21,6 +21,14 @@ class UserSchema:
             }
         )
 
+        self.reset_password_schema = Schema(
+            schema={
+                "old_passwd": And(str, lambda old_pswd: len(old_pswd.strip()) > 0),
+                "new_passwd": And(str, lambda new_pswd: len(new_pswd.strip()) > 0),
+                "email_id": And(str, lambda eamil_id: len(eamil_id.strip()) > 0)
+            }
+        )
+
     def approval(self):
         """Validate data
 
@@ -30,6 +38,8 @@ class UserSchema:
         try:
             if self.kwargs.get("register"):
                 return self.register_schema.validate(self.kwargs.get("data"))
+            elif self.kwargs.get("reset"):
+                return self.reset_password_schema.validate(self.kwargs.get("data"))
             return self.login_schema.validate(self.kwargs.get("data"))
         except SchemaError as e:
             return {"error": str(e)}
