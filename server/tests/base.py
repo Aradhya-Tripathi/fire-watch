@@ -1,7 +1,11 @@
 import os
 from dotenv import load_dotenv
+import pymongo
 
 load_dotenv()
+
+client = pymongo.MongoClient(os.getenv("MONGO_URI"))
+db = client[os.getenv("TESTDB")]
 
 
 def user_register(
@@ -18,6 +22,11 @@ def user_register(
     }
 
     return doc
+
+
+def clear_all():
+    db.drop_collection("users")
+    db.drop_collection("units")
 
 
 DATABASE = {

@@ -1,11 +1,7 @@
 from unittest import TestCase
 import requests
-from .base import user_register
+from .base import user_register, clear_all
 import json
-
-import pymongo
-import os
-from dotenv import load_dotenv
 
 
 class TestServer(TestCase):
@@ -17,21 +13,12 @@ class TestServer(TestCase):
         cls.request = requests.Session()
         cls.base_url = "http://localhost:8000/"
 
-    def clear_all(self):
-        load_dotenv()
-
-        client = pymongo.MongoClient(os.getenv("MONGO_URI"))
-        db = client[os.getenv("TESTDB")]
-
-        db.drop_collection("users")
-        db.drop_collection("units")
-
     def test_server(self):
         status = self.request.get(self.base_url + "apis/healthcheck")
         self.assertEqual(200, status.status_code)
 
     def test_register(self):
-        self.clear_all()
+        clear_all()
 
         doc = user_register()
         headers = {"Content-type": "application/json"}
@@ -53,7 +40,7 @@ class TestServer(TestCase):
         self.assertEqual(status.status_code, 400)
 
     def test_login(self):
-        self.clear_all()
+        clear_all()
         doc = user_register()
         headers = {"Content-type": "application/json"}
         status = self.request.post(
@@ -91,4 +78,4 @@ class TestServer(TestCase):
 
     @classmethod
     def tearDownClass(cls) -> None:
-        cls.clear_all(cls)
+        clear_all()

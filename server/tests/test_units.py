@@ -1,7 +1,7 @@
 import pymongo
 from unittest import TestCase
 import requests
-from .base import user_register, DATABASE
+from .base import user_register, DATABASE, clear_all
 import json
 from core import conf
 
@@ -15,10 +15,6 @@ class TestUnit(TestCase):
         cls.base_url = "http://localhost:8000/"
         cls.client = pymongo.MongoClient(DATABASE["Test"]["MONGO_URI"])
         cls.db = cls.client[DATABASE["Test"]["DB"]]
-
-    def clear_all(self):
-        self.db.drop_collection("users")
-        self.db.drop_collection("units")
 
     def register_user(self, doc: Dict[str, Union[str, int]]):
         headers = {"Content-Type": "application/json"}
@@ -58,7 +54,7 @@ class TestUnit(TestCase):
         self.assertEqual(status.status_code, 400)
 
     def setUp(self):
-        self.clear_all()
+        clear_all()
 
     def tearDown(self):
-        self.clear_all()
+        clear_all()
