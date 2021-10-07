@@ -1,16 +1,31 @@
 from core.settings import conf
 from core.errorfactory import LogsNotEnabled
-from importlib import import_module
+import logging
+
+FMT = "%(asctime)s:%(name)s:%(message)s"
 
 
-class Log:
-    # TODO: Find a better way to do this (if required)
-    #! init class only if configurations allow it
-    #! Ristrict all logging if logger is disabled
-    def __new__(cls, *args, **kwargs):
-        if conf["logs"]:
-            return super().__new__(cls, *args, **kwargs)
-        raise LogsNotEnabled
+def get_logger(logger_name: str, filename: str, level: int = 10) -> logging.getLogger:
+    """Simple logger configuration implemented to support
+       safe logging.
 
-    def __init__(self, *args, **kwargs):
-        self.logger = import_module("logging")
+    Args:
+        logger_name (str): name given to current logger.
+        level (int): severity level.
+        filename (str): file to throw all logs to.
+
+    Raises:
+        LogsNotEnabled: Raised if logging is tried with out enabling logger in configurations
+
+    Returns:
+        logging.getLogger: logger object
+    """
+    logger = logging.getLogger(logger_name)
+    if conf["logs"]:
+        logger.setLevel(level=level)
+        file_handler = logging.FileHandler(filename, mode="a")
+        file_handler.setFormatter(logging.Formatter(FMT))
+
+        logger.addHandler(file_handler)
+        return logger
+    raise LogsNotEnabled

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import SOS, HealthCheck, Register, Login, ProtectedView, CollectData
+from .views import Alert, HealthCheck, Register, Login, ProtectedView, CollectData
 
 urlpatterns = [
     path("healthcheck", HealthCheck.as_view()),
@@ -7,5 +7,5 @@ urlpatterns = [
     path("login", Login.as_view()),
     path("protected", ProtectedView.as_view()),
     path("upload", CollectData.as_view()),
-    path("sos", SOS.as_view()),
+    path("sos", Alert.as_view()),
 ]

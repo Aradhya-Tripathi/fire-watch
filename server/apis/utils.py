@@ -2,11 +2,6 @@ from core import conf
 from apis import model
 
 
-def check_logging():
-    if conf["logs"]:
-        return True
-
-
 def check_subscription():
     """
     Check all subscriptions mentioned in configuration
