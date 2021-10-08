@@ -11,7 +11,7 @@ echo "$execution [STARTING-SERVER] [PORT] 8000"
 echo "$execution Looking for asgi application..."
 cd server
 
-#STARTING APPLICATION
+# STARTING APPLICATION
 uvicorn core.asgi:application  --port 8000 --reload &
 
 cd ../

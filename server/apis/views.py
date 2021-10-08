@@ -5,7 +5,7 @@ from typing import Dict, Union
 
 import psutil
 from asgiref.sync import async_to_sync
-from authentication import issue_keys, permissions, utils
+from authentication import permissions, utils
 from channels.layers import get_channel_layer
 from core import conf
 from core.log.log_configs import get_logger
@@ -14,7 +14,7 @@ from django.http import request
 from django.http.response import JsonResponse
 from rest_framework.views import APIView
 
-from .checks import enter_user, insert_data, login, reset_password
+from .checks import enter_user, insert_data
 from .definitions import UserSchema
 from .utils import check_subscription
 
@@ -56,40 +56,6 @@ class Register(APIView):
             return JsonResponse(data={"error": str(value)}, status=400)
 
         return JsonResponse(data={"success": True}, status=201)
-
-
-class Login(APIView):
-    throttle_classes = [throttle]
-
-    def post(self, request: request, **kwargs) -> JsonResponse:
-        """Login users
-
-        Args:
-            request (request): wsgi request
-
-        Returns:
-            JsonResponse: Response
-        """
-        validate = UserSchema(data=request.data).approval()
-
-        if "error" in validate:
-            return JsonResponse(data={"error": validate["error"]}, status=400)
-
-        creds = login(password=validate.get("password"), email=validate.get("email"))
-
-        if isinstance(creds, str):
-            return JsonResponse(data={"error": creds}, status=403)
-        payload = {"user_name": creds["user_name"]}
-        key = issue_keys.generate_key(
-            payload=payload, expiry=1, get_refresh=True, refresh_exipry=12
-        )
-        return JsonResponse(
-            data={
-                "access_token": key["access_token"],
-                "refresh_token": key["refresh_token"],
-            },
-            status=200,
-        )
 
 
 class ProtectedView(APIView):
@@ -170,15 +136,4 @@ class Alert(APIView):
         except Exception as e:
             return JsonResponse(data={"error": "Invalid token"}, status=403)
         self.send_alert(token, request.data)
-        return JsonResponse(data={}, status=200)
-
-
-class ResetPassword(APIView):
-    throttle_classes = [throttle]
-
-    def post(self, request, **kwargs):
-        validate = UserSchema(data=request.data, reset=True).approval()
-        if "error" in validate:
-            return JsonResponse(data={"error": validate["error"]}, status=400)
-        reset_password(request.data)
         return JsonResponse(data={}, status=200)
