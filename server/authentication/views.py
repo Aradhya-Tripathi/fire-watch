@@ -24,7 +24,9 @@ class Login(APIView):
         if "error" in validate:
             return JsonResponse(data={"error": validate["error"]}, status=400)
 
-        creds = login(password=validate.get("password"), email=validate.get("email"))
+        creds = login(
+            password=validate.get("password"), email=validate.get("email")
+        )
 
         if isinstance(creds, str):
             return JsonResponse(data={"error": creds}, status=403)
