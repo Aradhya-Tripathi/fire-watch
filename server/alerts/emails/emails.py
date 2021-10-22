@@ -1,6 +1,5 @@
 import httpx
 import os
-from jinja2 import Template
 from typing import List
 from dotenv import load_dotenv
 
@@ -15,7 +14,7 @@ class Service:
 
     @staticmethod
     def get_content():
-        raise NotImplemented
+        raise NotImplementedError
 
     def send_mail(self, html: str, subject: str, to: List[str]) -> None:
         """API to send Emails to List[str] of users
