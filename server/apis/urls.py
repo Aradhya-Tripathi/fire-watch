@@ -3,11 +3,11 @@ from .views import (
     Alert,
     HealthCheck,
     Register,
-    Login,
     ProtectedView,
     CollectData,
-    ResetPassword,
 )
+
+from authentication.views import Login, ResetPassword
 
 urlpatterns = [
     path("healthcheck", HealthCheck.as_view()),
