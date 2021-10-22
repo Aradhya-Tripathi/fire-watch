@@ -11,8 +11,8 @@ echo "$execution [STARTING-SERVER] [PORT] 8000"
 echo "$execution Looking for asgi application..."
 cd server
 
-#STARTING APPLICATION
-uvicorn core.asgi:application  --port 8000 --reload &
+# STARTING APPLICATION
+uvicorn core.asgi:application  --host 0.0.0.0 --port 8000 --reload &
 
 cd ../
 echo "$execution Running Django Server [8000]"
