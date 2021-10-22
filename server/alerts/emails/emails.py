@@ -34,6 +34,8 @@ class Service:
             "subject": subject,
             "html": html,
         }
+        if os.getenv("CI"):
+            return
         with httpx.Client(auth=self.auth) as client:
             return client.post(url=self.base_url, data=data)
 
@@ -41,7 +43,5 @@ class Service:
 if __name__ == "__main__":
     service = Service()
     print(
-        service.send_mail(
-            html="random", subject="tester", to=["at8029@srmist.edu.in"]
-        )
+        service.send_mail(html="random", subject="tester", to=["at8029@srmist.edu.in"])
     )
