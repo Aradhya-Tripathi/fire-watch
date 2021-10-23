@@ -1,6 +1,6 @@
 module.exports = {
     apps: [{
         name: "Free-Watch",
-        script: "chmod +x ./deploy.sh && ./deploy.sh"
+        script: "chmod +x ./run_server.sh && ./run_server.sh"
     }]
 }
