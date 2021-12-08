@@ -34,19 +34,15 @@ class TokenAuth:
             refresh_token = jwt.encode(refresh_payload, key=self.signature)
             return {"access_token": access_token, "refresh_token": refresh_token}
 
-        return access_token
+        return dict(access_token=access_token)
 
-    def verify_key(self, key: str):
-        def _verify_key(key: str):
-            try:
-                key = jwt.decode(
-                    jwt=key.encode(),
-                    key=self.signature,
-                    options={"verify_exp": True, "verify_signature": True},
-                    algorithms=["HS256"],
-                )
-                return key
-            except Exception:
-                return None
-
-        return _verify_key(key=key)
+    def verify_key(self, key: Union[str, Dict[str, str]]):
+        if isinstance(key, dict):
+            key = key["access_token"]
+        key = jwt.decode(
+            jwt=key.encode(),
+            key=self.signature,
+            options={"verify_exp": True, "verify_signature": True},
+            algorithms=["HS256"],
+        )
+        return key

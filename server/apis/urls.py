@@ -1,16 +1,9 @@
-from django.urls import path
-from .views import (
-    Alert,
-    HealthCheck,
-    Register,
-    ProtectedView,
-    CollectData,
-)
-
 from authentication.views import Login, ResetPassword
+from django.urls import path
+
+from .views import Alert, CollectData, ProtectedView, Register
 
 urlpatterns = [
-    path("healthcheck", HealthCheck.as_view()),
     path("register", Register.as_view()),
     path("login", Login.as_view()),
     path("protected", ProtectedView.as_view()),

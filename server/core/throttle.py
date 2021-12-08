@@ -1,7 +1,7 @@
 from rest_framework.throttling import AnonRateThrottle
 
 
-class throttle(AnonRateThrottle):
+class Throttle(AnonRateThrottle):
 
     scope = "basic_throttle"
 

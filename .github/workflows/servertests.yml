@@ -1,4 +1,4 @@
-name: Unit Tests
+name: Server Tests
 
 on: [push]
 
@@ -27,5 +27,7 @@ jobs:
           MONGO_URI: ${{ secrets.MONGO_URI }}
           DEBUG: ${{ secrets.DEBUG }}
           MAX_UNIT_ENTRY: ${{ secrets.MAX_UNIT_ENTRY }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
+
         run: |
-          . ./run_server_tests.sh 1 0 || true
+          . ./run_server_tests.sh 0 || true

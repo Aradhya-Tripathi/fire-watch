@@ -26,7 +26,10 @@ class Alert(JsonWebsocketConsumer):
         self.send_json(content["content"])
 
     def add_to_group(self):
-        self.group_id = GROUP_NAME + str(self.scope["current"])
+        """Add users to specified group, using `channel_name`
+        as the unique user identifier.
+        """
+        self.group_id = GROUP_NAME + str(self.scope["unit_id"])
         async_to_sync(self.channel_layer.group_add)(self.group_id, self.channel_name)
 
     def disconnect(self, code):
