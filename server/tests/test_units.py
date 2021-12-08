@@ -46,7 +46,7 @@ class TestUnit(TestCase):
             "Content-Type": "application/json",
         }
         status = self.request.post(self.base_url + "apis/upload", headers=headers)
-        self.assertEqual(status.status_code, 403)
+        self.assertEqual(status.status_code, 401)
 
     def test_excessive_units(self):
         doc = user_register(units=conf["max_unit_entry"] + 1)

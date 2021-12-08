@@ -34,7 +34,7 @@ class TokenAuth:
             refresh_token = jwt.encode(refresh_payload, key=self.signature)
             return {"access_token": access_token, "refresh_token": refresh_token}
 
-        return access_token
+        return dict(access_token=access_token)
 
     def verify_key(self, key: str):
         def _verify_key(key: str):

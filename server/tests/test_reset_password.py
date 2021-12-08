@@ -49,7 +49,7 @@ class TestResetPassword(unittest.TestCase):
             headers=self.headers,
         )
         # Assert failure
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(response.status_code, 401)
         self.assertIn("error", response.json())
 
         # Try logging in with new password

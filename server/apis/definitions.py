@@ -1,4 +1,4 @@
-from schema import Schema, SchemaError, And
+from schema import And, Schema, SchemaError
 
 
 class UserSchema:

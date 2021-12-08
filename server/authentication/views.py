@@ -1,14 +1,14 @@
 from rest_framework.views import APIView
 from django.http.response import JsonResponse
 from django.http import request
-from core.throttle import throttle
+from core.throttle import Throttle
 from apis.checks import login, reset_password
 from apis.definitions import UserSchema
 from . import issue_keys
 
 
 class Login(APIView):
-    throttle_classes = [throttle]
+    throttle_classes = [Throttle]
 
     def post(self, request: request, **kwargs) -> JsonResponse:
         """Login users
@@ -26,8 +26,6 @@ class Login(APIView):
 
         creds = login(password=validate.get("password"), email=validate.get("email"))
 
-        if isinstance(creds, str):
-            return JsonResponse(data={"error": creds}, status=403)
         payload = {"user_name": creds["user_name"]}
         key = issue_keys.generate_key(
             payload=payload, expiry=1, get_refresh=True, refresh_exipry=12
@@ -42,7 +40,7 @@ class Login(APIView):
 
 
 class ResetPassword(APIView):
-    throttle_classes = [throttle]
+    throttle_classes = [Throttle]
 
     def post(self, request: request, **kwargs) -> JsonResponse:
         """Allow reset password

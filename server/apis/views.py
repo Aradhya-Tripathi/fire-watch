@@ -1,15 +1,12 @@
 import json
-import os
-import time
 from typing import Dict, Union
 
-import psutil
 from asgiref.sync import async_to_sync
 from authentication import permissions, utils
 from channels.layers import get_channel_layer
 from core import conf
 from core.log.log_configs import get_logger
-from core.throttle import throttle
+from core.throttle import Throttle
 from django.http import request
 from django.http.response import JsonResponse
 from rest_framework.views import APIView
@@ -19,24 +16,8 @@ from .definitions import UserSchema
 from .utils import check_subscription
 
 
-class HealthCheck(APIView):
-    throttle_classes = [throttle]
-
-    def get(self, request: request, **kwargs) -> JsonResponse:
-        """Health check route
-
-        Args:
-            request (request): Request
-
-        Returns:
-            JsonResponse: Uptime
-        """
-        uptime = time.time() - psutil.Process(os.getpid()).create_time()
-        return JsonResponse(data={"uptime": uptime, "OK": True}, status=200)
-
-
 class Register(APIView):
-    throttle_classes = [throttle]
+    throttle_classes = [Throttle]
 
     def post(self, request: request, **kwargs) -> JsonResponse:
         """Register users
@@ -52,30 +33,13 @@ class Register(APIView):
         if "error" in validate:
             return JsonResponse(data={"error": validate["error"]}, status=400)
 
-        if value := enter_user(validate):
-            return JsonResponse(data={"error": str(value)}, status=400)
-
+        enter_user(validate)
         return JsonResponse(data={"success": True}, status=201)
-
-
-class ProtectedView(APIView):
-    throttle_classes = [throttle]
-
-    def get(self, request: request, **kwargs) -> JsonResponse:
-        """Test protected route
-
-        Args:
-            request (request): request object
-
-        Returns:
-            JsonResponse: Response
-        """
-        return JsonResponse(data={"success": True}, status=200)
 
 
 class CollectData(APIView):
     permission_classes = [permissions.ValidateUnit]
-    throttle_classes = [throttle]
+    throttle_classes = [Throttle]
 
     def post(self, request: request, **kwargs) -> JsonResponse:
         """Accept data dumps from device
@@ -86,9 +50,8 @@ class CollectData(APIView):
         Returns:
             JsonResponse: Response
         """
-        if insert_data(unit_id=request.unit_id, data=request.data):
-            return JsonResponse(data={}, status=201)
-        return JsonResponse(data={}, status=400)
+        insert_data(unit_id=request.unit_id, data=request.data)
+        return JsonResponse({}, status=201)
 
 
 class Alert(APIView):
@@ -119,7 +82,6 @@ class Alert(APIView):
             async_to_sync(self.channel_layer.group_send)(
                 group_id, {"type": "send.alert", "content": data}
             )
-        return None
 
     def post(self, request: request, **kwargs) -> JsonResponse:
         """Accept alert from device
@@ -130,10 +92,23 @@ class Alert(APIView):
         Returns:
             JsonResponse: Response
         """
-        try:
-            token = utils.get_token(request.headers)
-            self.logger.warning(f"Alert {json.dumps(request.data)}")
-        except Exception as e:
-            return JsonResponse(data={"error": "Invalid token"}, status=403)
+
+        token = utils.get_token(request.headers)
+        self.logger.warning(f"Alert {json.dumps(request.data)}")
         self.send_alert(token, request.data)
         return JsonResponse(data={}, status=200)
+
+
+class ProtectedView(APIView):
+    throttle_classes = [Throttle]
+
+    def get(self, request: request, **kwargs) -> JsonResponse:
+        """Test protected route
+
+        Args:
+            request (request): request object
+
+        Returns:
+            JsonResponse: Response
+        """
+        return JsonResponse(data={"success": True}, status=200)

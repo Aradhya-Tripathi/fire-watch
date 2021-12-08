@@ -1,7 +1,8 @@
+import json
 import os
 from pathlib import Path
+
 from .errorfactory import ConfigFileNotFound
-import json
 
 
 def get_config(base_path):

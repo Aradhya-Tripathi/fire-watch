@@ -3,10 +3,8 @@ import random
 import string
 from typing import Dict, Union
 
-from pymongo.message import update
-from core import conf
-
 import pymongo
+from core import conf
 from core.errorfactory import (
     DuplicationError,
     ExcessiveUnitsError,
@@ -33,7 +31,11 @@ class Model:
 
         _units = doc.get("units")
         if _units > limit:
-            raise ExcessiveUnitsError(units=_units)
+            raise ExcessiveUnitsError(
+                detail={
+                    "error": f"Excessive no. of units {_units} current max units are {self.max_entry}"
+                }
+            )
 
         doc = {**{"unit_id": self.get_uid(length=16)}, **doc}
         self.db.users.insert_one(doc)
@@ -72,13 +74,13 @@ class Model:
             }
         )
         if user:
-            raise DuplicationError("user Exists")
+            raise DuplicationError({"error": "User exists!"})
 
     def credetials(self, password: str, email: str):
         user = self.db.users.find_one({"password": password, "email": email})
         if user:
             return user
-        raise InvalidCredentialsError("Invalid credentials")
+        raise InvalidCredentialsError(detail={"error": "Invalid credentials"})
 
     def insert_data(self, unit_id: str, data: Dict[str, Union[str, int]]):
         """Insert collected data into respective unit documents.
@@ -100,7 +102,7 @@ class Model:
         try:
             unit = units.pop()
         except IndexError as e:
-            raise InvalidUid(f"No unit with the id {unit_id} found")
+            raise InvalidUid(detail={"error": f"No unit with the id {unit_id} found"})
 
         if len(unit["data"]) < self.max_entry:
             self.db.units.update_one(
