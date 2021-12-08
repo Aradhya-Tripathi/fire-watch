@@ -3,7 +3,7 @@ from rest_framework.exceptions import APIException
 
 def set_default_detail(detail):
     if not detail:
-        return dict(error="Error Occured!")
+        return dict(error="Error Occurred!")
     return detail
 
 

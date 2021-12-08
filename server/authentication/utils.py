@@ -7,7 +7,7 @@ def get_token(headers: Dict[str, Union[int, str]]):
     try:
         token_type, token = headers["Authorization"].split()
         assert token_type == "Bearer"
-    except (ValueError, AssertionError) as e:
+    except (ValueError, AssertionError):
         raise InvalidToken(detail={"error": "Invalid token type"})
     return token
 

@@ -28,5 +28,6 @@ jobs:
           DEBUG: ${{ secrets.DEBUG }}
           MAX_UNIT_ENTRY: ${{ secrets.MAX_UNIT_ENTRY }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
+
         run: |
-          . ./run_server_tests.sh 0
+          . ./run_server_tests.sh 0 || true
