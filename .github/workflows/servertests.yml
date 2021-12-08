@@ -1,4 +1,4 @@
-name: Unit Tests
+name: Server Tests
 
 on: [push]
 
@@ -28,4 +28,4 @@ jobs:
           DEBUG: ${{ secrets.DEBUG }}
           MAX_UNIT_ENTRY: ${{ secrets.MAX_UNIT_ENTRY }}
         run: |
-          . ./run_server_tests.sh 1 0 || true
+          . ./run_server_tests.sh 0
