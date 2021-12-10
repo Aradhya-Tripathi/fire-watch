@@ -23,7 +23,6 @@ channels-redis = "^3.3.0"
 uvicorn = "^0.15.0"
 websockets = "^10.0"
 httpx = "^0.20.0"
-click = "^8.0.3"
 
 [tool.poetry.dev-dependencies]
 requests = "^2.26.0"
