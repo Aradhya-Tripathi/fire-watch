@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from apis.checks import login, reset_password
+from apis.transactions import login, reset_password
 from apis.definitions import UserSchema
 from core.throttle import Throttle
 from django.http import request
