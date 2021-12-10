@@ -11,5 +11,5 @@
     "socket": {
         "base_group": "Alerts"
     },
-    "developer": true
+    "developer": false
 }
