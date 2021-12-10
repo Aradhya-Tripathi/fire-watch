@@ -11,7 +11,7 @@ from django.http import request
 from django.http.response import JsonResponse
 from rest_framework.views import APIView
 
-from .checks import enter_user, insert_data
+from .transactions import enter_user, insert_data
 from .definitions import UserSchema
 from .utils import check_subscription
 

@@ -1,5 +1,4 @@
 from core import conf
-from apis import model
 
 
 def check_subscription():
@@ -10,8 +9,3 @@ def check_subscription():
     alerts = conf["send_alerts"]
     if alerts:
         return alerts
-
-
-def log_warnings(token: str):
-    # TODO: Logging
-    ...

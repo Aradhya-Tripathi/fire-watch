@@ -6,7 +6,6 @@ from apis import model
 
 def enter_user(doc: Dict[str, Union[str, int]]):
     model.check_existing(doc)
-
     doc["password"] = sha256(doc["password"].encode()).hexdigest()
     model.register_user(doc)
 
