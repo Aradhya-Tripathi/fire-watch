@@ -12,7 +12,7 @@ class TestResetPassword(unittest.TestCase):
         cls.headers = {"Content-Type": "application/json"}
 
     def setUp(self) -> None:
-        # Initialize password
+        clear_all()
         self.initial_password = "TestPassword"
         self.user = user_register(password=self.initial_password)
         response = self.request.post(
