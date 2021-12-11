@@ -56,5 +56,6 @@ class TestUnit(TestCase):
     def setUp(self):
         clear_all()
 
-    def tearDown(self):
+    @classmethod
+    def tearDownClass(cls) -> None:
         clear_all()
