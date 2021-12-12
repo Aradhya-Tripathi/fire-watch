@@ -1,22 +1,16 @@
-import os
 from typing import Dict, Union
 
-import pymongo
-from free_watch import conf
 from free_watch.errorfactory import (
     ExcessiveUnitsError,
     InvalidCredentialsError,
     InvalidUid,
 )
+from free_watch.models import BaseModel
 
 
-class AuthModel:
+class AuthModel(BaseModel):
     def __init__(self, *args, **kwargs):
-        client = pymongo.MongoClient(os.getenv("MONGO_URI"))
-        if conf["developer"] or os.getenv("CI"):
-            self.db = client[os.getenv("TESTDB")]
-        else:
-            self.db = client[os.getenv("DB")]
+        super().__init__(*args, **kwargs)
 
     def validate_unit_id(self, unit_id: str):
         documents = self.db.units.find_one({"unit_id": unit_id})
@@ -64,7 +58,6 @@ class AuthModel:
             new_pswd (str): new hashed password
             email_id (str): email_id
         """
-
         self.db.users.find_one_and_update(
             {"password": old_passwd, "email": email_id},
             update={"$set": {"password": new_passwd}},
