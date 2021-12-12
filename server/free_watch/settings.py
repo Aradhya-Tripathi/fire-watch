@@ -50,7 +50,7 @@ MIDDLEWARE = [
     "authentication.middleware.AuthMiddleWare",
 ]
 
-ROOT_URLCONF = "core.urls"
+ROOT_URLCONF = "free_watch.urls"
 
 TEMPLATES = [
     {
@@ -68,8 +68,8 @@ TEMPLATES = [
     },
 ]
 
-ASGI_APPLICATION = "core.asgi.application"
-WSGI_APPLICATION = "core.wsgi.application"
+ASGI_APPLICATION = "free_watch.asgi.application"
+WSGI_APPLICATION = "free_watch.wsgi.application"
 
 throttle_rate = "100/min" if DEBUG else "10/min"
 

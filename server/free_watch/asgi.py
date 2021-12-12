@@ -15,7 +15,7 @@ from channels.auth import AuthMiddlewareStack
 from authentication.socket_middleware import AuthMiddleWare
 from alerts.urls import urlpatterns
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "core.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "free_watch.settings")
 
 application = ProtocolTypeRouter(
     {
