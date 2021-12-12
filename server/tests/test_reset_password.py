@@ -1,20 +1,13 @@
-import unittest
-from .base import user_register, clear_all
+from .base import CustomTestCase
 import json
-import requests
 
 
-class TestResetPassword(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls) -> None:
-        cls.request = requests.Session()
-        cls.base_url = "http://localhost:8000/"
-        cls.headers = {"Content-Type": "application/json"}
-
+class TestResetPassword(CustomTestCase):
     def setUp(self) -> None:
-        clear_all()
+        self.clear_all()
         self.initial_password = "TestPassword"
-        self.user = user_register(password=self.initial_password)
+        self.headers = {"Content-Type": "application/json"}
+        self.user = self.user_register(password=self.initial_password)
         response = self.request.post(
             self.base_url + "apis/register",
             data=json.dumps(self.user),
@@ -63,6 +56,5 @@ class TestResetPassword(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn("access_token", response.json())
 
-    @classmethod
-    def tearDownClass(cls) -> None:
-        clear_all()
+    def tearDown(self) -> None:
+        self.clear_all()

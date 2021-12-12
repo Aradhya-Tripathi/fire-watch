@@ -22,7 +22,7 @@ def get_unittests(suite):
 
 
 def get_server_tests(suite):
-    suite.addTest(unittest.makeSuite(test_login.TestServer))
+    suite.addTest(unittest.makeSuite(test_login.TestAuthentication))
     suite.addTest(unittest.makeSuite(test_units.TestUnit))
     suite.addTest(unittest.makeSuite(test_reset_password.TestResetPassword))
 
