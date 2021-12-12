@@ -7,10 +7,9 @@ import pymongo
 from free_watch import conf
 from free_watch.errorfactory import (
     DuplicationError,
-    ExcessiveUnitsError,
-    InvalidCredentialsError,
     InvalidUid,
 )
+from authentication import auth_model
 
 
 class Model:
@@ -22,24 +21,8 @@ class Model:
             self.db = client[os.getenv("DB")]
         self.max_entry = conf["max_unit_entry"]
 
-    def register_user(self, doc: Dict[str, Union[str, int]], limit: int = 50):
-        """Register new users and assign units
-
-        Args:
-            doc (Dict[str, Union[str, int]]): user data
-        """
-
-        _units = doc.get("units")
-        if _units > limit:
-            raise ExcessiveUnitsError(
-                detail={
-                    "error": f"Excessive no. of units {_units} current max units are {self.max_entry}"
-                }
-            )
-
-        doc = {**{"unit_id": self.get_uid(length=16)}, **doc}
-        self.db.users.insert_one(doc)
-        self.db.units.insert_one({"unit_id": doc["unit_id"], "data": []})
+    def register_user(self, **kwargs):
+        auth_model.register_user(**kwargs)
 
     def get_uid(self, length: int = 8) -> str:
         """
@@ -76,11 +59,8 @@ class Model:
         if user:
             raise DuplicationError({"error": "User exists!"})
 
-    def credetials(self, password: str, email: str):
-        user = self.db.users.find_one({"password": password, "email": email})
-        if user:
-            return user
-        raise InvalidCredentialsError(detail={"error": "Invalid credentials"})
+    def credetials(self, **kwargs):
+        return auth_model.credentials(**kwargs)
 
     def insert_data(self, unit_id: str, data: Dict[str, Union[str, int]]):
         """Insert collected data into respective unit documents.
@@ -101,31 +81,16 @@ class Model:
         units = list(self.db.units.find({"unit_id": unit_id}))
         try:
             unit = units.pop()
-        except IndexError as e:
+        except IndexError:
             raise InvalidUid(detail={"error": f"No unit with the id {unit_id} found"})
 
         if len(unit["data"]) < self.max_entry:
             self.db.units.update_one(
                 {"_id": unit["_id"]}, update={"$push": {"data": data}}
             )
-            return True
+        else:
+            doc = {"unit_id": unit_id, "data": [data]}
+            self.db.units.insert_one(doc)
 
-        doc = {"unit_id": unit_id, "data": [data]}
-        self.db.units.insert_one(doc)
-        return True
-
-    def reset_password(self, email_id: str, old_passwd: str, new_passwd: str) -> None:
-        """Takes in hashed passwords updates
-           password if user found.
-
-        Args:
-            old_pswd (str): old hashed password
-            new_pswd (str): new hashed password
-            email_id (str): email_id
-        """
-
-        self.db.users.find_one_and_update(
-            {"password": old_passwd, "email": email_id},
-            update={"$set": {"password": new_passwd}},
-        )
-        return None
+    def reset_password(self, **kwargs) -> None:
+        auth_model.reset_password(**kwargs)

@@ -1,4 +1,3 @@
-import requests
 from .base import CustomTestCase
 import json
 

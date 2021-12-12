@@ -16,7 +16,7 @@ def login(password: str, email: str):
 
 
 def insert_data(unit_id: str, data: Dict[str, Union[str, int]]):
-    return model.insert_data(unit_id=unit_id, data=data)
+    model.insert_data(unit_id=unit_id, data=data)
 
 
 def reset_password(data: Dict[str, str]) -> None:

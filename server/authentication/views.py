@@ -1,10 +1,10 @@
 from datetime import timedelta
 
-from apis.transactions import login, reset_password
 from apis.definitions import UserSchema
-from free_watch.throttle import Throttle
+from apis.transactions import login, reset_password
 from django.http import request
 from django.http.response import JsonResponse
+from free_watch.throttle import Throttle
 from rest_framework.views import APIView
 
 from . import issue_keys
