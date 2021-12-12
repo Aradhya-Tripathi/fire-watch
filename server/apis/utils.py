@@ -1,4 +1,4 @@
-from core import conf
+from free_watch import conf
 
 
 def check_subscription():

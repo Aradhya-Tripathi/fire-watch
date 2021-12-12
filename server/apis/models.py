@@ -4,8 +4,8 @@ import string
 from typing import Dict, Union
 
 import pymongo
-from core import conf
-from core.errorfactory import (
+from free_watch import conf
+from free_watch.errorfactory import (
     DuplicationError,
     ExcessiveUnitsError,
     InvalidCredentialsError,

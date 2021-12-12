@@ -1,7 +1,7 @@
 import pymongo
 import os
-from core import conf
-from core.errorfactory import InvalidUid
+from free_watch import conf
+from free_watch.errorfactory import InvalidUid
 
 
 class AuthModel:

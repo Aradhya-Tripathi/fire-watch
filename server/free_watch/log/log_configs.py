@@ -1,5 +1,5 @@
-from core.settings import conf
-from core.errorfactory import LogsNotEnabled
+from free_watch.settings import conf
+from free_watch.errorfactory import LogsNotEnabled
 import logging
 
 FMT = "%(asctime)s:%(name)s:%(message)s"

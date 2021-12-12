@@ -1,6 +1,6 @@
 from authentication import issue_keys
 from django.http.response import JsonResponse
-from core.errorfactory import InvalidToken
+from free_watch.errorfactory import InvalidToken
 
 
 class AuthMiddleWare:

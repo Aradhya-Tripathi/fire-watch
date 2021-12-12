@@ -2,9 +2,9 @@ from channels.generic.websocket import JsonWebsocketConsumer
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
-from core.errorfactory import SocketAuthenticationFailed
+from free_watch.errorfactory import SocketAuthenticationFailed
 from .checks import authenticate
-from core import conf
+from free_watch import conf
 
 
 GROUP_NAME = conf["socket"]["base_group"]
