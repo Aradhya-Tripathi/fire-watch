@@ -1,8 +1,9 @@
 import os
 from unittest import TestCase
-from dotenv import load_dotenv
-import requests
+
 import pymongo
+import requests
+from dotenv import load_dotenv
 
 load_dotenv()
 
