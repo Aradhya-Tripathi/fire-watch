@@ -1,8 +1,9 @@
-from .base import CustomTestCase
 import json
-from free_watch import conf
+from typing import Dict, Union
 
-from typing import Union, Dict
+import free_watch
+
+from .base import CustomTestCase
 
 
 class TestUnit(CustomTestCase):
@@ -39,7 +40,7 @@ class TestUnit(CustomTestCase):
         self.assertEqual(status.status_code, 401)
 
     def test_excessive_units(self):
-        doc = self.user_register(units=conf["max_unit_entry"] + 1)
+        doc = self.user_register(units=free_watch.conf.max_unit_entry + 1)
         status = self.register_user(doc)
         self.assertEqual(status.status_code, 400)
 
