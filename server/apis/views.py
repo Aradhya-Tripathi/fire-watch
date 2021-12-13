@@ -1,18 +1,19 @@
 import json
 from typing import Dict, Union
 
+import free_watch
+from alerts import email_service
 from asgiref.sync import async_to_sync
 from authentication import permissions, utils
 from channels.layers import get_channel_layer
-from free_watch import conf
-from free_watch.log.log_configs import get_logger
-from free_watch.throttle import Throttle
 from django.http import request
 from django.http.response import JsonResponse
+from free_watch.log.log_configs import get_logger
+from free_watch.throttle import Throttle
 from rest_framework.views import APIView
 
-from .transactions import enter_user, insert_data
 from .definitions import UserSchema
+from .transactions import enter_user, insert_data
 from .utils import check_subscription
 
 
@@ -56,7 +57,7 @@ class CollectData(APIView):
 
 class Alert(APIView):
     permission_classes = [permissions.ValidateUnit]
-    group_name = conf["socket"]["base_group"]
+    group_name = free_watch.conf.socket["base_group"]
     channel_layer = get_channel_layer()
 
     logger = get_logger(__name__, filename="./alerts.log")
@@ -75,8 +76,9 @@ class Alert(APIView):
         """
         subs = check_subscription()
         if "email" in subs:
-            # TODO: Include email
-            ...
+            email_service.send_mail(
+                html="[Place Holder]", subject="Alert", to=[request.auth_user["email"]]
+            )
         if "ws" in subs:
             group_id = self.group_name + str(token)
             async_to_sync(self.channel_layer.group_send)(

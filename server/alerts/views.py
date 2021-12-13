@@ -4,10 +4,10 @@ from asgiref.sync import async_to_sync
 
 from free_watch.errorfactory import SocketAuthenticationFailed
 from .checks import authenticate
-from free_watch import conf
+import free_watch
 
-
-GROUP_NAME = conf["socket"]["base_group"]
+GROUP_NAME = free_watch.conf.socket["base_group"]
+free_watch.print(f"[bold][white]Group Name: {GROUP_NAME}")
 
 
 class Alert(JsonWebsocketConsumer):
