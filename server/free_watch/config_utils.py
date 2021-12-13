@@ -1,6 +1,9 @@
 import json
 import os
 from pathlib import Path
+from types import SimpleNamespace
+
+import free_watch
 
 from .errorfactory import ConfigFileNotFound
 
@@ -24,3 +27,7 @@ def sanitized_configs(base_path: Path):
     conf = get_config(base_path)
     # TODO: sanitize config file
     return conf
+
+
+def init_flags():
+    free_watch.flags = SimpleNamespace()

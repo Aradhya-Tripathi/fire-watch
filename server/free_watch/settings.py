@@ -3,15 +3,18 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from .utils import sanitized_configs
-
+from .config_utils import init_flags, sanitized_configs
 
 load_dotenv()
 _path = Path(__file__).resolve()
 
 BASE_DIR = _path.parent.parent
+
+# Initialize configuration
 conf = sanitized_configs(base_path=_path.parent)
 
+# Initialize application wide flags
+init_flags()
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 

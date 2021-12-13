@@ -1,4 +1,11 @@
-from .settings import conf
+"""
+Free-Watch
+~~~~~~~~~~~~~~~~~~~~~
+
+"""
+
+
+from free_watch.settings import conf
 
 
 __name__ = "Free-Watch"
