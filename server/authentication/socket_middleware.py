@@ -1,6 +1,6 @@
 from typing import Any, Dict
 from authentication import issue_keys, auth_model
-from core.errorfactory import InvalidToken, InvalidCredentialsError
+from free_watch.errorfactory import InvalidToken, InvalidCredentialsError
 
 
 class AuthMiddleWare:

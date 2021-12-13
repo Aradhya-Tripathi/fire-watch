@@ -1,7 +1,7 @@
 import unittest
 from tests import test_login, test_units, test_reset_password
 from authentication.tests import test_auth_model, test_jwt
-from core.log.tests import test_logging
+from free_watch.log.tests import test_logging
 from importlib import import_module
 
 import argparse
@@ -22,7 +22,7 @@ def get_unittests(suite):
 
 
 def get_server_tests(suite):
-    suite.addTest(unittest.makeSuite(test_login.TestServer))
+    suite.addTest(unittest.makeSuite(test_login.TestAuthentication))
     suite.addTest(unittest.makeSuite(test_units.TestUnit))
     suite.addTest(unittest.makeSuite(test_reset_password.TestResetPassword))
 

@@ -1,9 +1,12 @@
-from rest_framework.views import APIView
-from django.http.response import JsonResponse
-from django.http import request
-from core.throttle import Throttle
-from apis.checks import login, reset_password
+from datetime import timedelta
+
 from apis.definitions import UserSchema
+from apis.transactions import login, reset_password
+from django.http import request
+from django.http.response import JsonResponse
+from free_watch.throttle import Throttle
+from rest_framework.views import APIView
+
 from . import issue_keys
 
 
@@ -28,7 +31,10 @@ class Login(APIView):
 
         payload = {"user_name": creds["user_name"]}
         key = issue_keys.generate_key(
-            payload=payload, expiry=1, get_refresh=True, refresh_exipry=12
+            payload=payload,
+            expiry=timedelta(hours=1),
+            get_refresh=True,
+            refresh_exipry=timedelta(hours=12),
         )
         return JsonResponse(
             data={

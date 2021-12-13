@@ -1,6 +1,6 @@
 from rest_framework.permissions import BasePermission
+
 from .utils import get_token, validate_unit_id
-from core.errorfactory import InvalidUid
 
 
 class ValidateUnit(BasePermission):

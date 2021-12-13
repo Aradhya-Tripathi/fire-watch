@@ -4,14 +4,14 @@ from typing import Dict, Union
 from asgiref.sync import async_to_sync
 from authentication import permissions, utils
 from channels.layers import get_channel_layer
-from core import conf
-from core.log.log_configs import get_logger
-from core.throttle import Throttle
+from free_watch import conf
+from free_watch.log.log_configs import get_logger
+from free_watch.throttle import Throttle
 from django.http import request
 from django.http.response import JsonResponse
 from rest_framework.views import APIView
 
-from .checks import enter_user, insert_data
+from .transactions import enter_user, insert_data
 from .definitions import UserSchema
 from .utils import check_subscription
 

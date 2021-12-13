@@ -1,21 +1,11 @@
-import pymongo
-from unittest import TestCase
-import requests
-from .base import user_register, DATABASE, clear_all
+from .base import CustomTestCase
 import json
-from core import conf
+from free_watch import conf
 
 from typing import Union, Dict
 
 
-class TestUnit(TestCase):
-    @classmethod
-    def setUpClass(cls) -> None:
-        cls.request = requests.Session()
-        cls.base_url = "http://localhost:8000/"
-        cls.client = pymongo.MongoClient(DATABASE["Test"]["MONGO_URI"])
-        cls.db = cls.client[DATABASE["Test"]["DB"]]
-
+class TestUnit(CustomTestCase):
     def register_user(self, doc: Dict[str, Union[str, int]]):
         headers = {"Content-Type": "application/json"}
         status = self.request.post(
@@ -26,9 +16,9 @@ class TestUnit(TestCase):
         return status
 
     def test_upload_route(self):
-        self.register_user(user_register())
+        self.register_user(self.user_register())
 
-        user = self.db.users.find_one({"user_name": user_register()["user_name"]})
+        user = self.db.users.find_one({"user_name": self.user_register()["user_name"]})
         unit_id = user["unit_id"]
 
         headers = {
@@ -49,12 +39,12 @@ class TestUnit(TestCase):
         self.assertEqual(status.status_code, 401)
 
     def test_excessive_units(self):
-        doc = user_register(units=conf["max_unit_entry"] + 1)
+        doc = self.user_register(units=conf["max_unit_entry"] + 1)
         status = self.register_user(doc)
         self.assertEqual(status.status_code, 400)
 
     def setUp(self):
-        clear_all()
+        self.clear_all()
 
-    def tearDown(self):
-        clear_all()
+    def tearDown(self) -> None:
+        self.clear_all()

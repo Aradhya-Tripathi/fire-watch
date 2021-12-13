@@ -25,22 +25,15 @@ class Service:
             to (List[str]): List of recipients
 
         Returns:
-            requests.Response: Request response
+            httpx.client.post
         """
         data = {
-            "from": "Free Watch <aradhyatripathi51@gmail.com>",
+            "from": os.getenv("email_addr"),
             "to": to,
             "subject": subject,
             "html": html,
         }
         if os.getenv("CI"):
             return
-        with httpx.Client(auth=self.auth) as client:
+        with httpx.Client(http2=True, auth=self.auth) as client:
             return client.post(url=self.base_url, data=data)
-
-
-if __name__ == "__main__":
-    service = Service()
-    print(
-        service.send_mail(html="random", subject="tester", to=["at8029@srmist.edu.in"])
-    )

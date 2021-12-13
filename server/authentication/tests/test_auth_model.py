@@ -2,7 +2,7 @@ import unittest
 from dotenv import load_dotenv
 from authentication.models import AuthModel
 from authentication import utils
-from core.errorfactory import InvalidUid
+from free_watch.errorfactory import InvalidUid
 
 
 class TestAuthModel(unittest.TestCase):
