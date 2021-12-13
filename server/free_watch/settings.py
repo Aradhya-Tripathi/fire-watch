@@ -1,9 +1,17 @@
 import os
+import sys
 from pathlib import Path
 
 from dotenv import load_dotenv
 
-from .config_utils import init_flags, sanitized_configs
+import free_watch
+from free_watch.config_utils import (
+    init_flags,
+    init_print_utils,
+    sanitized_configs,
+    set_db_name,
+    set_debug_flags,
+)
 
 load_dotenv()
 _path = Path(__file__).resolve()
@@ -16,18 +24,27 @@ conf = sanitized_configs(base_path=_path.parent)
 # Initialize application wide flags
 init_flags()
 
+# initialize print utils
+init_print_utils(file=sys.stderr)
+
 SECRET_KEY = os.getenv("SECRET_KEY")
 
-DEBUG = conf["developer"]
+DEBUG = conf.developer
 
 if not DEBUG:
     import sentry_sdk
     from sentry_sdk.integrations.django import DjangoIntegration
 
     sentry_sdk.init(dsn=os.getenv("SENTRY_DSN"), integrations=[DjangoIntegration()])
-    print("SENTRY ENABLED")
+    free_watch.print("[bold cyan blue]Sentry Enabled :rocket:")
 
-ALLOWED_HOSTS = ["*"]
+set_db_name(conf)
+
+if DEBUG:
+    set_debug_flags()
+
+free_watch.flags.use_secret = False if os.getenv("CI") else True
+ALLOWED_HOSTS = conf.allowed_hosts
 
 
 INSTALLED_APPS = [
@@ -100,10 +117,7 @@ DATABASE = {
     "Test": {"MONGO_URI": os.getenv("MONGO_URI"), "DB": os.getenv("TESTDB")},
 }
 
-if DEBUG:
-    print(
-        f"[STARTING-SERVER] DEBUG: {DEBUG} USING-DB: {DATABASE['Test']['DB'] if DEBUG else DATABASE['Production']['DB']}"
-    )
+free_watch.print(f"[bold white]DEBUG: {DEBUG} USING-DB: {free_watch.flags.db_name}")
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",

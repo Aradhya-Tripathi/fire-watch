@@ -6,13 +6,17 @@ from typing import Dict, Union
 import jwt
 from dotenv import load_dotenv
 
+import free_watch
+
 load_dotenv()
 
 
 class TokenAuth:
     def __init__(self):
         self.signature = (
-            secrets.token_hex() if os.getenv("CI") else os.getenv("SECRET_KEY")
+            os.getenv("SECRET_KEY")
+            if free_watch.flags.use_secret
+            else secrets.token_hex()
         )
 
     @staticmethod

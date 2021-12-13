@@ -29,7 +29,7 @@ class Login(APIView):
 
         creds = login(password=validate.get("password"), email=validate.get("email"))
 
-        payload = {"user_name": creds["user_name"]}
+        payload = {"user_name": creds["user_name"], "email": creds["email"]}
         key = issue_keys.generate_key(
             payload=payload,
             expiry=timedelta(hours=1),

@@ -22,8 +22,8 @@ class AuthMiddleWare:
             token = self._validate_tokentype(request.headers.get("Authorization"))
         except InvalidToken as e:
             return JsonResponse(data={"error": str(e)}, status=403)
-        if keys := issue_keys.verify_key(key=token):
-            request.auth_user = keys
+        if payload := issue_keys.verify_key(key=token):
+            request.auth_user = payload
             return self.view(request)
         return JsonResponse(data={"error": "Invalid credentials"}, status=403)
 

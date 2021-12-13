@@ -11,5 +11,8 @@
     "socket": {
         "base_group": "Alerts"
     },
-    "developer": true
+    "developer": true,
+    "allowed_hosts": [
+        "*"
+    ]
 }
