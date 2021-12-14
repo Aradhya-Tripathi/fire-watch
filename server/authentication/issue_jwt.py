@@ -51,10 +51,13 @@ class TokenAuth:
     def verify_key(self, key: Union[str, Dict[str, str]]):
         if isinstance(key, dict):
             key = key["access_token"]
-        payload = jwt.decode(
-            jwt=key.encode(),
-            key=self.signature,
-            options={"verify_exp": True, "verify_signature": True},
-            algorithms=["HS256"],
-        )
+        try:
+            payload = jwt.decode(
+                jwt=key.encode(),
+                key=self.signature,
+                options={"verify_exp": True, "verify_signature": True},
+                algorithms=["HS256"],
+            )
+        except Exception:
+            return
         return payload
