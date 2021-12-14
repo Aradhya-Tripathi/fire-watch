@@ -24,7 +24,7 @@ class Flags(SimpleNamespace):
             return
 
 
-class _conf(dict):
+class Conf(dict):
     """dict like class allows accessing attributes"""
 
     def __getattribute__(self, __name: str) -> Any:
@@ -46,7 +46,7 @@ def get_config(base_path):
         raise ConfigFileNotFound(path=path)
 
     with open(path) as f:
-        return _conf(json.loads(f.read()))
+        return Conf(json.loads(f.read()))
 
 
 def sanitized_configs(base_path: Path):
