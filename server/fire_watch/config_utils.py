@@ -27,12 +27,8 @@ class Flags(SimpleNamespace):
 class Conf(dict):
     """dict like class allows accessing attributes"""
 
-    def __getattribute__(self, __name: str) -> Any:
-        try:
-            return super().__getitem__(__name)
-        except KeyError:
-            fire_watch.print(f"[blod red]{__name} conf does not exist")
-            return
+    def __getattr__(self, __name):
+        return self.get(__name)
 
 
 def get_config(base_path):
