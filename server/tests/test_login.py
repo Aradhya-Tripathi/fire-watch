@@ -65,7 +65,9 @@ class TestAuthentication(CustomTestCase):
         self.assertEqual(status.status_code, 403)
 
         headers.update({"Authorization": "Bearer Ransodasodmasd"})
-        status = self.request.get(self.base_url + "user/test-protected", headers=headers)
+        status = self.request.get(
+            self.base_url + "user/test-protected", headers=headers
+        )
         self.assertEqual(status.status_code, 403)
 
         doc = self.user_register()
@@ -80,7 +82,9 @@ class TestAuthentication(CustomTestCase):
             self.base_url + "login", data=json.dumps(creds), headers=headers
         )
         headers.update({"Authorization": f"Bearer {tokens.json()['access_token']}"})
-        status = self.request.get(self.base_url + "user/test-protected", headers=headers)
+        status = self.request.get(
+            self.base_url + "user/test-protected", headers=headers
+        )
         self.assertEqual(status.status_code, 200)
 
     def tearDown(self) -> None:
