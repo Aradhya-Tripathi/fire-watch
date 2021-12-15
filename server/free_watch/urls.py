@@ -1,8 +1,8 @@
 from django.urls import include, path
 
-from .views import HealthCheck
+from .views import health_check
 
 urlpatterns = [
     path("apis/", include("apis.urls")),
-    path("health-check", HealthCheck.as_view()),
+    path("health-check", health_check),
 ]

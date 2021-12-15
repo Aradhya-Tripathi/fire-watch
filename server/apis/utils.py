@@ -1,6 +1,8 @@
 import free_watch
+from functools import lru_cache
 
 
+@lru_cache()
 def check_subscription():
     """
     Check all subscriptions mentioned in configuration

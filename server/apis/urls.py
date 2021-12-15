@@ -1,13 +1,14 @@
-from authentication.views import Login, ResetPassword
 from django.urls import path
 
-from .views import Alert, CollectData, ProtectedView, Register
+from apis.views import views
+from apis.views import protected_views
+from authentication import views as auth_views
 
 urlpatterns = [
-    path("register", Register.as_view()),
-    path("login", Login.as_view()),
-    path("protected", ProtectedView.as_view()),
-    path("upload", CollectData.as_view()),
-    path("reset-password", ResetPassword.as_view()),
-    path("sos", Alert.as_view()),
+    path("register", views.Register.as_view()),
+    path("login", auth_views.Login.as_view()),
+    path("protected", protected_views.protected),
+    path("upload", views.CollectData.as_view()),
+    path("reset-password", auth_views.ResetPassword.as_view()),
+    path("sos", views.Alert.as_view()),
 ]

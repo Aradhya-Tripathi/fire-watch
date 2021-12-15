@@ -3,18 +3,15 @@ from typing import Dict, Union
 
 import free_watch
 from alerts import email_service
+from apis.views import APIView, JsonResponse, Throttle, request
 from asgiref.sync import async_to_sync
 from authentication import permissions, utils
 from channels.layers import get_channel_layer
-from django.http import request
-from django.http.response import JsonResponse
 from free_watch.log.log_configs import get_logger
-from free_watch.throttle import Throttle
-from rest_framework.views import APIView
 
-from .definitions import UserSchema
-from .transactions import enter_user, insert_data
-from .utils import check_subscription
+from ..definitions import UserSchema
+from ..transactions import enter_user, insert_data
+from ..utils import check_subscription
 
 
 class Register(APIView):
@@ -99,18 +96,3 @@ class Alert(APIView):
         self.logger.warning(f"Alert {json.dumps(request.data)}")
         self.send_alert(token, request.data)
         return JsonResponse(data={}, status=200)
-
-
-class ProtectedView(APIView):
-    throttle_classes = [Throttle]
-
-    def get(self, request: request, **kwargs) -> JsonResponse:
-        """Test protected route
-
-        Args:
-            request (request): request object
-
-        Returns:
-            JsonResponse: Response
-        """
-        return JsonResponse(data={"success": True}, status=200)
