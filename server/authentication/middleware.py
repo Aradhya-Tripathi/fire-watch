@@ -1,20 +1,22 @@
-from authentication import issue_keys
 from django.http.response import JsonResponse
+from fire_watch.config_utils import Conf
 from fire_watch.errorfactory import InvalidToken
+
+from authentication import issue_keys
 
 
 class AuthMiddleWare:
     def __init__(self, view):
         self.view = view
-        self._protected = ["/apis/protected"]
+        self._protected = ["/user/test-protected"]
 
     @staticmethod
     def _validate_tokentype(authorization: str):
         try:
             token_type, token = authorization.split()
             assert token_type == "Bearer"
-        except Exception as e:
-            raise InvalidToken("Invalid Token")
+        except (ValueError, AssertionError, AttributeError):
+            raise InvalidToken({"error": "Invalid Token"})
         return token
 
     def authenticate_request(self, request):
@@ -23,7 +25,7 @@ class AuthMiddleWare:
         except InvalidToken as e:
             return JsonResponse(data={"error": str(e)}, status=403)
         if payload := issue_keys.verify_key(key=token):
-            request.auth_user = payload
+            request.auth_user = Conf(payload)
             return self.view(request)
         return JsonResponse(data={"error": "Invalid credentials"}, status=403)
 
