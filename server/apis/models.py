@@ -13,7 +13,7 @@ class Model(BaseModel):
         auth_model.register_user(*args, **kwargs)
 
     def check_existing(self, doc: Dict[str, Union[str, int]]):
-        """Check existing users
+        """Check existing users againts the entered `email` only.
 
         Args:
             doc (Dict[str, Union[str, int]]): user data
@@ -21,14 +21,7 @@ class Model(BaseModel):
         Raises:
             DuplicationError: If user exists
         """
-        user = self.db.users.find_one(
-            {
-                "$or": [
-                    {"email": doc["email"]},
-                    {"user_name": doc["user_name"]},
-                ]
-            }
-        )
+        user = self.db.users.find_one({"email": doc["email"]})
         if user:
             raise DuplicationError({"error": "User exists!"})
 
@@ -67,3 +60,7 @@ class Model(BaseModel):
 
     def reset_password(self, **kwargs) -> None:
         auth_model.reset_password(**kwargs)
+
+    def get_collected_data(self, email: str, max_size: int, skip: int):
+        units = self.db.units.find({"email": email, "$limit": max_size, "$skip": skip})
+        return units
