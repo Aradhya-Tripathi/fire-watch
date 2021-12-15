@@ -1,6 +1,6 @@
 import os
 import unittest
-from free_watch.log.log_configs import get_logger
+from fire_watch.log.log_configs import get_logger
 
 
 class TestLog(unittest.TestCase):

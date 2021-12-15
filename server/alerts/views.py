@@ -2,12 +2,12 @@ from channels.generic.websocket import JsonWebsocketConsumer
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
-from free_watch.errorfactory import SocketAuthenticationFailed
+from fire_watch.errorfactory import SocketAuthenticationFailed
 from .checks import authenticate
-import free_watch
+import fire_watch
 
-GROUP_NAME = free_watch.conf.socket["base_group"]
-free_watch.print(f"[bold][white]Group Name: {GROUP_NAME}")
+GROUP_NAME = fire_watch.conf.socket["base_group"]
+fire_watch.print(f"[bold][white]Group Name: {GROUP_NAME}")
 
 
 class Alert(JsonWebsocketConsumer):

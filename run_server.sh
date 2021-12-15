@@ -13,7 +13,7 @@ cd server
 
 # STARTING APPLICATION
 
-uvicorn free_watch.asgi:application  --host 0.0.0.0 --port 8000 --reload &
+uvicorn fire_watch.asgi:application  --host 0.0.0.0 --port 8000 --reload &
 
 cd ../
 echo "$execution Running Django Server [8000]"

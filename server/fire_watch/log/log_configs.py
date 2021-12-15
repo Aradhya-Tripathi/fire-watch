@@ -1,5 +1,5 @@
-from free_watch.settings import conf
-from free_watch.errorfactory import LogsNotEnabled
+from fire_watch.settings import conf
+from fire_watch.errorfactory import LogsNotEnabled
 import logging
 
 FMT = "%(asctime)s:%(name)s:%(message)s"

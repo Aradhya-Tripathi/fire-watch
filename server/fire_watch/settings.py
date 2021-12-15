@@ -4,8 +4,8 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-import free_watch
-from free_watch.config_utils import (
+import fire_watch
+from fire_watch.config_utils import (
     init_flags,
     init_print_utils,
     sanitized_configs,
@@ -36,14 +36,14 @@ if not DEBUG:
     from sentry_sdk.integrations.django import DjangoIntegration
 
     sentry_sdk.init(dsn=os.getenv("SENTRY_DSN"), integrations=[DjangoIntegration()])
-    free_watch.print("[bold cyan blue]Sentry Enabled :rocket:")
+    fire_watch.print("[bold cyan blue]Sentry Enabled :rocket:")
 
 set_db_name(conf)
 
 if DEBUG:
     set_debug_flags()
 
-free_watch.flags.use_secret = False if os.getenv("CI") else True
+fire_watch.flags.use_secret = False if os.getenv("CI") else True
 ALLOWED_HOSTS = conf.allowed_hosts
 
 
@@ -78,7 +78,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-ROOT_URLCONF = "free_watch.urls"
+ROOT_URLCONF = "fire_watch.urls"
 
 TEMPLATES = [
     {
@@ -96,8 +96,8 @@ TEMPLATES = [
     },
 ]
 
-ASGI_APPLICATION = "free_watch.asgi.application"
-WSGI_APPLICATION = "free_watch.wsgi.application"
+ASGI_APPLICATION = "fire_watch.asgi.application"
+WSGI_APPLICATION = "fire_watch.wsgi.application"
 
 throttle_rate = "100/min" if DEBUG else "10/min"
 
@@ -117,7 +117,7 @@ DATABASE = {
     "Test": {"MONGO_URI": os.getenv("MONGO_URI"), "DB": os.getenv("TESTDB")},
 }
 
-free_watch.print(f"[bold white]DEBUG: {DEBUG} USING-DB: {free_watch.flags.db_name}")
+fire_watch.print(f"[bold white]DEBUG: {DEBUG} USING-DB: {fire_watch.flags.db_name}")
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",

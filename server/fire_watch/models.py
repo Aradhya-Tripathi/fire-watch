@@ -4,14 +4,14 @@ import string
 
 import pymongo
 
-import free_watch
+import fire_watch
 
 
 class BaseModel:
     def __init__(self, *args, **kwargs):
         client = pymongo.MongoClient(os.getenv("MONGO_URI"))
-        self.db = client[free_watch.flags.db_name]
-        self.max_entry = free_watch.conf.max_unit_entry
+        self.db = client[fire_watch.flags.db_name]
+        self.max_entry = fire_watch.conf.max_unit_entry
 
     def get_uid(self, length: int):
         """

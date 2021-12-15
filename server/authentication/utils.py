@@ -1,6 +1,6 @@
 from typing import Union, Dict
 from authentication import auth_model
-from free_watch.errorfactory import InvalidToken
+from fire_watch.errorfactory import InvalidToken
 
 
 def get_token(headers: Dict[str, Union[int, str]]):
