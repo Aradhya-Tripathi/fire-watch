@@ -117,7 +117,10 @@ DATABASE = {
     "Test": {"MONGO_URI": os.getenv("MONGO_URI"), "DB": os.getenv("TESTDB")},
 }
 
-fire_watch.print(f"[bold white]DEBUG: {DEBUG} USING-DB: {fire_watch.flags.db_name}")
+fire_watch.print(f"[bold green]DEBUG: {DEBUG} USING-DB: {fire_watch.flags.db_name}")
+fire_watch.print("[bold green]Current server configurations")
+fire_watch.print_json(data=conf)
+
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
