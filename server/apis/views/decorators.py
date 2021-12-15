@@ -4,7 +4,7 @@ from apis.views import api_view as base_api_view
 
 
 def api_view(
-    http_methods,
+    http_methods: List[str],
     throttle_classes: Optional[List[type]] = None,
     permission_classes: Optional[List[type]] = None,
 ):
@@ -12,7 +12,7 @@ def api_view(
     just adds all permissions and throttles in one wrapper.
 
     Args:
-        http_methods ([type]): HTTP methods
+        http_methods (List[str]): HTTP methods
         throttle_classes (Optional[List[type]], optional): Throttle Classes for this view. Defaults to None.
         permission_classes (Optional[List[type]], optional): Permission Classes for this view. Defaults to None.
     """
