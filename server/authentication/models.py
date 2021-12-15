@@ -25,7 +25,7 @@ class AuthModel(BaseModel):
         return user["unit_id"]
 
     def register_user(self, doc: Dict[str, Union[str, int]], limit: int = 50):
-        """Register new users and assign units
+        """Register new users and assign units.
 
         Args:
             doc (Dict[str, Union[str, int]]): user data
