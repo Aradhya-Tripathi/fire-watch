@@ -10,7 +10,7 @@ class TestUnit(CustomTestCase):
     def register_user(self, doc: Dict[str, Union[str, int]]):
         headers = {"Content-Type": "application/json"}
         status = self.request.post(
-            self.base_url + "apis/register",
+            self.base_url + "register",
             data=json.dumps(doc),
             headers=headers,
         )
@@ -26,7 +26,7 @@ class TestUnit(CustomTestCase):
             "Authorization": f"Bearer {unit_id}",
             "Content-Type": "application/json",
         }
-        status = self.request.post(self.base_url + "apis/upload", headers=headers)
+        status = self.request.post(self.base_url + "upload", headers=headers)
         self.assertEqual(status.status_code, 201)
 
     def test_forbidden_upload(self):
@@ -36,7 +36,7 @@ class TestUnit(CustomTestCase):
             "Authorization": f"Bearer {unit_id}",
             "Content-Type": "application/json",
         }
-        status = self.request.post(self.base_url + "apis/upload", headers=headers)
+        status = self.request.post(self.base_url + "upload", headers=headers)
         self.assertEqual(status.status_code, 401)
 
     def test_excessive_units(self):
