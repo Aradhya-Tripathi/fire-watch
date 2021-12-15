@@ -6,7 +6,7 @@ from typing import Any, Optional
 
 from rich.console import Console
 
-import free_watch
+import fire_watch
 
 from .errorfactory import ConfigFileNotFound
 
@@ -20,7 +20,7 @@ class Flags(SimpleNamespace):
         try:
             return super().__getattribute__(name)
         except AttributeError:
-            free_watch.print(f"[blod red]{name} flag does not exist")
+            fire_watch.print(f"[blod red]{name} flag does not exist")
             return
 
 
@@ -31,13 +31,13 @@ class Conf(dict):
         try:
             return super().__getitem__(__name)
         except KeyError:
-            free_watch.print(f"[blod red]{__name} conf does not exist")
+            fire_watch.print(f"[blod red]{__name} conf does not exist")
             return
 
 
 def get_config(base_path):
     """
-    Search for config file in `free_watch.config` name space
+    Search for config file in `fire_watch.config` name space
     if found return unsanitized config file as a dictionary.
     else raise `ConfigFileNotFound` error.
     """
@@ -57,15 +57,15 @@ def sanitized_configs(base_path: Path):
 
 
 def init_flags():
-    free_watch.flags = Flags()
+    fire_watch.flags = Flags()
 
 
 def set_debug_flags():
-    free_watch.flags.send_email = False
+    fire_watch.flags.send_email = False
 
 
 def set_db_name(conf):
-    free_watch.flags.db_name = (
+    fire_watch.flags.db_name = (
         os.getenv("TESTDB") if conf.developer or os.getenv("CI") else os.getenv("DB")
     )
 
@@ -74,6 +74,6 @@ def init_print_utils(
     file: Optional[str] = None,
 ):
     console = Console(file=file)
-    free_watch.print = console.print
-    free_watch.print_json = console.print_json
-    free_watch.print_exception = console.print_exception
+    fire_watch.print = console.print
+    fire_watch.print_json = console.print_json
+    fire_watch.print_exception = console.print_exception

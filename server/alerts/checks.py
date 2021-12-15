@@ -1,4 +1,4 @@
-from free_watch.errorfactory import SocketAuthenticationFailed
+from fire_watch.errorfactory import SocketAuthenticationFailed
 
 
 def authenticate(scope):

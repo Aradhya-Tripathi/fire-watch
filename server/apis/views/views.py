@@ -1,13 +1,13 @@
 import json
 from typing import Dict, Union
 
-import free_watch
+import fire_watch
 from alerts import email_service
 from apis.views import APIView, JsonResponse, Throttle, request
 from asgiref.sync import async_to_sync
 from authentication import permissions, utils
 from channels.layers import get_channel_layer
-from free_watch.log.log_configs import get_logger
+from fire_watch.log.log_configs import get_logger
 
 from ..definitions import UserSchema
 from ..transactions import enter_user, insert_data
@@ -54,7 +54,7 @@ class CollectData(APIView):
 
 class Alert(APIView):
     permission_classes = [permissions.ValidateUnit]
-    group_name = free_watch.conf.socket["base_group"]
+    group_name = fire_watch.conf.socket["base_group"]
     channel_layer = get_channel_layer()
 
     logger = get_logger(__name__, filename="./alerts.log")

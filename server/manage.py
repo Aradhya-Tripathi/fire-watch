@@ -6,7 +6,7 @@ import sys
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "free_watch.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fire_watch.settings")
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

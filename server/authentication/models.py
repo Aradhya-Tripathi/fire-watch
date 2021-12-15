@@ -1,11 +1,11 @@
 from typing import Dict, Union
 
-from free_watch.errorfactory import (
+from fire_watch.errorfactory import (
     ExcessiveUnitsError,
     InvalidCredentialsError,
     InvalidUid,
 )
-from free_watch.models import BaseModel
+from fire_watch.models import BaseModel
 
 
 class AuthModel(BaseModel):

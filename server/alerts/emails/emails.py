@@ -2,7 +2,7 @@ import httpx
 import os
 from typing import List
 from dotenv import load_dotenv
-import free_watch
+import fire_watch
 
 load_dotenv()
 
@@ -34,7 +34,7 @@ class Service:
             "subject": subject,
             "html": html,
         }
-        if not free_watch.flags.send_email:
+        if not fire_watch.flags.send_email:
             return
         with httpx.Client(http2=True, auth=self.auth) as client:
             return client.post(url=self.base_url, data=data)

@@ -5,7 +5,7 @@ Free-Watch
 """
 
 
-from free_watch.settings import conf
+from fire_watch.settings import conf
 
 
 __name__ = "Free-Watch"

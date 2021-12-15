@@ -1,7 +1,7 @@
 import unittest
 from tests import test_login, test_units, test_reset_password
 from authentication.tests import test_auth_model, test_jwt
-from free_watch.log.tests import test_logging
+from fire_watch.log.tests import test_logging
 from importlib import import_module
 
 import argparse
