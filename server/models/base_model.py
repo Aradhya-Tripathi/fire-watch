@@ -14,7 +14,7 @@ class BaseModel:
         self.max_entry = fire_watch.conf.max_unit_entry
 
     def get_uid(self, length: int):
-        """
+        """Get unique UID for a document.
 
         Args:
             length (int, optional): length of uuid. Defaults to 8.

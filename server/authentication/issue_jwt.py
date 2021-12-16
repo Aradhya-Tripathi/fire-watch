@@ -4,12 +4,8 @@ from datetime import datetime, timedelta
 from typing import Dict, Union
 
 import jwt
-from dotenv import load_dotenv
 
 import fire_watch
-
-load_dotenv()
-
 
 class TokenAuth:
     def __init__(self):

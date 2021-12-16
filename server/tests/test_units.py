@@ -26,7 +26,15 @@ class TestUnit(CustomTestCase):
             "Authorization": f"Bearer {unit_id}",
             "Content-Type": "application/json",
         }
-        status = self.request.post(self.base_url + "upload", headers=headers)
+        data = {
+            "data": {
+                "some_data": "this happened",
+                "some_other_data": "this other thing happened",
+            }
+        }
+        status = self.request.post(
+            self.base_url + "upload", data=json.dumps(data), headers=headers
+        )
         self.assertEqual(status.status_code, 201)
 
     def test_forbidden_upload(self):

@@ -52,15 +52,28 @@ class Model(BaseModel):
 
         if len(unit["data"]) < self.max_entry:
             self.db.units.update_one(
-                {"_id": unit["_id"]}, update={"$push": {"data": data}}
+                {"_id": unit["_id"]}, update={"$push": {"data": data["data"]}}
             )
         else:
-            doc = {"unit_id": unit_id, "data": [data]}
+            doc = {"unit_id": unit_id, "data": [data["data"]]}
             self.db.units.insert_one(doc)
 
     def reset_password(self, **kwargs) -> None:
         auth_model.reset_password(**kwargs)
 
     def get_collected_data(self, email: str, max_size: int, skip: int):
-        units = self.db.units.find({"email": email, "$limit": max_size, "$skip": skip})
+        units = self.db.units.aggregate(
+            [
+                {"$limit": max_size},
+                {"$skip": skip},
+                {
+                    "$project": {
+                        "email": email,
+                        "_id": 0,
+                        "email": 0,
+                        "unit_id": 0,
+                    }
+                },
+            ]
+        )
         return units
