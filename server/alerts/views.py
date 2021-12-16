@@ -7,7 +7,6 @@ from .checks import authenticate
 import fire_watch
 
 GROUP_NAME = fire_watch.conf.socket["base_group"]
-fire_watch.print(f"[bold][white]Group Name: {GROUP_NAME}")
 
 
 class Alert(JsonWebsocketConsumer):
