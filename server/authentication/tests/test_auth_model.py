@@ -1,6 +1,6 @@
 import unittest
 from dotenv import load_dotenv
-from authentication.models import AuthModel
+from models.auth_model import AuthModel
 from authentication import utils
 from fire_watch.errorfactory import InvalidUid
 

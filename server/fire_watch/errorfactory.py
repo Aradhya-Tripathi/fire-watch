@@ -42,6 +42,13 @@ class InvalidUid(APIException):
         super().__init__(detail=detail)
 
 
+class UserDoesNotExist(APIException):
+    def __init__(self, detail=None, status_code=400):
+        detail = set_default_detail(detail)
+        self.status_code = status_code
+        super().__init__(detail)
+
+
 class ConfigFileNotFound(Exception):
     def __init__(self, *args: object, path: str) -> None:
         super().__init__(f"Config file not found at the location {path}")
