@@ -7,6 +7,7 @@ import jwt
 
 import fire_watch
 
+
 class TokenAuth:
     def __init__(self):
         self.signature = (
