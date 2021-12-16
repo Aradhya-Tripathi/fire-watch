@@ -1,4 +1,3 @@
-from apis.user_model import User
 from apis.views import APIView, JsonResponse, Throttle
 from apis.views.decorators import api_view
 
@@ -8,12 +7,8 @@ def test_protected(request):
     return JsonResponse(data={"Success": True}, status=200)
 
 
-class UserData(APIView):
+class UserAPI(APIView):
     throttle_classes = [Throttle]
-
-    @staticmethod
-    def init_user(email, user_name, max_size):
-        return User(user_name, email, max_size)
 
     def get(self, request):
         try:
@@ -22,8 +17,9 @@ class UserData(APIView):
             return JsonResponse(
                 {"error": f"Invalid page number {request.GET.get('page')}"}, status=400
             )
-
-        user = self.init_user(request.auth_user.email, request.auth_user.user_name, 10)
-        data = user.user_data(page=page)
+        data = request.user.user_data(page=page)
         response = data if data else dict(detail="No data found!")
         return JsonResponse(response, status=200, safe=False)
+
+    def delete(self, request):
+        request.user.delete()
