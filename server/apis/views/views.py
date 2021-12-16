@@ -48,6 +48,10 @@ class CollectData(APIView):
         Returns:
             JsonResponse: Response
         """
+        validate = UserSchema(data=request.data, upload=True).approval()
+        if "error" in validate:
+            return JsonResponse(data={"error": validate["error"]}, status=400)
+
         insert_data(unit_id=request.unit_id, data=request.data)
         return JsonResponse({}, status=201)
 
