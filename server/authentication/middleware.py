@@ -22,8 +22,8 @@ class AuthMiddleWare:
         Args:
             request (request): request object
         """
-        if request.path == "/user/details" and request.user.authorized:
-            request.user = User(
+        if request.path == "/user/details":
+            request.current_user = User(
                 user_name=request.auth_user.user_name,
                 email=request.auth_user.email,
                 max_size=fire_watch.conf.pagination_limit["debug"]
@@ -46,12 +46,10 @@ class AuthMiddleWare:
         except InvalidToken as e:
             return JsonResponse(data={"error": str(e)}, status=403)
         if payload := issue_keys.verify_key(key=token):
-            request.user.authorized = True
             request.auth_user = Conf(payload)
             # Warning: Only attach user object after authentication!
             self.attach_user(request)
             return self.view(request)
-        request.user.authorized = False
         return JsonResponse(data={"error": "Invalid credentials"}, status=403)
 
     def __call__(self, request):
