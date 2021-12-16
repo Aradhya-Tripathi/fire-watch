@@ -5,7 +5,7 @@ from fire_watch.errorfactory import (
     InvalidCredentialsError,
     InvalidUid,
 )
-from fire_watch.models import BaseModel
+from .base_model import BaseModel
 
 
 class AuthModel(BaseModel):

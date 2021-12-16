@@ -2,7 +2,7 @@ from typing import Dict, Union
 
 from authentication import auth_model
 from fire_watch.errorfactory import DuplicationError, InvalidUid
-from fire_watch.models import BaseModel
+from .base_model import BaseModel
 
 
 class Model(BaseModel):
