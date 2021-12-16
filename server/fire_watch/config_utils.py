@@ -58,6 +58,7 @@ def init_flags():
 
 def set_debug_flags():
     fire_watch.flags.send_email = False
+    fire_watch.flags.in_debug = True
 
 
 def set_db_name(conf):
