@@ -29,6 +29,8 @@ class UserSchema:
             }
         )
 
+        self.collect_data = Schema(schema={"data": dict})
+
     def approval(self):
         """Validate data
 
@@ -40,6 +42,8 @@ class UserSchema:
                 return self.register_schema.validate(self.kwargs.get("data"))
             elif self.kwargs.get("reset"):
                 return self.reset_password_schema.validate(self.kwargs.get("data"))
+            elif self.kwargs.get("upload"):
+                return self.collect_data.validate(self.kwargs.get("data"))
             return self.login_schema.validate(self.kwargs.get("data"))
         except SchemaError as e:
             return {"error": str(e)}
