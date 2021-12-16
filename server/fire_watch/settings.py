@@ -99,8 +99,10 @@ TEMPLATES = [
 ASGI_APPLICATION = "fire_watch.asgi.application"
 WSGI_APPLICATION = "fire_watch.wsgi.application"
 
-throttle_rate = "100/min" if DEBUG else "10/min"
-
+throttle_rate = (
+    conf.throttle_rate["debug"] if DEBUG else conf.throttle_rate["production"]
+)
+fire_watch.flags.throttle_rate = throttle_rate
 REST_FRAMEWORK = {
     "DEFAULT_THROTTLE_RATES": {
         "basic_throttle": throttle_rate,
@@ -117,9 +119,10 @@ DATABASE = {
     "Test": {"MONGO_URI": os.getenv("MONGO_URI"), "DB": os.getenv("TESTDB")},
 }
 
-fire_watch.print(f"[bold green]DEBUG: {DEBUG} USING-DB: {fire_watch.flags.db_name}")
 fire_watch.print("[bold green]Current server configurations")
-fire_watch.print_json(data=conf)
+
+fire_watch.print(f"[blue]DEBUG: {DEBUG} USING-DB: {fire_watch.flags.db_name}")
+fire_watch.print(f"[blue]Current throttle setting {fire_watch.flags.throttle_rate}")
 
 CHANNEL_LAYERS = {
     "default": {
