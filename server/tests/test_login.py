@@ -70,6 +70,12 @@ class TestAuthentication(CustomTestCase):
         )
         self.assertEqual(status.status_code, 403)
 
+        headers.update({"Authorization": None})
+        status = self.request.get(
+            self.base_url + "user/test-protected", headers=headers
+        )
+        self.assertEqual(status.status_code, 403)
+
         doc = self.user_register()
         headers = {"Content-type": "application/json"}
         status = self.request.post(
