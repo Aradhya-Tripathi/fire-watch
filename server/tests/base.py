@@ -22,6 +22,7 @@ class CustomTestCase(TestCase):
     base_url = "http://localhost:8000/"
     client = pymongo.MongoClient(DATABASE["Test"]["MONGO_URI"])
     db = client[DATABASE["Test"]["DB"]]
+    headers = {"Content-Type": "application/json"}
 
     def user_register(
         self,
