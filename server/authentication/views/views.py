@@ -7,7 +7,7 @@ from django.http.response import JsonResponse
 from fire_watch.throttle import Throttle
 from rest_framework.views import APIView
 
-from . import issue_keys
+from .. import issue_keys
 
 
 class Login(APIView):
