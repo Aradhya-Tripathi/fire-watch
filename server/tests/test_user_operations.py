@@ -8,24 +8,24 @@ class UserTests(CustomTestCase):
         self.clear_all()
 
     def test_user_data(self):
-        headers = {"Content-Type": "application/json"}
         user_doc = self.user_register()
         response = self.request.post(
-            self.base_url + "register", data=json.dumps(user_doc), headers=headers
+            self.base_url + "register", data=json.dumps(user_doc), headers=self.headers
         )
         login_response = self.request.post(
             self.base_url + "login",
             data=json.dumps(
                 {"email": user_doc["email"], "password": user_doc["password"]}
             ),
-            headers=headers,
+            headers=self.headers,
         )
         self.assertEqual(login_response.status_code, 200)
         user_creds = login_response.json()["access_token"]
         details_response = self.request.get(
-            self.base_url + "user/details", headers=headers
+            self.base_url + "user/details", headers=self.headers
         )
         self.assertEqual(details_response.status_code, 403)
+        headers = self.headers.copy()
         headers.update({"Authorization": f"Bearer {user_creds}"})
         details_response = self.request.get(
             self.base_url + "user/details", headers=headers

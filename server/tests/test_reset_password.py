@@ -6,7 +6,6 @@ class TestResetPassword(CustomTestCase):
     def setUp(self) -> None:
         self.clear_all()
         self.initial_password = "TestPassword"
-        self.headers = {"Content-Type": "application/json"}
         self.user = self.user_register(password=self.initial_password)
         response = self.request.post(
             self.base_url + "register",
