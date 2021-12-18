@@ -8,11 +8,10 @@ from .base import CustomTestCase
 
 class TestUnit(CustomTestCase):
     def register_user(self, doc: Dict[str, Union[str, int]]):
-        headers = {"Content-Type": "application/json"}
         status = self.request.post(
             self.base_url + "register",
             data=json.dumps(doc),
-            headers=headers,
+            headers=self.headers,
         )
         return status
 
@@ -22,10 +21,8 @@ class TestUnit(CustomTestCase):
         user = self.db.users.find_one({"user_name": self.user_register()["user_name"]})
         unit_id = user["unit_id"]
 
-        headers = {
-            "Authorization": f"Bearer {unit_id}",
-            "Content-Type": "application/json",
-        }
+        headers = self.headers.copy()
+        headers.update({"Authorization": f"Bearer {unit_id}"})
         data = {
             "data": {
                 "some_data": "this happened",
@@ -40,10 +37,8 @@ class TestUnit(CustomTestCase):
     def test_forbidden_upload(self):
         unit_id = "random"
 
-        headers = {
-            "Authorization": f"Bearer {unit_id}",
-            "Content-Type": "application/json",
-        }
+        headers = self.headers.copy()
+        headers = headers.update({"Authorization": f"Bearer {unit_id}"})
         status = self.request.post(self.base_url + "upload", headers=headers)
         self.assertEqual(status.status_code, 401)
 
