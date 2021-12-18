@@ -3,7 +3,8 @@ from typing import Dict, Union
 
 import fire_watch
 from alerts import email_service
-from apis.views import APIView, JsonResponse, Throttle, request
+from apis.views import BaseAPIView, JsonResponse, request
+from apis.views.decorators import api_view
 from asgiref.sync import async_to_sync
 from authentication import permissions, utils
 from channels.layers import get_channel_layer
@@ -14,49 +15,44 @@ from ..transactions import enter_user, insert_data
 from ..utils import check_subscription
 
 
-class Register(APIView):
-    throttle_classes = [Throttle]
+@api_view(["POST"])
+def register(request: request) -> JsonResponse:
+    """Register users
 
-    def post(self, request: request, **kwargs) -> JsonResponse:
-        """Register users
+    Args:
+        request (request): wsgi request
 
-        Args:
-            request (request): wsgi request
+    Returns:
+        JsonResponse: Response
+    """
+    validate = UserSchema(data=request.data, register=True).approval()
 
-        Returns:
-            JsonResponse: Response
-        """
-        validate = UserSchema(data=request.data, register=True).approval()
+    if "error" in validate:
+        return JsonResponse(data={"error": validate["error"]}, status=400)
 
-        if "error" in validate:
-            return JsonResponse(data={"error": validate["error"]}, status=400)
-
-        enter_user(validate)
-        return JsonResponse(data={"success": True}, status=201)
+    enter_user(validate)
+    return JsonResponse(data={"success": True}, status=201)
 
 
-class CollectData(APIView):
-    permission_classes = [permissions.ValidateUnit]
-    throttle_classes = [Throttle]
+@api_view(["POST"], permission_classes=[permissions.ValidateUnit])
+def collect_data(request: request) -> JsonResponse:
+    """Accept data dumps from device
 
-    def post(self, request: request, **kwargs) -> JsonResponse:
-        """Accept data dumps from device
+    Args:
+        request (request): wsgi request
 
-        Args:
-            request (request): wsgi request
+    Returns:
+        JsonResponse: Response
+    """
+    validate = UserSchema(data=request.data, upload=True).approval()
+    if "error" in validate:
+        return JsonResponse(data={"error": validate["error"]}, status=400)
 
-        Returns:
-            JsonResponse: Response
-        """
-        validate = UserSchema(data=request.data, upload=True).approval()
-        if "error" in validate:
-            return JsonResponse(data={"error": validate["error"]}, status=400)
-
-        insert_data(unit_id=request.unit_id, data=request.data)
-        return JsonResponse({}, status=201)
+    insert_data(unit_id=request.unit_id, data=request.data)
+    return JsonResponse({}, status=201)
 
 
-class Alert(APIView):
+class Alert(BaseAPIView):
     permission_classes = [permissions.ValidateUnit]
     group_name = fire_watch.conf.socket["base_group"]
     channel_layer = get_channel_layer()

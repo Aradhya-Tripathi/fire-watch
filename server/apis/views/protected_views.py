@@ -1,15 +1,13 @@
-from apis.views import APIView, JsonResponse, Throttle
+from apis.views import BaseAPIView, JsonResponse, Throttle
 from apis.views.decorators import api_view
 
 
-@api_view(["GET"], [Throttle])
+@api_view(["GET"])
 def test_protected(request):
     return JsonResponse(data={"Success": True}, status=200)
 
 
-class UserAPI(APIView):
-    throttle_classes = [Throttle]
-
+class UserAPI(BaseAPIView):
     def get(self, request):
         try:
             page = int(request.GET.get("page", 1))
@@ -23,3 +21,7 @@ class UserAPI(APIView):
 
     def delete(self, request):
         request.current_user.delete()
+        return JsonResponse(data={"success": True}, status=200)
+
+    def put(self, request):
+        ...
