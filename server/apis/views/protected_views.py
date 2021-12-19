@@ -1,4 +1,4 @@
-from apis.views import BaseAPIView, JsonResponse, Throttle
+from apis.views import BaseAPIView, JsonResponse
 from apis.views.decorators import api_view
 
 
@@ -24,4 +24,7 @@ class UserAPI(BaseAPIView):
         return JsonResponse(data={"success": True}, status=200)
 
     def put(self, request):
-        ...
+        request.current_user.update_user(
+            email=request.auth_user.email, doc=request.data
+        )
+        return JsonResponse(data={"success": True}, status=200)

@@ -1,11 +1,12 @@
-from typing import Dict, Union
+from typing import Dict, Optional, Union
 
 from authentication import auth_model
 from fire_watch.errorfactory import DuplicationError, InvalidUid
+
 from .base_model import BaseModel
 
 
-class Model(BaseModel):
+class ApiModel(BaseModel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -61,19 +62,28 @@ class Model(BaseModel):
     def reset_password(self, **kwargs) -> None:
         auth_model.reset_password(**kwargs)
 
-    def get_collected_data(self, email: str, max_size: int, skip: int):
+    def get_collected_data(
+        self,
+        max_size: int,
+        skip: int,
+        email: Optional[str] = None,
+    ):
+        project_pipeline = {
+            "$project": {
+                "email": email,
+                "_id": 0,
+                "email": 0,
+                "unit_id": 0,
+            }
+        }
+        if not email:
+            project_pipeline["$project"]["email"] = {}
+
         units = self.db.units.aggregate(
             [
                 {"$limit": max_size},
                 {"$skip": skip},
-                {
-                    "$project": {
-                        "email": email,
-                        "_id": 0,
-                        "email": 0,
-                        "unit_id": 0,
-                    }
-                },
+                project_pipeline,
             ]
         )
         return units
