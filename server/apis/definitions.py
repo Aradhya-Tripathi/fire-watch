@@ -1,3 +1,6 @@
+import re
+from typing import Optional
+
 from schema import And, Schema, SchemaError
 
 
@@ -5,6 +8,7 @@ class UserSchema:
     def __init__(self, *args, **kwargs):
 
         self.kwargs = kwargs
+        self.email_re = re.compile("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
 
         self.register_schema = Schema(
             schema={
@@ -25,11 +29,22 @@ class UserSchema:
             schema={
                 "old_passwd": And(str, lambda old_pswd: len(old_pswd.strip()) > 0),
                 "new_passwd": And(str, lambda new_pswd: len(new_pswd.strip()) > 0),
-                "email_id": And(str, lambda eamil_id: len(eamil_id.strip()) > 0),
+                "email_id": And(
+                    str,
+                    lambda email: len(email.strip()) > 0
+                    and self.email_re.fullmatch(email),
+                ),
             }
         )
 
         self.collect_data = Schema(schema={"data": dict})
+
+        self.modify_user_details = Schema(
+            schema={
+                "units": Optional[int],
+                "user_name": Optional[str],
+            }
+        )
 
     def approval(self):
         """Validate data
@@ -38,12 +53,17 @@ class UserSchema:
             Union[str, Dict]: Schema check
         """
         try:
+            if not self.kwargs.get("data").values():
+                raise SchemaError("No data provided")
             if self.kwargs.get("register"):
                 return self.register_schema.validate(self.kwargs.get("data"))
             elif self.kwargs.get("reset"):
                 return self.reset_password_schema.validate(self.kwargs.get("data"))
             elif self.kwargs.get("upload"):
                 return self.collect_data.validate(self.kwargs.get("data"))
-            return self.login_schema.validate(self.kwargs.get("data"))
+            elif self.kwargs.get("user_update"):
+                return self.modify_user_details.validate(self.kwargs.get("data"))
+            else:
+                return self.login_schema.validate(self.kwargs.get("data"))
         except SchemaError as e:
             return {"error": str(e)}

@@ -1,7 +1,6 @@
 from typing import Dict, Union
 
 from fire_watch.errorfactory import (
-    ExcessiveUnitsError,
     InvalidCredentialsError,
     InvalidUid,
 )
@@ -24,20 +23,15 @@ class AuthModel(BaseModel):
         user = self.db.users.find_one({"user_name": user_name})
         return user["unit_id"]
 
-    def register_user(self, doc: Dict[str, Union[str, int]], limit: int = 50):
+    def register_user(self, doc: Dict[str, Union[str, int]]):
         """Register new users and assign units.
 
         Args:
             doc (Dict[str, Union[str, int]]): user data
         """
 
-        _units = doc.get("units")
-        if _units > limit:
-            raise ExcessiveUnitsError(
-                detail={
-                    "error": f"Excessive no. of units {_units} current max units are {self.max_entry}"
-                }
-            )
+        units = doc.get("units")
+        self.check_excessive_units(units)
 
         doc = {**{"unit_id": self.get_uid(length=16)}, **doc}
         self.db.users.insert_one(doc)

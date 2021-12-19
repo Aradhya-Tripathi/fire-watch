@@ -1,9 +1,12 @@
-from models.api_model import Model
-from fire_watch.errorfactory import UserDoesNotExist
+from typing import Any, Dict
+
 from apis.utils import pagination_utils
+from fire_watch.errorfactory import UserDoesNotExist
+
+from models.api_model import ApiModel
 
 
-class User(Model):
+class User(ApiModel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.user_name = kwargs["user_name"]
@@ -32,7 +35,7 @@ class User(Model):
     def user_data(self, page):
         skip = pagination_utils(page, self.max_size)
         if data := self.get_collected_data(
-            self.email, max_size=self.max_size, skip=skip
+            email=self.email, max_size=self.max_size, skip=skip
         ):
             return list(data)
 
@@ -41,3 +44,21 @@ class User(Model):
         if user_doc:
             self.db.units.delete_many({"unit_id": user_doc["unit_id"]})
         raise UserDoesNotExist({"error": "User already removed!"})
+
+    def update_user(self, email: str, doc: Dict[str, Any]):
+        original_doc = self.db.users.find_one({"email": email})
+        if not original_doc:
+            UserDoesNotExist({"error": "User does not exist!"})
+
+        changes = dict()
+        self.check_excessive_units(doc.get("units", 0))
+        for key, value in original_doc.items():
+            if key in doc and doc[key] != value:
+                changes.update({key: doc[key]})
+
+        if changes:
+            # Todo: fix this (users and units collection need to update togather)
+            doc = self.db.users.find_one_and_update(
+                {"email": email},
+                {"$set": changes},
+            )
