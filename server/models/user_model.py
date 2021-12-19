@@ -1,12 +1,13 @@
 from typing import Any, Dict
 
+from apis import model as api_model
 from apis.utils import pagination_utils
 from fire_watch.errorfactory import UserDoesNotExist
 
-from models.api_model import ApiModel
+from .admin_model import AdminModel
 
 
-class User(ApiModel):
+class User(AdminModel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.user_name = kwargs["user_name"]
@@ -34,7 +35,7 @@ class User(ApiModel):
 
     def user_data(self, page):
         skip = pagination_utils(page, self.max_size)
-        if data := self.get_collected_data(
+        if data := api_model.get_collected_data(
             email=self.email, max_size=self.max_size, skip=skip
         ):
             return list(data)
