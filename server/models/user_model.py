@@ -57,8 +57,7 @@ class User(ApiModel):
                 changes.update({key: doc[key]})
 
         if changes:
-            # Todo: fix this (users and units collection need to update togather)
-            doc = self.db.users.find_one_and_update(
+            self.db.users.find_one_and_update(
                 {"email": email},
                 {"$set": changes},
             )

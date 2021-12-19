@@ -67,17 +67,17 @@ class UserTests(CustomTestCase):
 
     def test_user_update(self):
         user_creds = self.user_login()
-        # data = {"units": 100}
-        # response = self.update(data, user_creds)
-        # self.assertEqual(response.status_code, 200)
+        data = {"units": 100}
+        response = self.update(data, user_creds)
+        self.assertEqual(response.status_code, 200)
 
-        # data = {"units": 1, "user_name": "OtherUser"}
-        # response = self.update(data, user_creds)
-        # self.assertEqual(response.status_code, 200)
+        data = {"units": 1, "user_name": "OtherUser"}
+        response = self.update(data, user_creds)
+        self.assertEqual(response.status_code, 200)
 
-        # data = {"units": 1000, "user_name": "OtherUser"}
-        # response = self.update(data, user_creds)
-        # self.assertEqual(response.status_code, 400)
+        data = {"units": 1000, "user_name": "OtherUser"}
+        response = self.update(data, user_creds)
+        self.assertEqual(response.status_code, 400)
 
         data = {"user_name": "OtherUser"}
         response = self.update(data, user_creds)
