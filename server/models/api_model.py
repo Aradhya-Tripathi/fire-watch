@@ -3,10 +3,10 @@ from typing import Dict, Optional, Union
 from authentication import auth_model
 from fire_watch.errorfactory import DuplicationError, InvalidUid
 
-from .base_model import BaseModel
+from .admin_model import AdminModel
 
 
-class ApiModel(BaseModel):
+class ApiModel(AdminModel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
