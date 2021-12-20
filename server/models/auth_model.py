@@ -2,10 +2,11 @@ from typing import Dict, Union
 
 from fire_watch.errorfactory import InvalidCredentialsError, InvalidUid
 
-from .admin_model import AdminModel
+from .base_model import BaseModel
+from admin import admin_model
 
 
-class AuthModel(AdminModel):
+class AuthModel(BaseModel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -34,7 +35,7 @@ class AuthModel(AdminModel):
         doc = {**{"unit_id": self.get_uid(length=16)}, **doc}
         self.db.users.insert_one(doc)
         self.db.units.insert_one({"unit_id": doc["unit_id"], "data": []})
-        self.log_user_request(
+        admin_model.log_user_request(
             {"unit_id": doc["unit_id"], "email": doc["email"], "units": doc["units"]}
         )
 
