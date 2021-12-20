@@ -3,9 +3,8 @@ import secrets
 from datetime import datetime, timedelta
 from typing import Dict, Union
 
-import jwt
-
 import fire_watch
+import jwt
 
 
 class TokenAuth:
@@ -28,12 +27,15 @@ class TokenAuth:
         payload: Dict[str, Union[str, int]],
         expiry: Union[int, timedelta] = 1,
         get_refresh: bool = False,
+        is_admin: bool = False,
         **kwargs,
     ):
 
         current_time = datetime.utcnow()
         self.set_expiry(payload, current_time, expiry)
-
+        payload.update({"is_admin": True}) if is_admin else payload.update(
+            {"is_admin": False}
+        )
         access_token = jwt.encode(payload, key=self.signature)
 
         if get_refresh:
@@ -45,7 +47,7 @@ class TokenAuth:
 
         return dict(access_token=access_token)
 
-    def verify_key(self, key: Union[str, Dict[str, str]]):
+    def verify_key(self, is_admin: bool, key: Union[str, Dict[str, str]]):
         if isinstance(key, dict):
             key = key["access_token"]
         try:
@@ -55,6 +57,12 @@ class TokenAuth:
                 options={"verify_exp": True, "verify_signature": True},
                 algorithms=["HS256"],
             )
-        except Exception:
+            assert (
+                self.verify_role(is_admin, payload) == True
+            ), "Role verification failed!"
+        except Exception as e:
             return
         return payload
+
+    def verify_role(self, is_admin, payload):
+        return payload.get("is_admin") == is_admin
