@@ -45,7 +45,7 @@ class AuthMiddleWare:
             token = get_token(request.headers)
         except InvalidToken as e:
             return JsonResponse(data={"error": str(e)}, status=403)
-        if payload := issue_keys.verify_key(key=token):
+        if payload := issue_keys.verify_key(key=token, is_admin=False):
             request.auth_user = Conf(payload)
             #! Warning: Only attach user object after authentication!
             self.attach_user(request)
@@ -56,4 +56,3 @@ class AuthMiddleWare:
         if self._protected in request.path:
             return self.authenticate_request(request)
         return self.view(request)
-
