@@ -43,3 +43,4 @@ class CustomTestCase(TestCase):
     def clear_all(self):
         self.db.drop_collection("users")
         self.db.drop_collection("units")
+        self.db.drop_collection("Admin")

@@ -14,6 +14,13 @@ class DuplicationError(APIException):
         super().__init__(detail=detail)
 
 
+class EmptyUpdateClause(APIException):
+    def __init__(self, detail=None, status_code=400):
+        detail = set_default_detail(detail)
+        self.status_code = status_code
+        super().__init__(detail=detail)
+
+
 class ExcessiveUnitsError(APIException):
     def __init__(self, detail=None, status_code=400):
         detail = set_default_detail(detail)

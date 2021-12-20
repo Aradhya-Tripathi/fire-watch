@@ -2,7 +2,7 @@ from typing import Any, Dict
 
 from apis import model as api_model
 from apis.utils import pagination_utils
-from fire_watch.errorfactory import UserDoesNotExist
+from fire_watch.errorfactory import EmptyUpdateClause, UserDoesNotExist
 
 from .admin_model import AdminModel
 
@@ -13,6 +13,7 @@ class User(AdminModel):
         self.user_name = kwargs["user_name"]
         self.email = kwargs["email"]
         self.max_size = kwargs.get("max_size", 10)
+        self._user = self.db.users.find_one({"email": self.email})
 
     def __repr__(self) -> str:
         return self.user_name
@@ -26,14 +27,17 @@ class User(AdminModel):
 
     @property
     def total_units(self):
-        user = self.db.users.find_one({"email": self.email})
-        return user["units"]
+        return self._user["units"]
+
+    @property
+    def unit_id(self):
+        return self._user["unit_id"]
 
     @property
     def user(self):
         return self.user_name
 
-    def user_data(self, page):
+    def data(self, page):
         skip = pagination_utils(page, self.max_size)
         if data := api_model.get_collected_data(
             email=self.email, max_size=self.max_size, skip=skip
@@ -42,11 +46,12 @@ class User(AdminModel):
 
     def delete(self):
         user_doc = self.db.users.delete_one({"email": self.email})
-        if user_doc:
-            self.db.units.delete_many({"unit_id": user_doc["unit_id"]})
+        if user_doc.deleted_count:
+            self.db.units.delete_many({"unit_id": self.unit_id})
+            return 
         raise UserDoesNotExist({"error": "User already removed!"})
 
-    def update_user(self, email: str, doc: Dict[str, Any]):
+    def update(self, email: str, doc: Dict[str, Any]):
         original_doc = self.db.users.find_one({"email": email})
         if not original_doc:
             UserDoesNotExist({"error": "User does not exist!"})
@@ -62,3 +67,6 @@ class User(AdminModel):
                 {"email": email},
                 {"$set": changes},
             )
+            self.log_user_request({"email": email, "updates": changes})
+            return
+        raise EmptyUpdateClause(detail={"error": "Nothing to update!"})

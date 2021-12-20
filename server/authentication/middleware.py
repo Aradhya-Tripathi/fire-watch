@@ -47,7 +47,7 @@ class AuthMiddleWare:
             return JsonResponse(data={"error": str(e)}, status=403)
         if payload := issue_keys.verify_key(key=token):
             request.auth_user = Conf(payload)
-            # Warning: Only attach user object after authentication!
+            #! Warning: Only attach user object after authentication!
             self.attach_user(request)
             return self.view(request)
         return JsonResponse(data={"error": "Invalid credentials"}, status=403)
@@ -57,12 +57,3 @@ class AuthMiddleWare:
             return self.authenticate_request(request)
         return self.view(request)
 
-
-class ReCaptchaMiddleWare:
-    def __init__(self, view):
-        self.view = view
-
-    def __call__(self, request):
-        # todo: Add recaptcha
-        fire_watch.flags.recaptcha_enabled = False
-        return self.view(request)

@@ -57,9 +57,13 @@ class UserTests(CustomTestCase):
         expected_response = [{"data": [{"temp": 201, "other data": "other value"}]}]
         self.assertEqual(details_response.json(), expected_response)
 
-    def update(self, data, user_creds):
+    def update(self, data, user_creds, invalid_user=False):
         headers = self.headers.copy()
-        headers.update({"Authorization": f"Bearer {user_creds}"})
+        if not invalid_user:
+            headers.update({"Authorization": f"Bearer {user_creds}"})
+        else:
+            headers.update({"Authorization": f"Bearer {None}"})
+
         response = self.request.put(
             self.base_url + "user/details", data=json.dumps(data), headers=headers
         )
@@ -81,7 +85,21 @@ class UserTests(CustomTestCase):
 
         data = {"user_name": "OtherUser"}
         response = self.update(data, user_creds)
+        self.assertEqual(response.status_code, 400)
+
+        data = {"user_name": "NewName"}
+        response = self.update(data, user_creds)
         self.assertEqual(response.status_code, 200)
+
+    def test_user_deletion(self):
+        user_creds = self.user_login()
+        headers = self.headers.copy()
+        headers.update({"Authorization": f"Bearer {user_creds}"})
+        response = self.request.delete(self.base_url + "user/details", headers=headers)
+        self.assertEqual(response.status_code, 200)
+
+        response = self.request.delete(self.base_url + "user/details", headers=headers)
+        self.assertEqual(response.status_code, 400)
 
     def tearDown(self) -> None:
         self.clear_all()
