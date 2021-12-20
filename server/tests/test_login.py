@@ -45,15 +45,7 @@ class TestAuthentication(CustomTestCase):
         status = self.request.post(
             self.base_url + "login", data=json.dumps(creds), headers=self.headers
         )
-
-        self.assertEqual(status.status_code, 401)
-
-        creds = {"password": "incorrect password", "email": "incorrect email"}
-        status = self.request.post(
-            self.base_url + "login", data=json.dumps(creds), headers=self.headers
-        )
-
-        self.assertEqual(status.status_code, 401)
+        self.assertEqual(status.status_code, 400)
 
     def test_protected_route(self):
         status = self.request.get(
