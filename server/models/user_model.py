@@ -1,18 +1,20 @@
 from typing import Any, Dict
 
+from admin import admin_model
 from apis import model as api_model
-from apis.utils import pagination_utils
+from fire_watch.utils import pagination_utils
 from fire_watch.errorfactory import EmptyUpdateClause, UserDoesNotExist
+import fire_watch
+from .base_model import BaseModel
 
-from .admin_model import AdminModel
+from .base_model import BaseModel
 
 
-class User(AdminModel):
+class User(BaseModel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.user_name = kwargs["user_name"]
         self.email = kwargs["email"]
-        self.max_size = kwargs.get("max_size", 10)
         self._user = self.db.users.find_one({"email": self.email})
 
     def __repr__(self) -> str:
@@ -38,9 +40,9 @@ class User(AdminModel):
         return self.user_name
 
     def data(self, page):
-        skip = pagination_utils(page, self.max_size)
         if data := api_model.get_collected_data(
-            email=self.email, max_size=self.max_size, skip=skip
+            email=self.email,
+            page=page,
         ):
             return list(data)
 
@@ -48,7 +50,7 @@ class User(AdminModel):
         user_doc = self.db.users.delete_one({"email": self.email})
         if user_doc.deleted_count:
             self.db.units.delete_many({"unit_id": self.unit_id})
-            return 
+            return
         raise UserDoesNotExist({"error": "User already removed!"})
 
     def update(self, email: str, doc: Dict[str, Any]):
@@ -67,6 +69,6 @@ class User(AdminModel):
                 {"email": email},
                 {"$set": changes},
             )
-            self.log_user_request({"email": email, "updates": changes})
+            admin_model.log_user_request({"email": email, "updates": changes})
             return
         raise EmptyUpdateClause(detail={"error": "Nothing to update!"})
