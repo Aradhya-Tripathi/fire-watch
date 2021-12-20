@@ -2,11 +2,13 @@ from typing import Dict, Optional, Union
 
 from authentication import auth_model
 from fire_watch.errorfactory import DuplicationError, InvalidUid
+from fire_watch.utils import pagination_utils
+import fire_watch
 
-from .admin_model import AdminModel
+from .base_model import BaseModel
 
 
-class ApiModel(AdminModel):
+class ApiModel(BaseModel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -26,7 +28,7 @@ class ApiModel(AdminModel):
         if user:
             raise DuplicationError({"error": "User exists!"})
 
-    def credetials(self, *args, **kwargs):
+    def credentials(self, *args, **kwargs):
         return auth_model.credentials(*args, **kwargs)
 
     def insert_data(self, unit_id: str, data: Dict[str, Union[str, int]]):
@@ -64,10 +66,12 @@ class ApiModel(AdminModel):
 
     def get_collected_data(
         self,
-        max_size: int,
-        skip: int,
+        page: int,
         email: Optional[str] = None,
     ):
+        skip, limit = pagination_utils(
+            page=page, page_limit=fire_watch.conf.pagination_limit
+        )
         project_pipeline = {
             "$project": {
                 "email": email,
@@ -81,7 +85,7 @@ class ApiModel(AdminModel):
 
         units = self.db.units.aggregate(
             [
-                {"$limit": max_size},
+                {"$limit": limit},
                 {"$skip": skip},
                 project_pipeline,
             ]
