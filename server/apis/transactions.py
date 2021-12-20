@@ -12,7 +12,7 @@ def enter_user(doc: Dict[str, Union[str, int]]):
 
 def login(password: str, email: str):
     password = sha256(password.encode()).hexdigest()
-    return model.credetials(password, email)
+    return model.credentials(password, email)
 
 
 def insert_data(unit_id: str, data: Dict[str, Union[str, int]]):
