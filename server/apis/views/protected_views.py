@@ -15,7 +15,7 @@ class UserAPI(BaseAPIView):
             return JsonResponse(
                 {"error": f"Invalid page number {request.GET.get('page')}"}, status=400
             )
-        data = request.current_user.user_data(page=page)
+        data = request.current_user.data(page=page)
         response = data if data else dict(detail="No data found!")
         return JsonResponse(response, status=200, safe=False)
 
@@ -24,7 +24,5 @@ class UserAPI(BaseAPIView):
         return JsonResponse(data={"success": True}, status=200)
 
     def put(self, request):
-        request.current_user.update_user(
-            email=request.auth_user.email, doc=request.data
-        )
+        request.current_user.update(email=request.auth_user.email, doc=request.data)
         return JsonResponse(data={"success": True}, status=200)

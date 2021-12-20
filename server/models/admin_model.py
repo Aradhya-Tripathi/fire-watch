@@ -6,9 +6,7 @@ from .base_model import BaseModel
 
 
 class AdminModel(BaseModel):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.logger = get_logger(__name__, filename="./alerts.log")
+    logger = get_logger(__name__, filename="./alerts.log")
 
     def log_user_request(self, doc: Dict[str, str]):
         existing_user = self.db.Admin.find_one({"email": doc["email"]})
@@ -17,4 +15,5 @@ class AdminModel(BaseModel):
             self.logger.warning(f"User Update Request!")
         else:
             self.logger.warning(f"User insertion!")
+        # Maintain a record of all units with users!
         self.db.Admin.insert_one(doc)
