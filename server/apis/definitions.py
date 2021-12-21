@@ -75,7 +75,7 @@ class AdminSchema:
     def __init__(self, data: Dict[str, str]):
         self.admin_login = Schema(
             schema={
-                "email": And(str, lambda email: self.email_re.fullmatch(email)),
+                "email": And(str, lambda email: email_re.fullmatch(email)),
                 "password": str,
             }
         )
@@ -83,6 +83,6 @@ class AdminSchema:
 
     def approval(self):
         try:
-            self.admin_login.validate(self.data)
+            return self.admin_login.validate(self.data)
         except SchemaError as e:
             return {"error": str(e)}

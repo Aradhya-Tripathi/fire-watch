@@ -8,7 +8,7 @@ from authentication.utils import admin_login
 
 
 class AdminView(BaseAPIView):
-    def get(request: HttpRequest) -> JsonResponse:
+    def get(self, request: HttpRequest) -> JsonResponse:
         try:
             page = int(request.GET.get("page", 1))
         except ValueError:
@@ -16,11 +16,11 @@ class AdminView(BaseAPIView):
         details = admin_model.get_unit_details(page=page)
         return JsonResponse(data={"data": details}, status=200)
 
-    def post(request: HttpRequest) -> JsonResponse:
+    def post(self, request: HttpRequest) -> JsonResponse:
         validate = AdminSchema(request.data).approval()
         if "error" in validate:
             return JsonResponse(data={"error": validate["error"]}, status=400)
-        creds = admin_login(validate["password"], validate["email"])
+        creds = admin_login(password=validate["password"], email=validate["email"])
         payload = {"email": creds["email"]}
         key = issue_keys.generate_key(
             payload=payload,

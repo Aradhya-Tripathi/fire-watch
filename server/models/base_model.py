@@ -20,10 +20,11 @@ class BaseModel:
         "data": list,
     }
 
+    max_entry = fire_watch.conf.max_unit_entry
+
     def __init__(self, *args, **kwargs):
         client = pymongo.MongoClient(os.getenv("MONGO_URI"))
         self.db = client[fire_watch.flags.db_name]
-        self.max_entry = fire_watch.conf.max_unit_entry
 
     def get_uid(self, length: int):
         """Get unique UID for a document.
@@ -46,3 +47,6 @@ class BaseModel:
                     "error": f"Excessive no. of units {units} current max units are {self.max_entry}"
                 }
             )
+
+    def get_db(self):
+        return self
