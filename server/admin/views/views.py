@@ -17,7 +17,7 @@ class AdminView(BaseAPIView):
         return JsonResponse(data={"data": details}, status=200)
 
     def post(request: request) -> JsonResponse:
-        validate = AdminSchema(request.data)
+        validate = AdminSchema(request.data).approval()
         if "error" in validate:
             return JsonResponse(data={"error": validate["error"]}, status=400)
         creds = admin_login(validate["password"], validate["email"])
