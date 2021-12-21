@@ -2,6 +2,7 @@ import os
 import sys
 from pathlib import Path
 
+import patches
 from dotenv import load_dotenv
 
 import fire_watch
