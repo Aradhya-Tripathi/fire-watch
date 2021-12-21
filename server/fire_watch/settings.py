@@ -2,7 +2,6 @@ import os
 import sys
 from pathlib import Path
 
-import patches
 from dotenv import load_dotenv
 
 import fire_watch
@@ -28,6 +27,7 @@ init_flags()
 # initialize print utils
 init_print_utils(file=sys.stderr)
 
+
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 DEBUG = conf.developer
@@ -47,6 +47,7 @@ if DEBUG:
 fire_watch.flags.use_secret = False if os.getenv("CI") else True
 ALLOWED_HOSTS = conf.allowed_hosts
 
+import patches
 
 INSTALLED_APPS = [
     "channels",
@@ -147,5 +148,6 @@ USE_TZ = True
 
 
 STATIC_URL = "/static/"
+APPEND_SLASH = False
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

@@ -53,7 +53,21 @@ class AuthMiddleWare:
             return self.view(request)
         return JsonResponse(data={"error": "Invalid credentials"}, status=403)
 
+    def admin_login_route(self, request):
+        #! Allow access to admin login route.
+        return request.path == "/admin/details" and request.method == "POST"
+
     def authenticate_admin_request(self, request: HttpRequest):
+        """Authenticate each request made to a admin route.
+
+        Args:
+            request (request): request object
+
+        Returns:
+            APIView: handler method.
+        """
+        if self.admin_login_route(request):
+            return self.view(request)
         try:
             token = get_token(request.headers)
         except InvalidToken as e:
@@ -66,7 +80,8 @@ class AuthMiddleWare:
     def __call__(self, request):
         if self._admin_path in request.path:
             return self.authenticate_admin_request(request)
-        elif self._protected in request.path:
+
+        if self._protected in request.path:
             return self.authenticate_user_request(request)
-        else:
-            return self.view(request)
+
+        return self.view(request)

@@ -34,4 +34,4 @@ def reset_password(data: Dict[str, str]) -> None:
 
 def admin_login(password: str, email: str):
     password = sha256(password.encode()).hexdigest()
-    return auth_model.admin_login(password, email)
+    return auth_model.admin_login(password=password, email=email)
