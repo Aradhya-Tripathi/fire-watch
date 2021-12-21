@@ -2,9 +2,7 @@ from typing import Any, Dict
 
 from admin import admin_model
 from apis import model as api_model
-from fire_watch.utils import pagination_utils
 from fire_watch.errorfactory import EmptyUpdateClause, UserDoesNotExist
-import fire_watch
 from .base_model import BaseModel
 
 from .base_model import BaseModel
