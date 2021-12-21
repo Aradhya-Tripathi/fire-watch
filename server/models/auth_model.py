@@ -60,5 +60,10 @@ class AuthModel(BaseModel):
         )
         return None
 
-    def admin_login(self, *args, **kwargs):
-        return admin_model.login(*args, **kwargs)
+    def admin_login(self, email: str, password: str):
+        admin = self.db.AdminCredentials.find_one(
+            {"email": email, "password": password}
+        )
+        if admin:
+            return admin
+        raise InvalidCredentialsError({"error": "Invalid credentials!"})
