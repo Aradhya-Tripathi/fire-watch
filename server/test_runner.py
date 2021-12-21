@@ -2,6 +2,7 @@ import argparse
 import unittest
 from importlib import import_module
 
+import patches
 from authentication.tests import test_auth_model, test_jwt
 from fire_watch.log.tests import test_logging
 from tests import (
