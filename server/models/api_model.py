@@ -16,7 +16,7 @@ class ApiModel(BaseModel):
         auth_model.register_user(*args, **kwargs)
 
     def check_existing(self, doc: Dict[str, Union[str, int]]):
-        """Check existing users againts the entered `email` only.
+        """Check existing users against the entered `email` only.
 
         Args:
             doc (Dict[str, Union[str, int]]): user data
