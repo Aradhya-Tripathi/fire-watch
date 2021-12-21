@@ -7,6 +7,8 @@ import sys
 def main():
     """Run administrative tasks."""
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fire_watch.settings")
+    import patches
+
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
@@ -15,6 +17,9 @@ def main():
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
+    if sys.argv == ["manage.py", "create-admin-user"]:
+        execute_from_command_line.create_admin_user()
+        return
     execute_from_command_line(sys.argv)
 
 
