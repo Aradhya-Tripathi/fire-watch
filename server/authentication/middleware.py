@@ -1,9 +1,9 @@
 import fire_watch
-from models.user_model import User
 from django.http import request
 from django.http.response import JsonResponse
 from fire_watch.config_utils import Conf
 from fire_watch.errorfactory import InvalidToken
+from models.user_model import User
 from rest_framework.views import APIView
 
 from authentication import issue_keys
@@ -14,6 +14,7 @@ class AuthMiddleWare:
     def __init__(self, view):
         self.view = view
         self._protected = "/user"
+        self._admin_path = "/admin"
 
     def attach_user(self, request: request):
         """Attach the user object to `request.user` if in view UserAPI
@@ -31,7 +32,7 @@ class AuthMiddleWare:
                 else fire_watch.conf.pagination_limit["production"],
             )
 
-    def authenticate_request(self, request: request) -> APIView:
+    def authenticate_user_request(self, request: request) -> APIView:
         """Authenticate each request made to a protected route.
 
         Args:
@@ -52,7 +53,20 @@ class AuthMiddleWare:
             return self.view(request)
         return JsonResponse(data={"error": "Invalid credentials"}, status=403)
 
+    def authenticate_admin_request(self, request: request):
+        try:
+            token = get_token(request.headers)
+        except InvalidToken as e:
+            return JsonResponse(data={"error": str(e)}, status=403)
+        if payload := issue_keys.verify_key(key=token, is_admin=True):
+            request.auth_admin = Conf(payload)
+            return self.view(request)
+        return JsonResponse(data={"error": "Invalid credentials"}, status=403)
+
     def __call__(self, request):
-        if self._protected in request.path:
-            return self.authenticate_request(request)
-        return self.view(request)
+        if self._admin_path in request.path:
+            return self.authenticate_admin_request(request)
+        elif self._protected in request.path:
+            return self.authenticate_user_request(request)
+        else:
+            return self.view(request)
