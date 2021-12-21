@@ -63,3 +63,4 @@ class CustomTestCase(TestCase):
         self.db.drop_collection("users")
         self.db.drop_collection("units")
         self.db.drop_collection("Admin")
+        self.db.drop_collection("AdminCredentials")
