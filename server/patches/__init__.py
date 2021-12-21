@@ -1,1 +1,1 @@
-from . import patches
+from . import patch_admin_user
