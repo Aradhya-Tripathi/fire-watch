@@ -16,8 +16,7 @@ class UserAPI(BaseAPIView):
                 {"error": f"Invalid page number {request.GET.get('page')}"}, status=400
             )
         data = request.current_user.data(page=page)
-        response = data if data else dict(detail="No data found!")
-        return JsonResponse(response, status=200, safe=False)
+        return JsonResponse(data, status=200, safe=False)
 
     def delete(self, request: HttpRequest) -> JsonResponse:
         request.current_user.delete()
