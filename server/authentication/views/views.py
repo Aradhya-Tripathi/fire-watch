@@ -1,19 +1,14 @@
 from datetime import timedelta
 
 from apis.definitions import UserSchema
-from apis.transactions import login, reset_password
-from django.http import request
-from django.http.response import JsonResponse
-from fire_watch.throttle import Throttle
-from rest_framework.views import APIView
+from authentication.utils import login, reset_password
+from apis.views import BaseAPIView, JsonResponse, request
 
 from .. import issue_keys
 
 
-class Login(APIView):
-    throttle_classes = [Throttle]
-
-    def post(self, request: request, **kwargs) -> JsonResponse:
+class Login(BaseAPIView):
+    def post(self, request: request) -> JsonResponse:
         """Login users
 
         Args:
@@ -35,6 +30,7 @@ class Login(APIView):
             expiry=timedelta(hours=1),
             get_refresh=True,
             refresh_exipry=timedelta(hours=12),
+            is_admin=False,
         )
         return JsonResponse(
             data={
@@ -45,10 +41,8 @@ class Login(APIView):
         )
 
 
-class ResetPassword(APIView):
-    throttle_classes = [Throttle]
-
-    def post(self, request: request, **kwargs) -> JsonResponse:
+class ResetPassword(BaseAPIView):
+    def post(self, request: request) -> JsonResponse:
         """Allow reset password
 
         Args:
