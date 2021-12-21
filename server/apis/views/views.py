@@ -3,7 +3,7 @@ from typing import Dict, Union
 
 import fire_watch
 from alerts import email_service
-from apis.views import BaseAPIView, JsonResponse, request
+from apis.views import BaseAPIView, HttpRequest, JsonResponse
 from apis.views.decorators import api_view
 from asgiref.sync import async_to_sync
 from authentication import permissions, utils
@@ -16,7 +16,7 @@ from ..utils import check_subscription
 
 
 @api_view(["POST"])
-def register(request: request) -> JsonResponse:
+def register(request: HttpRequest) -> JsonResponse:
     """Register users
 
     Args:
@@ -35,7 +35,7 @@ def register(request: request) -> JsonResponse:
 
 
 @api_view(["POST"], permission_classes=[permissions.ValidateUnit])
-def collect_data(request: request) -> JsonResponse:
+def collect_data(request: HttpRequest) -> JsonResponse:
     """Accept data dumps from device
 
     Args:
@@ -59,7 +59,9 @@ class Alert(BaseAPIView):
 
     logger = get_logger(__name__, filename="./alerts.log")
 
-    def send_alert(self, token: str, data: Dict[str, Union[str, int]]) -> None:
+    def send_alert(
+        self, token: str, data: Dict[str, Union[str, int]], to: str = None
+    ) -> None:
         """Send alert to group.
            Get group id -> common `group_name` + `unit_id`
            send alert to that group
@@ -73,16 +75,14 @@ class Alert(BaseAPIView):
         """
         subs = check_subscription()
         if "email" in subs:
-            email_service.send_mail(
-                html="[Place Holder]", subject="Alert", to=[request.auth_user["email"]]
-            )
+            email_service.send_mail(html="[Place Holder]", subject="Alert", to=[to])
         if "ws" in subs:
             group_id = self.group_name + str(token)
             async_to_sync(self.channel_layer.group_send)(
                 group_id, {"type": "send.alert", "content": data}
             )
 
-    def post(self, request: request, **kwargs) -> JsonResponse:
+    def post(self, request: HttpRequest, **kwargs) -> JsonResponse:
         """Accept alert from device
 
         Args:
@@ -94,5 +94,5 @@ class Alert(BaseAPIView):
 
         token = utils.get_token(request.headers)
         self.logger.warning(f"Alert {json.dumps(request.data)}")
-        self.send_alert(token, request.data)
+        self.send_alert(token, request.data, to=request.auth_user["email"])
         return JsonResponse(data={}, status=200)
