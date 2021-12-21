@@ -2,13 +2,13 @@ from datetime import timedelta
 
 from admin import admin_model
 from apis.definitions import AdminSchema
-from apis.views import BaseAPIView, JsonResponse, request
+from apis.views import BaseAPIView, HttpRequest, JsonResponse
 from authentication import issue_keys
 from authentication.utils import admin_login
 
 
 class AdminView(BaseAPIView):
-    def get(request: request) -> JsonResponse:
+    def get(request: HttpRequest) -> JsonResponse:
         try:
             page = int(request.GET.get("page", 1))
         except ValueError:
@@ -16,7 +16,7 @@ class AdminView(BaseAPIView):
         details = admin_model.get_unit_details(page=page)
         return JsonResponse(data={"data": details}, status=200)
 
-    def post(request: request) -> JsonResponse:
+    def post(request: HttpRequest) -> JsonResponse:
         validate = AdminSchema(request.data).approval()
         if "error" in validate:
             return JsonResponse(data={"error": validate["error"]}, status=400)

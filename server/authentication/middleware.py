@@ -1,5 +1,5 @@
 import fire_watch
-from django.http import request
+from django.http.request import HttpRequest
 from django.http.response import JsonResponse
 from fire_watch.config_utils import Conf
 from fire_watch.errorfactory import InvalidToken
@@ -16,7 +16,7 @@ class AuthMiddleWare:
         self._protected = "/user"
         self._admin_path = "/admin"
 
-    def attach_user(self, request: request):
+    def attach_user(self, request: HttpRequest):
         """Attach the user object to `request.user` if in view UserAPI
         and user is authenticated.
 
@@ -32,7 +32,7 @@ class AuthMiddleWare:
                 else fire_watch.conf.pagination_limit["production"],
             )
 
-    def authenticate_user_request(self, request: request) -> APIView:
+    def authenticate_user_request(self, request: HttpRequest) -> APIView:
         """Authenticate each request made to a protected route.
 
         Args:
@@ -53,7 +53,7 @@ class AuthMiddleWare:
             return self.view(request)
         return JsonResponse(data={"error": "Invalid credentials"}, status=403)
 
-    def authenticate_admin_request(self, request: request):
+    def authenticate_admin_request(self, request: HttpRequest):
         try:
             token = get_token(request.headers)
         except InvalidToken as e:

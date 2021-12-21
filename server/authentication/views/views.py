@@ -2,13 +2,13 @@ from datetime import timedelta
 
 from apis.definitions import UserSchema
 from authentication.utils import login, reset_password
-from apis.views import BaseAPIView, JsonResponse, request
+from apis.views import BaseAPIView, JsonResponse, HttpRequest
 
 from .. import issue_keys
 
 
 class Login(BaseAPIView):
-    def post(self, request: request) -> JsonResponse:
+    def post(self, request: HttpRequest) -> JsonResponse:
         """Login users
 
         Args:
@@ -42,7 +42,7 @@ class Login(BaseAPIView):
 
 
 class ResetPassword(BaseAPIView):
-    def post(self, request: request) -> JsonResponse:
+    def post(self, request: HttpRequest) -> JsonResponse:
         """Allow reset password
 
         Args:
