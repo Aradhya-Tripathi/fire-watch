@@ -5,6 +5,7 @@ from apis import model as api_model
 from fire_watch.errorfactory import EmptyUpdateClause, UserDoesNotExist
 from .base_model import BaseModel
 
+
 class User(BaseModel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -13,10 +14,10 @@ class User(BaseModel):
         self._user = self.db.users.find_one({"email": self.email})
 
     def __repr__(self) -> str:
-        return self.user_name
+        return self.user_details
 
     def __str__(self) -> str:
-        return self.user_name
+        return self.user_details
 
     @property
     def user_details(self):
