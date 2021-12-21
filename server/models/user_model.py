@@ -5,9 +5,6 @@ from apis import model as api_model
 from fire_watch.errorfactory import EmptyUpdateClause, UserDoesNotExist
 from .base_model import BaseModel
 
-from .base_model import BaseModel
-
-
 class User(BaseModel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
