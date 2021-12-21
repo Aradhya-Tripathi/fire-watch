@@ -4,7 +4,13 @@ from importlib import import_module
 
 from authentication.tests import test_auth_model, test_jwt
 from fire_watch.log.tests import test_logging
-from tests import test_login, test_reset_password, test_units, test_user_operations
+from tests import (
+    test_admin,
+    test_login,
+    test_reset_password,
+    test_units,
+    test_user_operations,
+)
 
 
 def configure_options():
@@ -26,6 +32,7 @@ def get_server_tests(suite):
     suite.addTest(unittest.makeSuite(test_units.TestUnit))
     suite.addTest(unittest.makeSuite(test_reset_password.TestResetPassword))
     suite.addTest(unittest.makeSuite(test_user_operations.UserTests))
+    suite.addTest(unittest.makeSuite(test_admin.TestAdmin))
 
 
 def main():
