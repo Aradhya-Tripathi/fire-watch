@@ -39,7 +39,7 @@ class AuthModel(BaseModel):
             {"unit_id": doc["unit_id"], "email": doc["email"], "units": doc["units"]}
         )
 
-    def credentials(self, password, email):
+    def login(self, password, email):
         user = self.db.users.find_one({"password": password, "email": email})
         if user:
             return user
@@ -59,3 +59,6 @@ class AuthModel(BaseModel):
             update={"$set": {"password": new_passwd}},
         )
         return None
+
+    def admin_login(self, *args, **kwargs):
+        return admin_model.login(*args, **kwargs)
