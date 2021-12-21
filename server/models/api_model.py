@@ -67,24 +67,24 @@ class ApiModel(BaseModel):
     def get_collected_data(
         self,
         page: int,
-        email: Optional[str] = None,
+        unit_id: Optional[str] = None,
     ):
         skip, limit = pagination_utils(
             page=page, page_limit=fire_watch.conf.pagination_limit
         )
         project_pipeline = {
             "$project": {
-                "email": email,
+                #     # "email": 1,
                 "_id": 0,
-                "email": 0,
-                "unit_id": 0,
-            }
+                "unit_id": 0
+                #     "unit_id": 0,
+            },
         }
-        if not email:
-            project_pipeline["$project"]["email"] = {}
 
+        match = {"unit_id": unit_id} if unit_id else {}
         units = self.db.units.aggregate(
             [
+                {"$match": match},
                 {"$limit": limit},
                 {"$skip": skip},
                 project_pipeline,

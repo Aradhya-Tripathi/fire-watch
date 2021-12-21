@@ -39,7 +39,7 @@ class User(BaseModel):
 
     def data(self, page):
         if data := api_model.get_collected_data(
-            email=self.email,
+            unit_id=self.unit_id,
             page=page,
         ):
             return list(data)
