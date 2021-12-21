@@ -39,9 +39,3 @@ class AdminModel(BaseModel):
             ]
         )
         return list(data)
-
-    def login(self, password, email):
-        admin = self.db.Admin.find_one({"email": email, "password": password})
-        if admin:
-            return admin
-        raise InvalidCredentialsError({"error": "Invalid credentials!"})
