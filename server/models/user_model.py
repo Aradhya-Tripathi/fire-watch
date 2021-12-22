@@ -4,17 +4,11 @@ from admin import admin_model
 from apis import model as api_model
 from fire_watch.errorfactory import EmptyUpdateClause, UserDoesNotExist
 
-from models import db
-
 from .base_model import BaseModel
 
 
 class User(BaseModel):
     def __init__(self, *args, **kwargs):
-        #! Can't call super init here as
-        #! it would connect to the database each
-        #! time a request is made to `/user/details`
-        self.db = db.db
         self.user_name = kwargs["user_name"]
         self.email = kwargs["email"]
         self._user = self.db.users.find_one({"email": self.email})
