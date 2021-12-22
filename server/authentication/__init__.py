@@ -1,5 +1,9 @@
+from dotenv import load_dotenv
+from models.auth_model import AuthModel
+
 from .issue_jwt import TokenAuth
-from .models import AuthModel
+
+load_dotenv()
 
 issue_keys = TokenAuth()
 auth_model = AuthModel()

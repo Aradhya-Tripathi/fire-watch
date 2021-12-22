@@ -1,0 +1,15 @@
+{
+  "max_unit_entry": 200,
+  "send_alerts": ["email", "ws"],
+  "logs": {
+    "path": "./server.log",
+    "level": "ERROR"
+  },
+  "socket": {
+    "base_group": "Alerts"
+  },
+  "developer": true,
+  "pagination_limit": { "debug": 20, "production": 10 },
+  "throttle_rate": { "debug": "100/min", "production": "10/min" },
+  "allowed_hosts": ["*"]
+}

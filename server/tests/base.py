@@ -1,3 +1,4 @@
+import json
 import os
 from unittest import TestCase
 
@@ -22,6 +23,7 @@ class CustomTestCase(TestCase):
     base_url = "http://localhost:8000/"
     client = pymongo.MongoClient(DATABASE["Test"]["MONGO_URI"])
     db = client[DATABASE["Test"]["DB"]]
+    headers = {"Content-Type": "application/json"}
 
     def user_register(
         self,
@@ -39,6 +41,26 @@ class CustomTestCase(TestCase):
 
         return doc
 
+    def user_login(self):
+        user_doc = self.user_register()
+        response = self.request.post(
+            self.base_url + "register", data=json.dumps(user_doc), headers=self.headers
+        )
+        self.assertEqual(response.status_code, 201)
+
+        login_response = self.request.post(
+            self.base_url + "login",
+            data=json.dumps(
+                {"email": user_doc["email"], "password": user_doc["password"]}
+            ),
+            headers=self.headers,
+        )
+        self.assertEqual(login_response.status_code, 200)
+        user_creds = login_response.json()["access_token"]
+        return user_creds
+
     def clear_all(self):
         self.db.drop_collection("users")
         self.db.drop_collection("units")
+        self.db.drop_collection("Admin")
+        self.db.drop_collection("AdminCredentials")

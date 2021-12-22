@@ -6,10 +6,9 @@ class TestResetPassword(CustomTestCase):
     def setUp(self) -> None:
         self.clear_all()
         self.initial_password = "TestPassword"
-        self.headers = {"Content-Type": "application/json"}
         self.user = self.user_register(password=self.initial_password)
         response = self.request.post(
-            self.base_url + "apis/register",
+            self.base_url + "register",
             data=json.dumps(self.user),
             headers=self.headers,
         )
@@ -24,7 +23,7 @@ class TestResetPassword(CustomTestCase):
             "new_passwd": new_password,  # Using the new password
         }
         response = self.request.post(
-            self.base_url + "apis/reset-password",
+            self.base_url + "reset-password",
             data=json.dumps(doc),
             headers=self.headers,
         )
@@ -37,7 +36,7 @@ class TestResetPassword(CustomTestCase):
 
         # Try logging in with old password
         response = self.request.post(
-            self.base_url + "apis/login",
+            self.base_url + "login",
             data=json.dumps(doc),
             headers=self.headers,
         )
@@ -48,7 +47,7 @@ class TestResetPassword(CustomTestCase):
         # Try logging in with new password
         doc["password"] = new_password
         response = self.request.post(
-            self.base_url + "apis/login",
+            self.base_url + "login",
             data=json.dumps(doc),
             headers=self.headers,
         )
