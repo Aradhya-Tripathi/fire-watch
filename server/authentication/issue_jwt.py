@@ -60,7 +60,7 @@ class TokenAuth:
             assert (
                 self.verify_role(is_admin, payload) == True
             ), "Role verification failed!"
-        except Exception as e:
+        except Exception:
             return
         return payload
 

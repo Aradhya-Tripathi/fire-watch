@@ -9,9 +9,6 @@ from .base_model import BaseModel
 
 
 class ApiModel(BaseModel):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
     def register_user(self, *args, **kwargs):
         auth_model.register_user(*args, **kwargs)
 

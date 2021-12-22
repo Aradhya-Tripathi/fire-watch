@@ -20,11 +20,10 @@ class BaseModel:
         "data": list,
     }
 
+    fire_watch.print("[bold green]Establishing Connection")
     max_entry = fire_watch.conf.max_unit_entry
-
-    def __init__(self, *args, **kwargs):
-        client = pymongo.MongoClient(os.getenv("MONGO_URI"))
-        self.db = client[fire_watch.flags.db_name]
+    client = pymongo.MongoClient(os.getenv("MONGO_URI"))
+    db = client[fire_watch.flags.db_name]
 
     def get_uid(self, length: int):
         """Get unique UID for a document.
