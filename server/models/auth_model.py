@@ -7,9 +7,6 @@ from admin import admin_model
 
 
 class AuthModel(BaseModel):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
     def validate_unit_id(self, unit_id: str):
         documents = self.db.units.find_one({"unit_id": unit_id})
         if documents:
