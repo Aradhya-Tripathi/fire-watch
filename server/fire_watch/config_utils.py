@@ -61,7 +61,7 @@ def set_debug_flags():
     fire_watch.flags.in_debug = True
 
 
-def set_db_name(conf):
+def set_db_name(conf: Conf):
     fire_watch.flags.db_name = (
         os.getenv("TESTDB") if conf.developer or os.getenv("CI") else os.getenv("DB")
     )
