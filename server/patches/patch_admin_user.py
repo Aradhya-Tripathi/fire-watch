@@ -5,19 +5,14 @@ import sys
 from hashlib import sha256
 
 import fire_watch
-import pymongo
 from django.core.management import execute_from_command_line
-
-
-client = pymongo.MongoClient(os.getenv("MONGO_URI"))
-db = client[fire_watch.flags.db_name]
 
 
 def create_admin_user():
     email_re = re.compile("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
     email = input("Email: ")
     password = getpass.getpass("Password: ")
-    if admin := db.AdminCredentials.find_one({"email": email}):
+    if admin := fire_watch.db.AdminCredentials.find_one({"email": email}):
         fire_watch.print(f"[bold red]Admin: {admin['email']} already exists!")
         sys.exit(0)
     if not email_re.fullmatch(email) or not password:
@@ -38,16 +33,18 @@ def remove_admin_user():
         sys.exit(0)
 
     password = sha256(password.encode()).hexdigest()
-    admin = db.AdminCredentials.find_one({"email": email, "password": password})
+    admin = fire_watch.db.AdminCredentials.find_one(
+        {"email": email, "password": password}
+    )
     if not admin:
         fire_watch.print("[bold red]Invalid credentials!")
         sys.exit(0)
-    db.AdminCredentials.find_one_and_delete({"email": email})
+    fire_watch.db.AdminCredentials.find_one_and_delete({"email": email})
     fire_watch.print(f"[bold green]Removed admin {admin['email']}!")
 
 
 def list_admins():
-    admins = list(db.AdminCredentials.find({}, {"_id": 0, "password": 0}))
+    admins = list(fire_watch.db.AdminCredentials.find({}, {"_id": 0, "password": 0}))
     if not admins:
         fire_watch.print("[bold red]No admins present!")
         sys.exit(0)

@@ -1,36 +1,17 @@
 import os
-import sys
 from pathlib import Path
 
-from dotenv import load_dotenv
-
 import fire_watch
-from fire_watch.config_utils import (
-    init_flags,
-    init_print_utils,
-    sanitized_configs,
-    set_db_name,
-    set_debug_flags,
-)
+from fire_watch.config_utils import set_debug_flags
 
-load_dotenv()
+
 _path = Path(__file__).resolve()
 
 BASE_DIR = _path.parent.parent
 
-# Initialize configuration
-conf = sanitized_configs(base_path=_path.parent)
-
-# Initialize application wide flags
-init_flags()
-
-# initialize print utils
-init_print_utils(file=sys.stderr)
-
-
 SECRET_KEY = os.getenv("SECRET_KEY")
 
-DEBUG = conf.developer
+DEBUG = fire_watch.conf.developer
 
 if not DEBUG:
     import sentry_sdk
@@ -39,13 +20,10 @@ if not DEBUG:
     sentry_sdk.init(dsn=os.getenv("SENTRY_DSN"), integrations=[DjangoIntegration()])
     fire_watch.print("[bold cyan blue]Sentry Enabled :rocket:")
 
-set_db_name(conf)
-
 if DEBUG:
     set_debug_flags()
 
-fire_watch.flags.use_secret = False if os.getenv("CI") else True
-ALLOWED_HOSTS = conf.allowed_hosts
+ALLOWED_HOSTS = fire_watch.conf.allowed_hosts
 
 import patches
 
@@ -82,11 +60,29 @@ AUTH_PASSWORD_VALIDATORS = [
 
 ROOT_URLCONF = "fire_watch.urls"
 
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+            ],
+        },
+    },
+]
+
 ASGI_APPLICATION = "fire_watch.asgi.application"
 WSGI_APPLICATION = "fire_watch.wsgi.application"
 
 throttle_rate = (
-    conf.throttle_rate["debug"] if DEBUG else conf.throttle_rate["production"]
+    fire_watch.conf.throttle_rate["debug"]
+    if DEBUG
+    else fire_watch.conf.throttle_rate["production"]
 )
 fire_watch.flags.throttle_rate = throttle_rate
 REST_FRAMEWORK = {

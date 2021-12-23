@@ -4,9 +4,9 @@ Free-Watch
 
 """
 
+from . import startup
 
-from fire_watch.settings import conf
-
+startup.init()
 
 __name__ = "Fire-Watch"
 __version__ = "1.0.0"

@@ -1,6 +1,7 @@
-from fire_watch.settings import conf
-from fire_watch.errorfactory import LogsNotEnabled
 import logging
+
+import fire_watch
+from fire_watch.errorfactory import LogsNotEnabled
 
 FMT = "%(asctime)s:%(name)s:%(message)s"
 
@@ -21,7 +22,7 @@ def get_logger(logger_name: str, filename: str, level: int = 10) -> logging.getL
         logging.getLogger: logger object
     """
     logger = logging.getLogger(logger_name)
-    if conf["logs"]:
+    if fire_watch.conf["logs"]:
         logger.setLevel(level=level)
         file_handler = logging.FileHandler(filename, mode="a")
         file_handler.setFormatter(logging.Formatter(FMT))
