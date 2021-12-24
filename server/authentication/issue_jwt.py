@@ -1,7 +1,7 @@
 import os
 import secrets
 from datetime import datetime, timedelta
-from typing import Dict, Union
+from typing import Dict, Optional, Union
 
 import fire_watch
 import jwt
@@ -21,6 +21,12 @@ class TokenAuth:
             payload["exp"] = current_time + time
         else:
             payload["exp"] = current_time + timedelta(hours=time)
+
+    def is_valid_refresh(self, key):
+        payload = self.verify_key(key)
+        if payload:
+            return payload.get("refresh", False)
+        return False
 
     def generate_key(
         self,
@@ -47,7 +53,9 @@ class TokenAuth:
 
         return dict(access_token=access_token)
 
-    def verify_key(self, is_admin: bool, key: Union[str, Dict[str, str]]):
+    def verify_key(
+        self, key: Union[str, Dict[str, str]], is_admin: Optional[bool] = None
+    ):
         if isinstance(key, dict):
             key = key["access_token"]
         try:
@@ -57,12 +65,26 @@ class TokenAuth:
                 options={"verify_exp": True, "verify_signature": True},
                 algorithms=["HS256"],
             )
-            assert (
-                self.verify_role(is_admin, payload) == True
-            ), "Role verification failed!"
+            if is_admin is not None:
+                assert (
+                    self.verify_role(is_admin, payload) == True
+                ), "Role verification failed!"
         except Exception:
             return
         return payload
 
     def verify_role(self, is_admin, payload):
         return payload.get("is_admin") == is_admin
+
+    def refresh_to_access(self, key):
+        if payload := self.verify_key(is_admin=None, key=key):
+            is_admin = payload["is_admin"]
+            if payload.get("refresh"):
+                del payload["refresh"]
+                return self.generate_key(
+                    payload=payload,
+                    expiry=fire_watch.conf.token_expiration,
+                    get_refresh=True,
+                    refresh_expiry=fire_watch.conf.refresh_expiration,
+                    is_admin=is_admin,
+                )

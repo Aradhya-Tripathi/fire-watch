@@ -48,6 +48,7 @@ class AuthMiddleWare:
             return JsonResponse(data={"error": str(e)}, status=403)
         if payload := issue_keys.verify_key(key=token, is_admin=False):
             request.auth_user = Conf(payload)
+            request.is_admin = False
             #! Warning: Only attach user object after authentication!
             self.attach_user(request)
             return self.view(request)
@@ -74,6 +75,7 @@ class AuthMiddleWare:
             return JsonResponse(data={"error": str(e)}, status=403)
         if payload := issue_keys.verify_key(key=token, is_admin=True):
             request.auth_admin = Conf(payload)
+            request.is_admin = True
             return self.view(request)
         return JsonResponse(data={"error": "Invalid credentials"}, status=403)
 

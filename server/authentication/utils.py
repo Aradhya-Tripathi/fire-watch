@@ -2,8 +2,9 @@ from hashlib import sha256
 from typing import Dict, Union
 
 from fire_watch.errorfactory import InvalidToken
+from rest_framework.permissions import BasePermission
 
-from authentication import auth_model
+from authentication import auth_model, issue_keys
 
 
 def get_token(headers: Dict[str, Union[int, str]]):
@@ -35,3 +36,12 @@ def reset_password(data: Dict[str, str]) -> None:
 def admin_login(password: str, email: str):
     password = sha256(password.encode()).hexdigest()
     return auth_model.admin_login(password=password, email=email)
+
+
+class RefreshToAccessPermission(BasePermission):
+    def has_permission(self, request, view):
+        token = get_token(headers=request.headers)
+        if issue_keys.is_valid_refresh(key=token):
+            request.refresh_token = token
+            return True
+        return False

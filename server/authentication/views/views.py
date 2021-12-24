@@ -1,8 +1,9 @@
 from datetime import timedelta
 
+import fire_watch
 from apis.definitions import UserSchema
-from authentication.utils import login, reset_password
-from apis.views import BaseAPIView, JsonResponse, HttpRequest
+from apis.views import BaseAPIView, HttpRequest, JsonResponse
+from authentication.utils import RefreshToAccessPermission, login, reset_password
 
 from .. import issue_keys
 
@@ -27,9 +28,9 @@ class Login(BaseAPIView):
         payload = {"user_name": creds["user_name"], "email": creds["email"]}
         key = issue_keys.generate_key(
             payload=payload,
-            expiry=timedelta(hours=1),
+            expiry=timedelta(hours=fire_watch.conf.token_expiration),
             get_refresh=True,
-            refresh_exipry=timedelta(hours=12),
+            refresh_exipry=timedelta(hours=fire_watch.conf.refresh_expiration),
             is_admin=False,
         )
         return JsonResponse(
@@ -56,3 +57,11 @@ class ResetPassword(BaseAPIView):
             return JsonResponse(data={"error": validate["error"]}, status=400)
         reset_password(request.data)
         return JsonResponse(data={}, status=200)
+
+
+class RefreshToAccess(BaseAPIView):
+    permission_classes = [RefreshToAccessPermission]
+
+    def get(self, request: HttpRequest):
+        tokens = issue_keys.refresh_to_access(request.refresh_token)
+        return JsonResponse(data=tokens, status=200)
