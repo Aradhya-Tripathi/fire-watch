@@ -1,6 +1,7 @@
 from hashlib import sha256
 from typing import Dict, Union
 
+import fire_watch
 from fire_watch.errorfactory import InvalidToken
 from rest_framework.permissions import BasePermission
 
@@ -41,7 +42,9 @@ def admin_login(password: str, email: str):
 class RefreshToAccessPermission(BasePermission):
     def has_permission(self, request, view):
         token = get_token(headers=request.headers)
-        if issue_keys.is_valid_refresh(key=token):
+        if issue_keys.is_valid_refresh(key=token) and not fire_watch.cache.sismember(
+            "Blacklist", token
+        ):
             request.refresh_token = token
             return True
         return False
