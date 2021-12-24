@@ -18,6 +18,7 @@ constantly==15.1.0; python_full_version >= "3.6.7" and python_version >= "3.6"
 contextlib2==21.6.0; python_version >= "3.6"
 cryptography==36.0.0; python_full_version >= "3.6.7" and python_version >= "3.7"
 daphne==3.0.2; python_version >= "3.6"
+deprecated==1.2.13; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
 django==3.2.8; python_version >= "3.6"
 djangorestframework==3.12.4; python_version >= "3.5"
 dnspython==2.1.0; python_version >= "3.6"
@@ -29,6 +30,7 @@ httpx==0.20.0; python_version >= "3.6"
 hyperlink==21.0.0; python_full_version >= "3.6.7" and python_version >= "3.7"
 idna==3.3; python_full_version >= "3.6.2" and python_version >= "3.6" and (python_version >= "3.7" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.7")
 incremental==21.3.0; python_full_version >= "3.6.7" and python_version >= "3.6"
+keydb==0.0.1; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.5.0")
 msgpack==1.0.3; python_version >= "3.6"
 mypy-extensions==0.4.3; python_full_version >= "3.6.2"
 pathspec==0.9.0; python_full_version >= "3.6.2"
@@ -43,6 +45,7 @@ pymongo==3.12.3
 pyopenssl==21.0.0; python_full_version >= "3.6.7" and python_version >= "3.6"
 python-dotenv==0.19.2; python_version >= "3.5"
 pytz==2021.3; python_version >= "3.6"
+redis==4.0.2; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
 requests==2.26.0; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.6.0")
 rfc3986==1.5.0; python_version >= "3.6"
 rich==10.16.0; python_full_version >= "3.6.2" and python_full_version < "4.0.0"
@@ -60,4 +63,5 @@ typing-extensions==4.0.1
 urllib3==1.26.7; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version < "4"
 uvicorn==0.15.0
 websockets==10.1; python_version >= "3.7"
+wrapt==1.13.3; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
 zope.interface==5.4.0; python_full_version >= "3.6.7" and python_version >= "3.6"
