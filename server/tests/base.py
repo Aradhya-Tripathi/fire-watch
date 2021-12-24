@@ -41,7 +41,7 @@ class CustomTestCase(TestCase):
 
         return doc
 
-    def user_login(self):
+    def user_login(self, get_refresh=False):
         user_doc = self.user_register()
         response = self.request.post(
             self.base_url + "register", data=json.dumps(user_doc), headers=self.headers
@@ -49,15 +49,17 @@ class CustomTestCase(TestCase):
         self.assertEqual(response.status_code, 201)
 
         login_response = self.request.post(
-            self.base_url + "login",
+            self.base_url + "auth/login",
             data=json.dumps(
                 {"email": user_doc["email"], "password": user_doc["password"]}
             ),
             headers=self.headers,
         )
         self.assertEqual(login_response.status_code, 200)
-        user_creds = login_response.json()["access_token"]
-        return user_creds
+        user_creds = login_response.json()
+        if get_refresh:
+            return user_creds
+        return user_creds["access_token"]
 
     def clear_all(self):
         self.db.drop_collection("users")
