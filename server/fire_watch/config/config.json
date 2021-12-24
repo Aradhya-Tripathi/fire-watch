@@ -11,5 +11,7 @@
   "developer": true,
   "pagination_limit": { "debug": 20, "production": 10 },
   "throttle_rate": { "debug": "100/min", "production": "10/min" },
-  "allowed_hosts": ["*"]
+  "allowed_hosts": ["*"],
+  "token_expiration": 1,
+  "refresh_expiration": 12
 }
