@@ -1,5 +1,4 @@
 import getpass
-import os
 import re
 import sys
 from hashlib import sha256
@@ -51,7 +50,12 @@ def list_admins():
     fire_watch.print_json(data=admins)
 
 
+def show_conf():
+    fire_watch.print_json(data=fire_watch.conf)
+
+
 print("\033[1mRunning Patches!")
 execute_from_command_line.create_admin_user = create_admin_user
 execute_from_command_line.remove_admin_user = remove_admin_user
 execute_from_command_line.list_admins = list_admins
+execute_from_command_line.show_conf = show_conf

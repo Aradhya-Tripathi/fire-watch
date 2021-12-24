@@ -17,12 +17,15 @@ def main():
             "available on your PYTHONPATH environment variable? Did you "
             "forget to activate a virtual environment?"
         ) from exc
+    # Todo: refactor this shit
     if "create-admin-user" in sys.argv:
         execute_from_command_line.create_admin_user()
     elif "remove-admin-user" in sys.argv:
         execute_from_command_line.remove_admin_user()
     elif "list-admins" in sys.argv:
         execute_from_command_line.list_admins()
+    elif "show-configs" in sys.argv:
+        execute_from_command_line.show_conf()
     else:
         execute_from_command_line(sys.argv)
 
