@@ -13,5 +13,6 @@
   "throttle_rate": { "debug": "100/min", "production": "10/min" },
   "allowed_hosts": ["*"],
   "token_expiration": 1,
-  "refresh_expiration": 12
+  "refresh_expiration": 12,
+  "cache_conf": { "host": "127.0.0.1", "port": 6379 }
 }
