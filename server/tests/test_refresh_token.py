@@ -15,6 +15,13 @@ class TestRefreshToAccess(CustomTestCase):
         self.assertIn("access_token", new_tokens)
         self.assertIn("refresh_token", new_tokens)
 
+        # assert expiry of once used refresh token
+        response = self.request.get(
+            self.base_url + "auth/refresh",
+            headers=headers,
+        )
+        self.assertEqual(response.status_code, 403)
+
     def test_access_as_refresh(self):
         creds = self.user_login(get_refresh=True)
         headers = self.headers.copy()
