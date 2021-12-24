@@ -1,11 +1,4 @@
-import os
-
-import jwt
-from dotenv import load_dotenv
-
 from .base import CustomTestCase
-
-load_dotenv()
 
 
 class TestRefreshToAccess(CustomTestCase):
@@ -21,39 +14,6 @@ class TestRefreshToAccess(CustomTestCase):
         ).json()
         self.assertIn("access_token", new_tokens)
         self.assertIn("refresh_token", new_tokens)
-        new_payload = jwt.decode(
-            new_tokens["access_token"],
-            key=os.getenv("SECRET_KEY"),
-            algorithms=["HS256"],
-        )
-
-        old_payload = jwt.decode(
-            creds["access_token"],
-            key=os.getenv("SECRET_KEY"),
-            algorithms=["HS256"],
-        )
-
-        new_refresh_payload = jwt.decode(
-            new_tokens["refresh_token"],
-            key=os.getenv("SECRET_KEY"),
-            algorithms=["HS256"],
-        )
-
-        old_refresh_payload = jwt.decode(
-            creds["refresh_token"],
-            key=os.getenv("SECRET_KEY"),
-            algorithms=["HS256"],
-        )
-
-        self.assertEqual(new_refresh_payload["email"], old_refresh_payload["email"])
-        self.assertEqual(
-            new_refresh_payload["is_admin"], old_refresh_payload["is_admin"]
-        )
-        self.assertEqual(new_refresh_payload.get("refresh"), True)
-
-        self.assertEqual(new_payload["email"], old_payload["email"])
-        self.assertEqual(new_payload["is_admin"], old_payload["is_admin"])
-        self.assertEqual(new_payload.get("refresh"), None)
 
     def test_access_as_refresh(self):
         creds = self.user_login(get_refresh=True)
