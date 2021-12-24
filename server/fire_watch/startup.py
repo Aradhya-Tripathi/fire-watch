@@ -5,7 +5,13 @@ from dotenv import load_dotenv
 
 import fire_watch
 
-from .config_utils import connect_db, init_flags, init_print_utils, sanitized_configs
+from .config_utils import (
+    connect_db,
+    init_cache,
+    init_flags,
+    init_print_utils,
+    sanitized_configs,
+)
 
 
 def init():
@@ -22,3 +28,4 @@ def init():
 
     # Connect to db
     connect_db(fire_watch.conf)
+    init_cache()

@@ -5,6 +5,7 @@ from types import SimpleNamespace
 from typing import Any, Optional
 
 import pymongo
+from keydb import KeyDB
 from rich.console import Console
 
 import fire_watch
@@ -51,6 +52,16 @@ def sanitized_configs(base_path: Path):
     conf = get_config(base_path)
     # TODO: sanitize config file
     return conf
+
+
+def init_cache():
+    """Connect to redis server with the configurations
+    present in `fire_watch.conf`.
+    """
+    fire_watch.cache = KeyDB(
+        host=fire_watch.conf.cache_conf["host"],
+        port=fire_watch.conf.cache_conf["port"],
+    )
 
 
 def init_flags():
