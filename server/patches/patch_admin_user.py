@@ -19,7 +19,7 @@ def create_admin_user():
         sys.exit(0)
 
     password = sha256(password.encode()).hexdigest()
-    db.AdminCredentials.insert_one({"email": email, "password": password})
+    fire_watch.db.AdminCredentials.insert_one({"email": email, "password": password})
     fire_watch.print(f"[bold green]Added new admin {email}!")
 
 
