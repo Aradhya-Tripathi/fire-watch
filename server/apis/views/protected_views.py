@@ -1,4 +1,4 @@
-from apis.views import BaseAPIView, JsonResponse, HttpRequest
+from apis.views import BaseAPIView, HttpRequest, JsonResponse
 from apis.views.decorators import api_view
 
 
