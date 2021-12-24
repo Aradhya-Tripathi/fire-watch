@@ -64,4 +64,10 @@ class RefreshToAccess(BaseAPIView):
 
     def get(self, request: HttpRequest):
         tokens = issue_keys.refresh_to_access(request.refresh_token)
+        fire_watch.cache.sadd("Blacklist", request.refresh_token)
+        fire_watch.cache.expiremember(
+            "Blacklist",
+            request.refresh_token,
+            fire_watch.conf.refresh_expiration * 60 * 60,
+        )
         return JsonResponse(data=tokens, status=200)
