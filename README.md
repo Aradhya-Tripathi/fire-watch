@@ -1,5 +1,5 @@
 <div align="center">
-  <img alt="Free-Watch Logo" src="docs/free-watch.png" height="56" />
+  <img alt="Free-Watch Logo" src="docs/fire-watch.png" height="56" />
 </div>
 
 <br>
@@ -46,7 +46,41 @@ or
 $ poetry install
 ```
 
-Start the Django server
+### Cache
+
+Using [KeyDB](https://keydb.dev) as alternative to [Redis](https://redis.io)
+
+```
+echo "deb https://download.keydb.dev/open-source-dist $(lsb_release -sc) main" | sudo tee /etc/aptsources.list.d/keydb.list
+$ sudo wget -O /etc/apt/trusted.gpg.d/keydb.gpg https://download.keydb.dev/open-source-dist/keyring.gpg
+
+$ sudo apt update
+$ sudo apt install keydb
+
+```
+
+### Server Configurations
+
+- Being a configurable plug-in, `Fire-Watch` can be configured on the fly.
+- Configuration options are listed in the `./server/fire_watch/config/config.json`
+
+### Django Patches
+
+Patched `manage.py` the django administrative file with several additional functionalities to sit with the current server architecture.
+
+#### Options
+
+- show-configs.
+  - Shows current server configurations.
+- list-admins.
+  - Shows all present admins.
+- create-admin-user.
+  - Drawn from native `create super user`, creates an admin user.
+
+* remove-admin-user.
+  - Removes admin user.
+
+### Run development server
 
 ```
 $ bash ./run_server.sh
@@ -54,7 +88,7 @@ $ bash ./run_server.sh
 
 ## 📜 License
 
-`free-watch` is available under the MIT license. See the LICENSE file for more info.
+`Fire-watch` is available under the MIT license. See the LICENSE file for more info.
 
 ## 🤝 Contributing
 
