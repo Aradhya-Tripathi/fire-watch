@@ -1,16 +1,16 @@
 <div align="center">
-  <img alt="Free-Watch Logo" src="docs/fire-watch.png" height="56" />
+  <img alt="Fire-watch Logo" src="docs/fire-watch.png" height="56" />
 </div>
 
 <br>
 <p align="center">
-<b>Free-Watch is a simple device monitoring service providing CLI support</b>
+<b>Fire-watch is a simple device monitoring service providing CLI support</b>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/github/issues/Aradhya-Tripathi/free-watch"/>
-  <img src="https://img.shields.io/github/forks/Aradhya-Tripathi/free-watch"/>
-  <img src="https://img.shields.io/github/stars/Aradhya-Tripathi/free-watch?style=social"/>
+  <img src="https://img.shields.io/github/issues/Aradhya-Tripathi/fire-watch"/>
+  <img src="https://img.shields.io/github/forks/Aradhya-Tripathi/fire-watch"/>
+  <img src="https://img.shields.io/github/stars/Aradhya-Tripathi/fire-watch?style=social"/>
   <img src="https://img.shields.io/badge/version-3.0.0-yellow" alt="version 3.0.0"/>
   <img src="https://img.shields.io/badge/license-MIT-blue" alt="license MIT"/>
   <img src="https://img.shields.io/badge/author-Aradhya%20Tripathi%20-green" alt="author Aradhya-Tripathi"/>
@@ -78,7 +78,11 @@ Patched `manage.py` the django administrative file with several additional funct
   - Drawn from native `create super user`, creates an admin user.
 
 * remove-admin-user.
+
   - Removes admin user.
+
+#### Usage
+![image](docs/show-configs.png)
 
 ### Run development server
 
@@ -90,15 +94,10 @@ $ bash ./run_server.sh
 
 `Fire-watch` is available under the MIT license. See the LICENSE file for more info.
 
-## 🤝 Contributing
-
-Please read [`Contributing.md`](https://github.com/SRM-IST-KTR/template/blob/main/Contributing.md) for details on our code of conduct, and the process for submitting pull requests to us.
-
 ## 💥 Contributors
 
-  <!-- replace 'githubsrm' with your repository name -->
-<a href="https://github.com/Aradhya-Tripathi/free-watch/graphs/contributors">
-<img src="https://contrib.rocks/image?repo=Aradhya-Tripathi/free-watch" alt="Contributors">
+<a href="https://github.com/Aradhya-Tripathi/fire-watch/graphs/contributors">
+<img src="https://contrib.rocks/image?repo=Aradhya-Tripathi/fire-watch" alt="Contributors">
 </a>
 
 ## 🚨 Forking this repo
