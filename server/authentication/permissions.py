@@ -1,5 +1,8 @@
 from rest_framework.permissions import BasePermission
 
+from authentication import issue_keys
+import fire_watch
+
 from .utils import get_token, validate_unit_id
 
 
@@ -12,3 +15,16 @@ class ValidateUnit(BasePermission):
         validate_unit_id(token)
         setattr(request, "unit_id", token)
         return True
+
+
+class RefreshToAccessPermission(BasePermission):
+    def has_permission(self, request, view):
+        """Allow accessing refresh route with valid refresh token,
+        check for blacklisted refresh tokens as well.
+        """
+        token = get_token(headers=request.headers)
+        if issue_keys.is_valid_refresh(key=token) and not fire_watch.cache.sismember(
+            "Blacklist", token
+        ):
+            request.refresh_token = token
+            return True

@@ -2,15 +2,16 @@ from channels.generic.websocket import JsonWebsocketConsumer
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
-from free_watch.errorfactory import SocketAuthenticationFailed
+from fire_watch.errorfactory import SocketAuthenticationFailed
 from .checks import authenticate
-import free_watch
-
-GROUP_NAME = free_watch.conf.socket["base_group"]
-free_watch.print(f"[bold][white]Group Name: {GROUP_NAME}")
+import fire_watch
 
 
 class Alert(JsonWebsocketConsumer):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.group_name = fire_watch.conf.socket["base_group"]
+
     def connect(self):
         try:
             authenticate(scope=self.scope)
@@ -29,7 +30,7 @@ class Alert(JsonWebsocketConsumer):
         """Add users to specified group, using `channel_name`
         as the unique user identifier.
         """
-        self.group_id = GROUP_NAME + str(self.scope["unit_id"])
+        self.group_id = self.group_name + str(self.scope["unit_id"])
         async_to_sync(self.channel_layer.group_add)(self.group_id, self.channel_name)
 
     def disconnect(self, code):

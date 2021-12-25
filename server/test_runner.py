@@ -1,10 +1,18 @@
+import argparse
 import unittest
-from tests import test_login, test_units, test_reset_password
-from authentication.tests import test_auth_model, test_jwt
-from free_watch.log.tests import test_logging
 from importlib import import_module
 
-import argparse
+import patches
+from authentication.tests import test_auth_model, test_jwt, test_refresh_to_access
+from fire_watch.log.tests import test_logging
+from tests import (
+    test_admin,
+    test_login,
+    test_reset_password,
+    test_units,
+    test_user_operations,
+    test_refresh_token,
+)
 
 
 def configure_options():
@@ -19,12 +27,16 @@ def get_unittests(suite):
     suite.addTest(unittest.makeSuite(test_auth_model.TestAuthModel))
     suite.addTest(unittest.makeSuite(test_jwt.TestJwt))
     suite.addTest(unittest.makeSuite(test_logging.TestLog))
+    suite.addTest(unittest.makeSuite(test_refresh_to_access.TestAccessToRefresh))
 
 
 def get_server_tests(suite):
     suite.addTest(unittest.makeSuite(test_login.TestAuthentication))
     suite.addTest(unittest.makeSuite(test_units.TestUnit))
     suite.addTest(unittest.makeSuite(test_reset_password.TestResetPassword))
+    suite.addTest(unittest.makeSuite(test_user_operations.UserTests))
+    suite.addTest(unittest.makeSuite(test_admin.TestAdmin))
+    suite.addTest(unittest.makeSuite(test_refresh_token.TestRefreshToAccess))
 
 
 def main():

@@ -19,7 +19,14 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r dev-dependencies.txt
+          pip install -r requirements.txt
+
+      - name: Install cache configs
+        run: |
+          echo "deb https://download.keydb.dev/open-source-dist $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/keydb.list
+          sudo wget -O /etc/apt/trusted.gpg.d/keydb.gpg https://download.keydb.dev/open-source-dist/keyring.gpg
+          sudo apt update
+          sudo apt install keydb
 
       - name: Run Tests
         env:

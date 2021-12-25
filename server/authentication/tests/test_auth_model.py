@@ -1,8 +1,8 @@
 import unittest
 from dotenv import load_dotenv
-from authentication.models import AuthModel
+from models.auth_model import AuthModel
 from authentication import utils
-from free_watch.errorfactory import InvalidUid
+from fire_watch.errorfactory import InvalidUid
 
 
 class TestAuthModel(unittest.TestCase):
