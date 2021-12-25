@@ -26,6 +26,8 @@ def main():
         execute_from_command_line.list_admins()
     elif "show-configs" in sys.argv:
         execute_from_command_line.show_conf()
+    elif "change-admin-password":
+        execute_from_command_line.change_admin_password()
     else:
         execute_from_command_line(sys.argv)
 
