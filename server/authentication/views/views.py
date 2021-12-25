@@ -3,7 +3,8 @@ from datetime import timedelta
 import fire_watch
 from apis.definitions import UserSchema
 from apis.views import BaseAPIView, HttpRequest, JsonResponse
-from authentication.utils import RefreshToAccessPermission, login, reset_password
+from authentication.permissions import RefreshToAccessPermission
+from authentication.utils import login, reset_password
 
 from .. import issue_keys
 

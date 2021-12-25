@@ -55,8 +55,8 @@ def sanitized_configs(base_path: Path):
 
 
 def init_cache():
-    """Connect to redis server with the configurations
-    present in `fire_watch.conf`.
+    """Connect to KeyDB server with the configurations
+    present in `fire_watch.conf, ref https://github.com/EQ-Alpha/KeyDB
     """
     fire_watch.cache = KeyDB(
         host=fire_watch.conf.cache_conf["host"],
@@ -66,7 +66,8 @@ def init_cache():
 
 def init_flags():
     fire_watch.flags = Flags()
-    fire_watch.flags.use_secret = False if os.getenv("CI") else True
+    fire_watch.flags.in_ci = os.getenv("CI")
+    fire_watch.flags.use_secret = False if fire_watch.flags.in_ci else True
 
 
 def set_debug_flags():
