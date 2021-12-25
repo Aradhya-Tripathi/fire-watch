@@ -17,10 +17,11 @@ class TokenAuth:
 
     @staticmethod
     def set_expiry(payload: Dict[str, str], current_time, time):
-        if isinstance(time, timedelta):
-            payload["exp"] = current_time + time
-        else:
-            payload["exp"] = current_time + timedelta(hours=time)
+        payload["exp"] = (
+            current_time + time
+            if isinstance(time, timedelta)
+            else current_time + timedelta(hours=time)
+        )
 
     def is_valid_refresh(self, key):
         payload = self.verify_key(key)
@@ -34,7 +35,7 @@ class TokenAuth:
         expiry: Union[int, timedelta] = 1,
         get_refresh: bool = False,
         is_admin: bool = False,
-        **kwargs,
+        refresh_expiry: Union[int, timedelta] = 12,
     ):
 
         current_time = datetime.utcnow()
@@ -45,8 +46,7 @@ class TokenAuth:
         access_token = jwt.encode(payload, key=self.signature)
 
         if get_refresh:
-            if value := kwargs.get("refresh_exipry", expiry):
-                self.set_expiry(payload, current_time, value)
+            self.set_expiry(payload, current_time, refresh_expiry)
             refresh_payload = {**{"refresh": True}, **payload}
             refresh_token = jwt.encode(refresh_payload, key=self.signature)
             return {"access_token": access_token, "refresh_token": refresh_token}
@@ -57,6 +57,8 @@ class TokenAuth:
         self, key: Union[str, Dict[str, str]], is_admin: Optional[bool] = None
     ):
         if isinstance(key, dict):
+            # Only verify access token by default if a dict is passed in.
+            # Use is_valid_refresh to verify refresh token.
             key = key["access_token"]
         try:
             payload = jwt.decode(
@@ -88,3 +90,19 @@ class TokenAuth:
                     refresh_expiry=fire_watch.conf.refresh_expiration,
                     is_admin=is_admin,
                 )
+
+    def valid_for(self, key: Union[str, int]):
+        """Checks the `alive_for` time of a token.
+        returns False if token already expired or invalid.
+
+        Args:
+            key Union[int, str]: token
+        """
+        current_time = datetime.utcnow()
+
+        if isinstance(key, int):
+            return datetime.utcfromtimestamp(key) - current_time
+
+        if payload := self.verify_key(key):
+            expiration = datetime.utcfromtimestamp(payload["exp"])
+            return expiration - current_time

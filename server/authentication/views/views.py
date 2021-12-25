@@ -3,6 +3,7 @@ from datetime import timedelta
 import fire_watch
 from apis.definitions import UserSchema
 from apis.views import BaseAPIView, HttpRequest, JsonResponse
+from authentication.definitions import logout_schema
 from authentication.permissions import RefreshToAccessPermission
 from authentication.utils import login, reset_password
 
@@ -31,7 +32,7 @@ class Login(BaseAPIView):
             payload=payload,
             expiry=timedelta(hours=fire_watch.conf.token_expiration),
             get_refresh=True,
-            refresh_exipry=timedelta(hours=fire_watch.conf.refresh_expiration),
+            refresh_expiry=timedelta(hours=fire_watch.conf.refresh_expiration),
             is_admin=False,
         )
         return JsonResponse(
@@ -69,6 +70,30 @@ class RefreshToAccess(BaseAPIView):
         fire_watch.cache.expiremember(
             "Blacklist",
             request.refresh_token,
-            fire_watch.conf.refresh_expiration * 60 * 60,
+            issue_keys.valid_for(request.refresh_token).seconds,
         )
         return JsonResponse(data=tokens, status=200)
+
+
+class Logout(BaseAPIView):
+    def post(self, request: HttpRequest):
+        tokens = logout_schema(request.data)
+        if not issue_keys.verify_key(
+            tokens["access_token"]
+        ) or not issue_keys.is_valid_refresh(tokens["refresh_token"]):
+            return JsonResponse(data={"error": "Invalid tokens"}, status=401)
+
+        fire_watch.cache.sadd(
+            "Blacklist", tokens["access_token"], tokens["refresh_token"]
+        )
+        fire_watch.expiremember(
+            "Blacklist",
+            tokens["access_token"],
+            issue_keys.valid_for(key=tokens["access_token"]).seconds,
+        )
+        fire_watch.expiremember(
+            "Blacklist",
+            tokens["refresh_token"],
+            issue_keys.valid_for(key=tokens["refresh_token"]).seconds,
+        )
+        return JsonResponse(data={"success": True}, status=200)
