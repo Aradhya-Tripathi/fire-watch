@@ -94,5 +94,5 @@ class Alert(BaseAPIView):
 
         token = utils.get_token(request.headers)
         self.logger.warning(f"Alert {json.dumps(request.data)}")
-        self.send_alert(token, request.data, to=request.auth_user["email"])
+        self.send_alert(token, request.data, to=request.current_user["email"])
         return JsonResponse(data={}, status=200)
