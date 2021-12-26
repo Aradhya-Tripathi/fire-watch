@@ -12,6 +12,7 @@ from tests import (
     test_units,
     test_user_operations,
     test_refresh_token,
+    test_logout,
 )
 
 
@@ -37,6 +38,7 @@ def get_server_tests(suite):
     suite.addTest(unittest.makeSuite(test_user_operations.UserTests))
     suite.addTest(unittest.makeSuite(test_admin.TestAdmin))
     suite.addTest(unittest.makeSuite(test_refresh_token.TestRefreshToAccess))
+    suite.addTest(unittest.makeSuite(test_logout.TestLogout))
 
 
 def main():

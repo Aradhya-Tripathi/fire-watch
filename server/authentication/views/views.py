@@ -86,12 +86,12 @@ class Logout(BaseAPIView):
         fire_watch.cache.sadd(
             "Blacklist", tokens["access_token"], tokens["refresh_token"]
         )
-        fire_watch.expiremember(
+        fire_watch.cache.expiremember(
             "Blacklist",
             tokens["access_token"],
             issue_keys.valid_for(key=tokens["access_token"]).seconds,
         )
-        fire_watch.expiremember(
+        fire_watch.cache.expiremember(
             "Blacklist",
             tokens["refresh_token"],
             issue_keys.valid_for(key=tokens["refresh_token"]).seconds,
