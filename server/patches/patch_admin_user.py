@@ -32,7 +32,7 @@ def remove_admin_user():
     password = getpass.getpass("Password: ")
 
     if not password or not email_re.fullmatch(email):
-        fire_watch.print(f"[bold red]Please enter valid details!")
+        fire_watch.print("[bold red]Please enter valid details!")
         sys.exit(0)
 
     password = sha256(password.encode()).hexdigest()
@@ -60,7 +60,7 @@ def change_password():
     new_password = getpass.getpass("New Password: ")
 
     if not password or not email_re.fullmatch(email) or not new_password:
-        fire_watch.print(f"[bold red]Please enter valid details!")
+        fire_watch.print("[bold red]Please enter valid details!")
         sys.exit(0)
 
     password = sha256(password.encode()).hexdigest()

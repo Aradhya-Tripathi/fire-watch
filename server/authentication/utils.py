@@ -1,11 +1,9 @@
 from hashlib import sha256
 from typing import Dict, Union
 
-import fire_watch
 from fire_watch.errorfactory import InvalidToken
-from rest_framework.permissions import BasePermission
 
-from authentication import auth_model, issue_keys
+from authentication import auth_model
 
 
 def get_token(headers: Dict[str, Union[int, str]]):

@@ -69,7 +69,7 @@ class TokenAuth:
             )
             if is_admin is not None:
                 assert (
-                    self.verify_role(is_admin, payload) == True
+                    self.verify_role(is_admin, payload) is True
                 ), "Role verification failed!"
         except Exception:
             return
