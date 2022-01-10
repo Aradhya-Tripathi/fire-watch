@@ -1,9 +1,7 @@
-import os
 import random
 import string
 
 import fire_watch
-import pymongo
 from fire_watch.errorfactory import ExcessiveUnitsError
 
 
@@ -20,10 +18,8 @@ class BaseModel:
         "data": list,
     }
 
-    fire_watch.print("[bold green]Establishing Connection")
     max_entry = fire_watch.conf.max_unit_entry
-    client = pymongo.MongoClient(os.getenv("MONGO_URI"))
-    db = client[fire_watch.flags.db_name]
+    db = fire_watch.db
 
     def get_uid(self, length: int):
         """Get unique UID for a document.
@@ -46,6 +42,3 @@ class BaseModel:
                     "error": f"Excessive no. of units {units} current max units are {self.max_entry}"
                 }
             )
-
-    def get_db(self):
-        return self

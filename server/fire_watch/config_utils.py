@@ -4,6 +4,8 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Optional
 
+import pymongo
+from keydb import KeyDB
 from rich.console import Console
 
 import fire_watch
@@ -52,8 +54,20 @@ def sanitized_configs(base_path: Path):
     return conf
 
 
+def init_cache():
+    """Connect to KeyDB server with the configurations
+    present in `fire_watch.conf, ref https://github.com/EQ-Alpha/KeyDB
+    """
+    fire_watch.cache = KeyDB(
+        host=fire_watch.conf.cache_conf["host"],
+        port=fire_watch.conf.cache_conf["port"],
+    )
+
+
 def init_flags():
     fire_watch.flags = Flags()
+    fire_watch.flags.in_ci = os.getenv("CI")
+    fire_watch.flags.use_secret = False if fire_watch.flags.in_ci else True
 
 
 def set_debug_flags():
@@ -61,10 +75,13 @@ def set_debug_flags():
     fire_watch.flags.in_debug = True
 
 
-def set_db_name(conf):
+def connect_db(conf: Conf):
     fire_watch.flags.db_name = (
         os.getenv("TESTDB") if conf.developer or os.getenv("CI") else os.getenv("DB")
     )
+    client = pymongo.MongoClient(os.getenv("MONGO_URI"))
+    fire_watch.print("[cyan green]Establishing Connection! :rocket:")
+    fire_watch.db = client[fire_watch.flags.db_name]
 
 
 def init_print_utils(

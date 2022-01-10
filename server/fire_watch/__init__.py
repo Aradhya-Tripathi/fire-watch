@@ -1,12 +1,12 @@
 """
-Free-Watch
-~~~~~~~~~~~~~~~~~~~~~
+# Free-Watch
+### Lite Device Monitoring Service
 
 """
 
+from . import startup
 
-from fire_watch.settings import conf
-
+startup.init()
 
 __name__ = "Fire-Watch"
-__version__ = "0.1.0"
+__version__ = "1.0.0"

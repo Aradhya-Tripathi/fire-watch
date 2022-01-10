@@ -3,7 +3,7 @@ import unittest
 from importlib import import_module
 
 import patches
-from authentication.tests import test_auth_model, test_jwt
+from authentication.tests import test_auth_model, test_jwt, test_refresh_to_access
 from fire_watch.log.tests import test_logging
 from tests import (
     test_admin,
@@ -11,6 +11,8 @@ from tests import (
     test_reset_password,
     test_units,
     test_user_operations,
+    test_refresh_token,
+    test_logout,
 )
 
 
@@ -26,6 +28,7 @@ def get_unittests(suite):
     suite.addTest(unittest.makeSuite(test_auth_model.TestAuthModel))
     suite.addTest(unittest.makeSuite(test_jwt.TestJwt))
     suite.addTest(unittest.makeSuite(test_logging.TestLog))
+    suite.addTest(unittest.makeSuite(test_refresh_to_access.TestAccessToRefresh))
 
 
 def get_server_tests(suite):
@@ -34,6 +37,8 @@ def get_server_tests(suite):
     suite.addTest(unittest.makeSuite(test_reset_password.TestResetPassword))
     suite.addTest(unittest.makeSuite(test_user_operations.UserTests))
     suite.addTest(unittest.makeSuite(test_admin.TestAdmin))
+    suite.addTest(unittest.makeSuite(test_refresh_token.TestRefreshToAccess))
+    suite.addTest(unittest.makeSuite(test_logout.TestLogout))
 
 
 def main():

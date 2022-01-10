@@ -29,7 +29,7 @@ class TestAuthentication(CustomTestCase):
 
         creds = {"password": doc["password"], "email": doc["email"]}
         status = self.request.post(
-            self.base_url + "login", data=json.dumps(creds), headers=self.headers
+            self.base_url + "auth/login", data=json.dumps(creds), headers=self.headers
         )
 
         self.assertEqual(status.status_code, 200)
@@ -37,13 +37,13 @@ class TestAuthentication(CustomTestCase):
         self.assertIsInstance(status.json()["refresh_token"], str)
         creds = {"password": "incorrectpassword", "email": doc["email"]}
         status = self.request.post(
-            self.base_url + "login", data=json.dumps(creds), headers=self.headers
+            self.base_url + "auth/login", data=json.dumps(creds), headers=self.headers
         )
         self.assertEqual(status.status_code, 401)
 
         creds = {"password": doc["password"], "email": "incorrect email"}
         status = self.request.post(
-            self.base_url + "login", data=json.dumps(creds), headers=self.headers
+            self.base_url + "auth/login", data=json.dumps(creds), headers=self.headers
         )
         self.assertEqual(status.status_code, 400)
 
@@ -73,7 +73,7 @@ class TestAuthentication(CustomTestCase):
 
         creds = {"password": doc["password"], "email": doc["email"]}
         tokens = self.request.post(
-            self.base_url + "login", data=json.dumps(creds), headers=self.headers
+            self.base_url + "auth/login", data=json.dumps(creds), headers=self.headers
         )
         headers = self.headers.copy()
         headers.update({"Authorization": f"Bearer {tokens.json()['access_token']}"})

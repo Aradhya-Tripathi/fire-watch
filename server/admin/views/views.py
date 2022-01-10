@@ -26,7 +26,7 @@ class AdminView(BaseAPIView):
             payload=payload,
             expiry=timedelta(hours=1),
             get_refresh=True,
-            refresh_exipry=timedelta(hours=12),
+            refresh_expiry=timedelta(hours=12),
             is_admin=True,
         )
         return JsonResponse(

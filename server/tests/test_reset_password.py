@@ -23,7 +23,7 @@ class TestResetPassword(CustomTestCase):
             "new_passwd": new_password,  # Using the new password
         }
         response = self.request.post(
-            self.base_url + "reset-password",
+            self.base_url + "auth/reset-password",
             data=json.dumps(doc),
             headers=self.headers,
         )
@@ -36,7 +36,7 @@ class TestResetPassword(CustomTestCase):
 
         # Try logging in with old password
         response = self.request.post(
-            self.base_url + "login",
+            self.base_url + "auth/login",
             data=json.dumps(doc),
             headers=self.headers,
         )
@@ -47,7 +47,7 @@ class TestResetPassword(CustomTestCase):
         # Try logging in with new password
         doc["password"] = new_password
         response = self.request.post(
-            self.base_url + "login",
+            self.base_url + "auth/login",
             data=json.dumps(doc),
             headers=self.headers,
         )

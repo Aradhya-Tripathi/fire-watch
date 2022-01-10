@@ -80,8 +80,9 @@ class UserTests(CustomTestCase):
         response = self.request.delete(self.base_url + "user/details", headers=headers)
         self.assertEqual(response.status_code, 200)
 
-        response = self.request.delete(self.base_url + "user/details", headers=headers)
-        self.assertEqual(response.status_code, 400)
+        data = {"units": 1, "user_name": "OtherUser"}
+        response = self.update(data, user_creds)
+        self.assertEqual(response.status_code, 403)
 
     def tearDown(self) -> None:
         self.clear_all()

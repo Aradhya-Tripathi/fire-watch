@@ -1,7 +1,6 @@
 from typing import Dict
 
 import fire_watch
-from fire_watch.errorfactory import InvalidCredentialsError
 from fire_watch.log.log_configs import get_logger
 from fire_watch.utils import pagination_utils
 
