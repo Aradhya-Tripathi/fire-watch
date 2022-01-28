@@ -1,11 +1,11 @@
 import secrets
 import unittest
-from authentication.issue_jwt import TokenAuth
+from authentication.issue_jwt import AuthToken
 from datetime import timedelta
 
 
 class TestJwt(unittest.TestCase):
-    auth_token = TokenAuth()
+    auth_token = AuthToken()
 
     def test_jwt_creation(self):
         keys = self.auth_token.generate_key(
