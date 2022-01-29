@@ -62,14 +62,14 @@ class AuthToken(Validator):
     ):
 
         current_time = datetime.utcnow()
-        self.set_expiry(payload, current_time, expiry)
+        set_expiry(payload, current_time, expiry)
         payload.update({"is_admin": True}) if is_admin else payload.update(
             {"is_admin": False}
         )
         access_token = jwt.encode(payload, key=self.signature)
 
         if get_refresh:
-            self.set_expiry(payload, current_time, refresh_expiry)
+            set_expiry(payload, current_time, refresh_expiry)
             refresh_payload = {**{"refresh": True}, **payload}
             refresh_token = jwt.encode(refresh_payload, key=self.signature)
             return {"access_token": access_token, "refresh_token": refresh_token}
