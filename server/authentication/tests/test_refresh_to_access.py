@@ -1,10 +1,10 @@
 from unittest import TestCase
 
-from authentication.issue_jwt import TokenAuth
+from authentication.issue_jwt import AuthToken
 
 
 class TestAccessToRefresh(TestCase):
-    auth_token = TokenAuth()
+    auth_token = AuthToken()
 
     def test_access_token_as_refresh(self):
         tokens = self.auth_token.generate_key(

@@ -1,6 +1,6 @@
 [tool.poetry]
-name = "Free-Watch"
-version = "0.1.0"
+name = "Fire-Watch"
+version = "1.0.0"
 description = "Lite IoT servers as plugin/standalone application"
 authors = ["Aradhya-Tripathi <aradhyatripathi51@gmail.com>"]
 license = "MIT"
