@@ -48,21 +48,15 @@ class TestAuthentication(CustomTestCase):
         self.assertEqual(status.status_code, 400)
 
     def test_protected_route(self):
-        status = self.request.get(
-            self.base_url + "user/test-protected", headers=self.headers
-        )
+        status = self.request.get(self.base_url + "user/me", headers=self.headers)
         self.assertEqual(status.status_code, 403)
         headers = self.headers.copy()
         headers.update({"Authorization": "Bearer Ransodasodmasd"})
-        status = self.request.get(
-            self.base_url + "user/test-protected", headers=headers
-        )
+        status = self.request.get(self.base_url + "user/me", headers=headers)
         self.assertEqual(status.status_code, 403)
 
         headers.update({"Authorization": None})
-        status = self.request.get(
-            self.base_url + "user/test-protected", headers=headers
-        )
+        status = self.request.get(self.base_url + "user/me", headers=headers)
         self.assertEqual(status.status_code, 403)
 
         doc = self.user_register()
@@ -77,9 +71,7 @@ class TestAuthentication(CustomTestCase):
         )
         headers = self.headers.copy()
         headers.update({"Authorization": f"Bearer {tokens.json()['access_token']}"})
-        status = self.request.get(
-            self.base_url + "user/test-protected", headers=headers
-        )
+        status = self.request.get(self.base_url + "user/me", headers=headers)
         self.assertEqual(status.status_code, 200)
 
     def tearDown(self) -> None:
