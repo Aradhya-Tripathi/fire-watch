@@ -63,7 +63,7 @@ class AuthMiddleWare:
         try:
             token = get_token(self.request.headers)
         except InvalidToken as e:
-            return JsonResponse(data={"error": str(e)}, status=403)
+            return JsonResponse(data={"error": "Invalid token type!"}, status=403)
         if (
             payload := issue_keys.verify_key(key=token, is_admin=False)
         ) and not fire_watch.cache.sismember("Blacklist", token):

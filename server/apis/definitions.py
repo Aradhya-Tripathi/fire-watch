@@ -4,6 +4,7 @@ from typing import Optional, Dict
 from schema import And, Schema, SchemaError
 
 email_re = re.compile("(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
+generic_error = "Please check your inputs!"
 
 
 class UserSchema:
@@ -18,7 +19,8 @@ class UserSchema:
                 "units": And(int, lambda units: units > 0),
                 "password": And(str, lambda passwd: len(passwd.strip()) > 0),
                 "email": And(str, lambda email: self.email_re.fullmatch(email)),
-            }
+            },
+            error=generic_error,
         )
         self.login_schema = Schema(
             schema={
@@ -35,7 +37,8 @@ class UserSchema:
                     str,
                     lambda email: self.email_re.fullmatch(email),
                 ),
-            }
+            },
+            error=generic_error,
         )
 
         self.collect_data = Schema(schema={"data": dict})
@@ -44,7 +47,8 @@ class UserSchema:
             schema={
                 "units": Optional[int],
                 "user_name": Optional[str],
-            }
+            },
+            error=generic_error,
         )
 
     def approval(self):
