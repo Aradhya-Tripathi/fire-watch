@@ -2,8 +2,8 @@ from authentication.routes import path
 from authentication.views import views
 
 urlpatterns = [
-    path("login", views.Login.as_view()),
-    path("reset-password", views.ResetPassword.as_view()),
-    path("refresh", views.RefreshToAccess.as_view()),
-    path("logout", views.Logout.as_view()),
+    path("login", views.login_users),
+    path("reset-password", views.reset_password),
+    path("refresh", views.refresh_to_acess),
+    path("logout", views.logut_users),
 ]

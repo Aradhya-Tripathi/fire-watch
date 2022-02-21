@@ -4,7 +4,7 @@ from apis.views.decorators import api_view
 
 
 @api_view(["GET"])
-def test_protected(request: HttpRequest):
+def me(request: HttpRequest):
     return JsonResponse(data={"Success": True}, status=200)
 
 
@@ -13,9 +13,7 @@ class UserAPI(BaseAPIView):
         try:
             page = int(request.GET.get("page", 1))
         except ValueError:
-            return JsonResponse(
-                {"error": f"Invalid page number {request.GET.get('page')}"}, status=400
-            )
+            page = 1
         data = request.current_user.data(page=page)
         return JsonResponse(data, status=200, safe=False)
 
