@@ -1,9 +1,9 @@
 from typing import Dict, Union
 
+from admin import admin_model
 from fire_watch.errorfactory import InvalidCredentialsError, InvalidUid
 
 from .base_model import BaseModel
-from admin import admin_model
 
 
 class AuthModel(BaseModel):
@@ -51,11 +51,12 @@ class AuthModel(BaseModel):
             new_pswd (str): new hashed password
             email_id (str): email_id
         """
-        self.db.users.find_one_and_update(
+        doc = self.db.users.find_one_and_update(
             {"password": old_passwd, "email": email_id},
             update={"$set": {"password": new_passwd}},
         )
-        return None
+        if not doc:
+            raise InvalidCredentialsError({"error": "Invalid credentials!"})
 
     def admin_login(self, email: str, password: str):
         admin = self.db.AdminCredentials.find_one(
