@@ -26,11 +26,8 @@ class AuthMiddleWare:
     ):
 
         setattr(
-            self.request,
-            "current_admin" if is_admin else "current_user",
-            Conf(payload),
+            self.request, "current_admin" if is_admin else "current_user", Conf(payload)
         )
-
         self.request.is_admin = is_admin
         self.request.token = token
 

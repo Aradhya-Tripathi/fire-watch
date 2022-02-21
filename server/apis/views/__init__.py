@@ -5,3 +5,4 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 
 from .base_view import BaseAPIView
+from .decorators import api_view
