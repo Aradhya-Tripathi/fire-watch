@@ -21,7 +21,7 @@ class BaseModel:
     max_entry = fire_watch.conf.max_unit_entry
     db = fire_watch.db
 
-    def get_uid(self, length: int):
+    def get_uid(self, length: int = 8):
         """Get unique UID for a document.
 
         Args:
@@ -31,7 +31,7 @@ class BaseModel:
             str: uuid
         """
         uid = random.choices(string.ascii_uppercase, k=length)
-        if self.db.collection.find_one({"_id": uid}):
+        if self.db.units.find_one({"_id": uid}):
             return self.get_uid()
         return "".join(uid)
 
