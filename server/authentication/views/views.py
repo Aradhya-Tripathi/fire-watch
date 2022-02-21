@@ -46,7 +46,7 @@ def reset_password(request: HttpRequest) -> JsonResponse:
     return JsonResponse(data={}, status=200)
 
 
-@api_view(["POST"], permission_classes=[RefreshToAccessPermission])
+@api_view(["GET"], permission_classes=[RefreshToAccessPermission])
 def refresh_to_acess(request: HttpRequest):
     tokens = issue_keys.refresh_to_access(request.refresh_token)
     fire_watch.cache.sadd("Blacklist", request.refresh_token)
