@@ -10,7 +10,7 @@ echo -e "$execution [...]"
 # START SERVER
 if [ $1 -eq "0" ];
 then
-    . ./run_server.sh
+    . ./run_server.sh &
     echo "$execution [SERVER-BOOT-COMPLETE]"
 fi
 
