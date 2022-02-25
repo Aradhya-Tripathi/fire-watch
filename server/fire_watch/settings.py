@@ -81,7 +81,7 @@ WSGI_APPLICATION = "fire_watch.wsgi.application"
 
 throttle_rate = (
     fire_watch.conf.throttle_rate["debug"]
-    if DEBUG
+    if DEBUG or os.getenv("CI")
     else fire_watch.conf.throttle_rate["production"]
 )
 fire_watch.flags.throttle_rate = throttle_rate
