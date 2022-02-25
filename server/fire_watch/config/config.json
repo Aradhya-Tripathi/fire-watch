@@ -8,7 +8,7 @@
   "socket": {
     "base_group": "Alerts"
   },
-  "developer": true,
+  "developer": false,
   "pagination_limit": { "debug": 20, "production": 10 },
   "throttle_rate": { "debug": "100/min", "production": "10/min" },
   "allowed_hosts": ["*"],
