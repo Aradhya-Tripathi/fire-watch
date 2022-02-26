@@ -1,5 +1,4 @@
-import random
-import string
+import uuid
 
 import fire_watch
 from fire_watch.errorfactory import ExcessiveUnitsError
@@ -21,19 +20,9 @@ class BaseModel:
     max_entry = fire_watch.conf.max_unit_entry
     db = fire_watch.db
 
-    def get_uid(self, length: int = 8):
-        """Get unique UID for a document.
-
-        Args:
-            length (int, optional): length of uuid. Defaults to 8.
-
-        Returns:
-            str: uuid
-        """
-        uid = random.choices(string.ascii_uppercase, k=length)
-        if self.db.units.find_one({"_id": uid}):
-            return self.get_uid()
-        return "".join(uid)
+    def get_uid(self):
+        """Get unique UID for a document."""
+        return uuid.uuid4().hex
 
     def check_excessive_units(self, units):
         if units > self.max_entry:

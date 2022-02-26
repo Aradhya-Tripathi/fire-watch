@@ -103,7 +103,12 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [fire_watch.conf.cache_conf],
+            "hosts": [
+                (
+                    fire_watch.conf.cache_conf["host"],
+                    fire_watch.conf.cache_conf["port"],
+                )
+            ],
         },
     },
 }
