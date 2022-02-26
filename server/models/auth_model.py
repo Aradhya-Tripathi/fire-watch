@@ -29,7 +29,7 @@ class AuthModel(BaseModel):
         units = doc.get("units")
         self.check_excessive_units(units)
 
-        doc = {**{"unit_id": self.get_uid(length=16)}, **doc}
+        doc = {**{"unit_id": self.get_uid()}, **doc}
         self.db.users.insert_one(doc)
         self.db.units.insert_one({"unit_id": doc["unit_id"], "data": []})
         admin_model.log_user_request(
