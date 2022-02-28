@@ -15,7 +15,7 @@ echo "$execution Executing patches"
 
 # STARTING APPLICATION
 
-uvicorn fire_watch.asgi:application  --host 0.0.0.0 --port 8000 --reload
+daphne fire_watch.asgi:application  --bind 0.0.0.0 --port 8000
 
 cd ../
 echo "$execution Running Django Server [8000]"
