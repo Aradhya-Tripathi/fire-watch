@@ -12,7 +12,7 @@ class TestAuthModel(unittest.TestCase):
         cls.auth_model = AuthModel()
 
     def setUp(self) -> None:
-        self.auth_model.db.units.insert_one({"unit_id": "randomunit_id"})
+        self.auth_model.db.users.insert_one({"unit_id": "randomunit_id", "email": "testuser@test.com"})
 
     def test_validate_token(self):
         self.assertTrue(utils.validate_unit_id("randomunit_id"))
@@ -22,4 +22,4 @@ class TestAuthModel(unittest.TestCase):
             utils.validate_unit_id("invalidunit_id")
 
     def tearDown(self) -> None:
-        self.auth_model.db.units.remove({"unit_id": "randomunit_id"})
+        self.auth_model.db.users.remove({"unit_id": "randomunit_id"})
