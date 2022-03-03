@@ -12,7 +12,9 @@ class TestAuthModel(unittest.TestCase):
         cls.auth_model = AuthModel()
 
     def setUp(self) -> None:
-        self.auth_model.db.users.insert_one({"unit_id": "randomunit_id", "email": "testuser@test.com"})
+        self.auth_model.db.users.insert_one(
+            {"unit_id": "randomunit_id", "email": "testuser@test.com"}
+        )
 
     def test_validate_token(self):
         self.assertTrue(utils.validate_unit_id("randomunit_id"))
