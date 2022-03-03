@@ -12,7 +12,7 @@ class ValidateUnit(BasePermission):
         the unit Id of the device. Set `request.unit_id` if token is validated.
         """
         token = get_token(request.headers)
-        request.email = validate_unit_id(token)
+        request.unit_id, request.email = token, validate_unit_id(token)
         return True
 
 
