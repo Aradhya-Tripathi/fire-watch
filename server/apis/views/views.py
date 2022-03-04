@@ -83,7 +83,7 @@ class Alert(BaseAPIView):
                 group_id, {"type": "send.alert", "content": data}
             )
 
-    def post(self, request: HttpRequest, **kwargs) -> JsonResponse:
+    def post(self, request: HttpRequest) -> JsonResponse:
         """Accept alert from device
 
         Args:
@@ -92,8 +92,7 @@ class Alert(BaseAPIView):
         Returns:
             JsonResponse: Response
         """
-
         token = utils.get_token(request.headers)
         self.logger.warning(f"Alert {json.dumps(request.data)}")
-        self.send_alert(token, request.data, to=request.current_user["email"])
+        self.send_alert(token, request.data, to=request.email)
         return JsonResponse(data={}, status=200)

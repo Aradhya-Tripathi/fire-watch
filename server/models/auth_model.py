@@ -8,9 +8,9 @@ from .base_model import BaseModel
 
 class AuthModel(BaseModel):
     def validate_unit_id(self, unit_id: str):
-        documents = self.db.units.find_one({"unit_id": unit_id})
-        if documents:
-            return True
+        document = self.db.users.find_one({"unit_id": unit_id})
+        if document:
+            return document["email"]
         raise InvalidUid(
             f"No document with unit with Id {unit_id} found", status_code=401
         )
@@ -29,7 +29,7 @@ class AuthModel(BaseModel):
         units = doc.get("units")
         self.check_excessive_units(units)
 
-        doc = {**{"unit_id": self.get_uid(length=16)}, **doc}
+        doc = {**{"unit_id": self.get_uid()}, **doc}
         self.db.users.insert_one(doc)
         self.db.units.insert_one({"unit_id": doc["unit_id"], "data": []})
         admin_model.log_user_request(
