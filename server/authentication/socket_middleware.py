@@ -11,10 +11,9 @@ class AuthMiddleWare:
     @staticmethod
     def get_credentials(headers):
         for header in headers:
-            if isinstance(header, tuple):
-                key, value = header[0].decode(), header[1].decode()
-                if key == "authorization":
-                    return value.split()
+            key, value = header[0].decode(), header[1].decode()
+            if key == "authorization":
+                return value.split()
         raise InvalidToken("Token not provided")
 
     def authenticate(self, scope: Dict[str, Any]) -> Dict[str, Any]:
