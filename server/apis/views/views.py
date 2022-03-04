@@ -78,6 +78,7 @@ class Alert(BaseAPIView):
             email_service.send_mail(html="[Place Holder]", subject="Alert", to=[to])
         if "ws" in subs:
             group_id = self.group_name + str(token)
+            # '_' in methods replaced with '.'
             async_to_sync(self.channel_layer.group_send)(
                 group_id, {"type": "send.alert", "content": data}
             )
