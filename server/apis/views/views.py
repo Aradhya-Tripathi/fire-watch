@@ -49,6 +49,11 @@ def collect_data(request: HttpRequest) -> JsonResponse:
         return JsonResponse(data={"error": validate["error"]}, status=400)
 
     insert_data(unit_id=request.unit_id, data=request.data)
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        fire_watch.conf.socket["base_group"] + request.unit_id,
+        {"type": "show.current.logs", "log": request.data},
+    )
     return JsonResponse({}, status=201)
 
 
