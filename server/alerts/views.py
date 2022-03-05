@@ -25,22 +25,14 @@ class Alert(JsonWebsocketConsumer):
             self.close()
             return
 
+        self._use_json = self.requested_json()
         self.accept()
         self.channel_layer = get_channel_layer()
-        self._use_json = self.requested_json()
         self.add_to_group()
-
-    def send_alert(self, content):
-        # Show tail (max-size 15) if requested format is plain/text else
-        # send only current alert (web-support)
-        # Fetching user logs from cache
-        if fire_watch.cache.llen(self.scope["unit_id"]) >= self.max_log_size:
-            fire_watch.cache.lpop(self.scope["unit_id"])
-        fire_watch.cache.rpush(self.scope["unit_id"], json.dumps(content["content"]))
-        if self._use_json:
-            self.send_json(content["content"])
-        else:
-            data = "\n".join(
+        # Show tail (max-size 15) if requested format is plain/text
+        # This is to simulate data log when requested through CLI
+        if not self._use_json:
+            initial_data = "\n".join(
                 map(
                     lambda x: x.decode(),
                     fire_watch.cache.lrange(
@@ -48,7 +40,27 @@ class Alert(JsonWebsocketConsumer):
                     ),
                 )
             )
-            self.send(data)
+
+            self.send(initial_data)
+
+    def show_current_logs(self, message):
+        # Show all incoming logs when logs are requested through CLI.
+        # Appending to previously sent data post handshake.
+        # Maintaining a max of 15 data points in cache for each user
+        if fire_watch.cache.llen(self.scope["unit_id"]) >= self.max_log_size:
+            fire_watch.cache.lpop(self.scope["unit_id"])
+
+        fire_watch.cache.rpush(self.scope["unit_id"], json.dumps(message["log"]))
+        data = "\n".join(
+            map(
+                lambda x: x.decode(),
+                fire_watch.cache.lrange(self.scope["unit_id"], -1, -1),
+            )
+        )
+        self.send(data) if not self._use_json else self.send_json(json.loads(data))
+
+    def send_alert(self, content):
+        self.send_json(content["content"])
 
     def add_to_group(self):
         """Add users to specified group, using `channel_name`
